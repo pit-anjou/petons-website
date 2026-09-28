@@ -29,6 +29,12 @@ svg.puppet.is-ready{opacity:1;animation:none;transition:opacity .35s ease-out}
 @keyframes pz-drip{0%{transform:translateY(-12px);opacity:0}25%{opacity:1}70%{opacity:1}100%{transform:translateY(22px);opacity:0}}
 /* Les mains tirent deux fois sur le manteau. */
 @keyframes pz-tug{0%,42%,100%{transform:none}9%,27%{transform:rotate(var(--tug,-5deg))}18%,36%{transform:rotate(calc(var(--tug,-5deg) * .25))}}
+/* Manteau qu’on referme : deux petits ajustements, on le garde fermé, on le rouvre. */
+@keyframes pz-close{0%,100%{transform:none}14%{transform:rotate(var(--close,4deg))}20%{transform:rotate(calc(var(--close,4deg) * .7))}27%,58%{transform:rotate(var(--close,4deg))}78%{transform:none}}
+/* Poussée du tapis : le buste se penche, le rouleau avance d’autant et tourne sur lui-même. */
+@keyframes pz-lean{0%,10%,100%{transform:none}36%,50%{transform:rotate(4deg)}80%{transform:none}}
+@keyframes pz-push{0%,10%,100%{transform:none}36%,50%{transform:translateX(15px)}80%{transform:none}}
+@keyframes pz-turn{0%,10%,100%{transform:none}36%,50%{transform:rotate(30deg)}80%{transform:none}}
 /* Foulée : le corps monte et redescend, la tête suit avec un peu de retard. */
 @keyframes pz-run{0%,100%{transform:translateY(0)}45%{transform:translateY(-15px)}}
 @keyframes pz-run-head{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-16px) rotate(-2deg)}}
@@ -60,10 +66,16 @@ svg.puppet.is-ready{opacity:1;animation:none;transition:opacity .35s ease-out}
 .puppet--fratrie .pz-sister-head{animation-name:pz-tilt;animation-duration:8s;--tilt:2.4deg}
 .puppet--fratrie .pz-brother-head{animation-name:pz-tilt;animation-duration:8s;animation-delay:.9s;--tilt:-3deg}
 
-/* Chenilles : le manteau, le tapis */
+/* Chenilles : la petite fille ferme son manteau en tirant sur les deux pans
+   (chaque moitié pivote à l’épaule), puis le rouvre. */
 .puppet--manteau .pz-head{animation-name:pz-tilt;animation-duration:7.6s;--tilt:-2deg}
-.puppet--manteau .pz-hand-l{animation-name:pz-tug;animation-duration:4.8s;--tug:-5deg}
-.puppet--manteau .pz-hand-r{animation-name:pz-tug;animation-duration:4.8s;animation-delay:.15s;--tug:5deg}
+.puppet--manteau .pz-coat-l{animation-name:pz-close;animation-duration:5.2s;--close:-4deg}
+.puppet--manteau .pz-coat-r{animation-name:pz-close;animation-duration:5.2s;animation-delay:.08s;--close:4deg}
+/* Le garçon se penche et pousse son tapis : le rouleau avance en tournant,
+   ses mains restent dessus, puis il se redresse. */
+.puppet--tapis .pz-torso{animation-name:pz-lean;animation-duration:5.6s}
+.puppet--tapis .pz-roll{animation-name:pz-push;animation-duration:5.6s}
+.puppet--tapis .pz-spiral{animation-name:pz-turn;animation-duration:5.6s}
 .puppet--tapis .pz-head{animation-name:pz-tilt;animation-duration:6.8s;--tilt:2.4deg}
 
 /* Coureurs du cross (école) : chacun sa foulée. */
