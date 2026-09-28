@@ -9,6 +9,11 @@
 :where(svg.puppet){display:block;max-width:100%;height:auto;overflow:visible}
 .puppet .pz{transform-box:view-box;animation:6s ease-in-out infinite both;will-change:transform}
 .puppet.is-paused .pz{animation-play-state:paused}
+/* Invisible tant que la planche n’est pas décodée (le script ajoute .is-ready) ;
+   sans script, elle apparaît quand même au bout de 2,5 s. */
+svg.puppet{opacity:0;animation:pz-reveal .01s 2.5s forwards}
+svg.puppet.is-ready{opacity:1;animation:none;transition:opacity .35s ease-out}
+@keyframes pz-reveal{to{opacity:1}}
 
 /* Étoile peinte qui scintille. */
 @keyframes pz-twinkle{0%,100%{transform:none}45%{transform:rotate(12deg) scale(1.12)}60%{transform:rotate(9deg) scale(1.06)}}
@@ -73,5 +78,5 @@
 .puppet--atlas .pz-boy-head,.puppet--atlas-blanc .pz-boy-head{animation-name:pz-tilt;animation-duration:6.6s;animation-delay:-2s;--tilt:-2deg}
 .puppet--atlas .pz-boy-hand,.puppet--atlas-blanc .pz-boy-hand{animation-name:pz-write;animation-duration:3.3s}
 
-@media(prefers-reduced-motion:reduce){.puppet .pz{animation:none}}
-@media print{.puppet .pz{animation:none}}
+@media(prefers-reduced-motion:reduce){.puppet .pz{animation:none}svg.puppet.is-ready{transition:none}}
+@media print{.puppet .pz{animation:none}svg.puppet{opacity:1;animation:none}}
