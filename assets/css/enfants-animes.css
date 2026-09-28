@@ -1,0 +1,82 @@
+/* Enfants animés : chaque illustration est une planche (assets/img/anim/<nom>.webp)
+   qui contient l’image de base et, dessous, les parties découpées (têtes, mains,
+   étoiles…). Le SVG les replace exactement ; seules ces parties bougent, autour
+   de leur articulation (transform-origin en unités de l’image, posé sur chaque calque).
+   Les gestes alternent avec des temps de repos, sur des durées qui ne tombent
+   jamais juste entre elles, pour que la scène ne se répète pas mécaniquement. */
+
+/* Même comportement de base que les <img> du site, sans prendre le pas sur leurs classes. */
+:where(svg.puppet){display:block;max-width:100%;height:auto;overflow:visible}
+.puppet .pz{transform-box:view-box;animation:6s ease-in-out infinite both;will-change:transform}
+.puppet.is-paused .pz{animation-play-state:paused}
+/* Invisible tant que la planche n’est pas décodée (le script ajoute .is-ready) ;
+   sans script, elle apparaît quand même au bout de 2,5 s. */
+svg.puppet{opacity:0;animation:pz-reveal .01s 2.5s forwards}
+svg.puppet.is-ready{opacity:1;animation:none;transition:opacity .35s ease-out}
+@keyframes pz-reveal{to{opacity:1}}
+
+/* Étoile peinte qui scintille. */
+@keyframes pz-twinkle{0%,100%{transform:none}45%{transform:rotate(12deg) scale(1.12)}60%{transform:rotate(9deg) scale(1.06)}}
+/* Coucou de la main : trois allers-retours, puis la main se repose. */
+@keyframes pz-wave{0%,46%,100%{transform:none}7%,21%,35%{transform:rotate(-13deg)}14%,28%{transform:rotate(4deg)}42%{transform:rotate(-3deg)}}
+/* Tête qui se penche, s’attarde, puis revient. */
+@keyframes pz-tilt{0%,100%{transform:none}22%,40%{transform:rotate(var(--tilt,3deg))}62%{transform:rotate(calc(var(--tilt,3deg) * -.35))}78%{transform:none}}
+/* Antenne à ressort. */
+@keyframes pz-spring{0%,100%{transform:none}18%{transform:rotate(var(--swing,-9deg))}38%{transform:rotate(calc(var(--swing,-9deg) * -.6))}56%{transform:rotate(calc(var(--swing,-9deg) * .3))}72%{transform:rotate(calc(var(--swing,-9deg) * -.1))}}
+/* Plante qui se balance. */
+@keyframes pz-sway{0%,100%{transform:none}30%{transform:rotate(1.5deg)}65%{transform:rotate(-1.1deg)}}
+/* Gouttes qui tombent de l’arrosoir, en continu (deux copies décalées). */
+@keyframes pz-drip{0%{transform:translateY(-12px);opacity:0}25%{opacity:1}70%{opacity:1}100%{transform:translateY(22px);opacity:0}}
+/* Les mains tirent deux fois sur le manteau. */
+@keyframes pz-tug{0%,42%,100%{transform:none}9%,27%{transform:rotate(var(--tug,-5deg))}18%,36%{transform:rotate(calc(var(--tug,-5deg) * .25))}}
+/* Foulée : le corps monte et redescend, la tête suit avec un peu de retard. */
+@keyframes pz-run{0%,100%{transform:translateY(0)}45%{transform:translateY(-15px)}}
+@keyframes pz-run-head{0%,100%{transform:translateY(0) rotate(1deg)}50%{transform:translateY(-16px) rotate(-2deg)}}
+/* Petits traits de crayon, puis une pause pour relire. */
+@keyframes pz-write{0%,34%,100%{transform:none}5%{transform:translate(8px,-2px) rotate(-2deg)}10%{transform:translate(-3px,2px) rotate(1deg)}15%{transform:translate(9px,0) rotate(-2deg)}20%{transform:translate(-2px,2px) rotate(1deg)}26%{transform:translate(10px,-1px) rotate(-1deg)}}
+
+/* Carnaval (accueil, actualités) */
+.puppet--carnaval .pz-star-a{animation-name:pz-twinkle;animation-duration:5.3s}
+.puppet--carnaval .pz-star-b{animation-name:pz-twinkle;animation-duration:6.7s;animation-delay:-2.4s}
+.puppet--carnaval .pz-antenna-a{animation-name:pz-spring;animation-duration:3.4s;--swing:-10deg}
+.puppet--carnaval .pz-antenna-b{animation-name:pz-spring;animation-duration:4.1s;animation-delay:-1.3s;--swing:9deg}
+.puppet--carnaval .pz-clown-hand{animation-name:pz-wave;animation-duration:5.8s;animation-delay:.4s}
+.puppet--carnaval .pz-ballerina-arm{animation-name:pz-wave;animation-duration:7.4s;animation-delay:-3.6s}
+.puppet--carnaval .pz-pyjama-head{animation-name:pz-tilt;animation-duration:8.3s;--tilt:2.6deg}
+.puppet--carnaval .pz-teddy-head{animation-name:pz-tilt;animation-duration:6.1s;animation-delay:-2s;--tilt:-5deg}
+
+/* Trois enfants autour de la plante (pédagogie) */
+.puppet--trio .pz-star-a{animation-name:pz-twinkle;animation-duration:5.9s}
+.puppet--trio .pz-star-b{animation-name:pz-twinkle;animation-duration:7.1s;animation-delay:-3s}
+.puppet--trio .pz-plant{animation-name:pz-sway;animation-duration:6.2s}
+.puppet--trio .pz-drops{animation-name:pz-drip;animation-duration:1.2s;animation-timing-function:ease-in}
+.puppet--trio .pz-drops.pz-copy-2{animation-delay:-.6s}
+.puppet--trio .pz-boy-head{animation-name:pz-tilt;animation-duration:7.3s;--tilt:-2.4deg}
+.puppet--trio .pz-left-head{animation-name:pz-tilt;animation-duration:8.9s;animation-delay:-2s;--tilt:2deg}
+.puppet--trio .pz-right-head{animation-name:pz-tilt;animation-duration:9.7s;animation-delay:-5s;--tilt:-1.6deg}
+
+/* Grande sœur et petit frère (tarifs) : elle se penche vers lui, il lève la tête vers elle. */
+.puppet--fratrie .pz-star{animation-name:pz-twinkle;animation-duration:6.3s}
+.puppet--fratrie .pz-sister-head{animation-name:pz-tilt;animation-duration:8s;--tilt:2.4deg}
+.puppet--fratrie .pz-brother-head{animation-name:pz-tilt;animation-duration:8s;animation-delay:.9s;--tilt:-3deg}
+
+/* Chenilles : le manteau, le tapis */
+.puppet--manteau .pz-head{animation-name:pz-tilt;animation-duration:7.6s;--tilt:-2deg}
+.puppet--manteau .pz-hand-l{animation-name:pz-tug;animation-duration:4.8s;--tug:-5deg}
+.puppet--manteau .pz-hand-r{animation-name:pz-tug;animation-duration:4.8s;animation-delay:.15s;--tug:5deg}
+.puppet--tapis .pz-head{animation-name:pz-tilt;animation-duration:6.8s;--tilt:2.4deg}
+
+/* Coureurs du cross (école) : chacun sa foulée. */
+.puppet--coureurs .pz{animation-duration:.64s}
+.puppet--coureurs .pz-a-body{animation-name:pz-run}
+.puppet--coureurs .pz-a-head{animation-name:pz-run-head;animation-delay:.05s}
+.puppet--coureurs .pz-b-body{animation-name:pz-run;animation-delay:-.32s}
+.puppet--coureurs .pz-b-head{animation-name:pz-run-head;animation-delay:-.27s}
+
+/* Atlas et globe (papillons, accueil) */
+.puppet--atlas .pz-girl-head,.puppet--atlas-blanc .pz-girl-head{animation-name:pz-tilt;animation-duration:8.4s;--tilt:2deg}
+.puppet--atlas .pz-boy-head,.puppet--atlas-blanc .pz-boy-head{animation-name:pz-tilt;animation-duration:6.6s;animation-delay:-2s;--tilt:-2deg}
+.puppet--atlas .pz-boy-hand,.puppet--atlas-blanc .pz-boy-hand{animation-name:pz-write;animation-duration:3.3s}
+
+@media(prefers-reduced-motion:reduce){.puppet .pz{animation:none}svg.puppet.is-ready{transition:none}}
+@media print{.puppet .pz{animation:none}svg.puppet{opacity:1;animation:none}}
