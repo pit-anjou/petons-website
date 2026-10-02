@@ -381,7 +381,8 @@ body .button:not(.secondary){color:#203f4d;}
 @media(max-width:1000px){#reperes-entreprises>article{display:block}}
 </style><style>
 /* Un contact identifié, après les engagements de l’association. */
-.partner-contact{background:#e7f1f4;border-color:#cedfe5;display:grid;grid-template-columns:184px minmax(0,1fr) auto;gap:34px;padding:32px 36px;scroll-margin-top:110px}
+.partner-contact{background:transparent;border:0;border-radius:0;isolation:isolate;display:grid;grid-template-columns:184px minmax(0,1fr) auto;gap:34px;padding:38px 36px;scroll-margin-top:110px}
+.partner-contact:before{content:'';position:absolute;inset:0;width:auto;height:auto;background:#e7f1f4;transform:none;z-index:-1;clip-path:polygon(0 9px,32% 0,74% 7px,100% 0,100% calc(100% - 8px),66% 100%,22% calc(100% - 6px),0 100%)}
 .partner-contact-photo{position:relative;width:184px;isolation:isolate}
 .partner-contact-photo:before{content:'';position:absolute;inset:9px -9px -9px 9px;background:#e4eacb;border-radius:48% 48% 5px 5px;z-index:-1}
 .partner-contact-photo:after{content:'✧';position:absolute;right:-22px;top:6px;font:48px/1 Georgia,serif;color:#eeb75d;transform:rotate(9deg)}
