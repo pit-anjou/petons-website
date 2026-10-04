@@ -163,10 +163,16 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-card h3{font-size:29px;line-height:1.2;margin:0 0 6px}
 .stage-card .stage-discipline{font-size:13px;font-weight:800;color:var(--heading);margin:0 0 14px}
 .stage-card .stage-description{font-size:14px;line-height:1.75;margin:0 0 18px}
-.stage-essentials{margin:auto 0 20px;padding:14px 0;border-top:1px solid #dce4d8;border-bottom:1px solid #dce4d8;display:grid;gap:9px}
-.stage-essentials>div{display:flex;flex-wrap:wrap;gap:4px 9px;align-items:baseline;font-size:13px;line-height:1.6}
-.stage-essentials dt{font-weight:800;color:var(--heading)}
-.stage-essentials dd{margin:0}.stage-essentials dd small{display:block;font-size:12px}
+.stage-essentials{margin:auto 0 22px;padding:16px 15px;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;background:var(--stage-tint);border-radius:5px 22px 5px 5px}
+.stage-essentials>div{min-width:0;font-size:12px;line-height:1.5}
+.stage-essentials>div+div{border-left:1px solid #31657320;padding-left:13px}
+.stage-essentials dt{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--heading);margin-bottom:8px}
+.stage-essentials dt svg{width:17px;height:17px;flex:none;color:#6c967e}
+.stage-essentials dd{margin:0;color:var(--heading)}
+.stage-essentials dd>strong{display:block;font-size:22px;line-height:1.2;white-space:nowrap;margin-bottom:6px}
+.stage-essentials dd small{display:block;font-size:11px;line-height:1.5;color:var(--body)}
+@media(max-width:900px){.stage-essentials{padding:13px 10px;gap:8px}.stage-essentials>div+div{padding-left:9px}.stage-essentials dt{gap:4px;font-size:10px}.stage-essentials dt svg{width:15px;height:15px}.stage-essentials dd>strong{font-size:18px}.stage-essentials dd small{font-size:10px}}
+@media(max-width:380px){.stage-essentials{grid-template-columns:1fr 1fr}.stage-essentials>div:last-child{grid-column:1/-1;border-left:0;border-top:1px solid #31657320;padding:10px 0 0;display:grid;grid-template-columns:1fr 2fr;gap:8px;align-items:center}.stage-essentials>div:last-child dt{margin:0}.stage-essentials>div:last-child dd{display:flex;align-items:center;gap:10px}.stage-essentials>div:last-child dd>strong{margin:0}}
 .stage-card-actions{display:flex;flex-wrap:wrap;align-items:center;gap:17px 24px}
 .stage-card-actions .button{font-size:13px;padding:11px 17px;min-height:44px}
 .stage-card-actions .text-link{font-size:13px}
@@ -181,7 +187,6 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-dialog p{font-size:14px;line-height:1.8;margin-bottom:15px}
 .stage-dialog .stage-practical{margin-top:28px;padding:25px 0 0;border-top:1px solid #e2e6d8}
 .stage-practical>h3{position:relative;margin-bottom:22px}
-.stage-practical>h3>span{background:linear-gradient(transparent 83%,#f7bc78 83%,#f7bc78 92%,transparent 92%);padding-bottom:3px}
 .stage-key-facts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:23px}
 .stage-fact{background:#f0f4e5;border-radius:5px 22px 5px 5px;padding:17px 18px}
 .stage-fact:nth-child(2){background:#eaf4f0}.stage-fact:nth-child(3){background:#fff0de}
@@ -190,15 +195,16 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-fact-value{display:block;font:700 32px/1.2 Kalam,cursive;color:var(--heading);margin-bottom:7px}
 .stage-fact small{display:block;font-size:12px;line-height:1.65}
 .stage-arrival{display:grid;grid-template-columns:1fr 1fr;gap:25px;margin:0 0 24px}
-.stage-arrival h4{font:800 14px/1.6 Nunito,sans-serif;color:var(--heading);margin:0 0 5px}
+.stage-arrival h4{display:flex;align-items:flex-start;gap:8px;font:800 14px/1.6 Nunito,sans-serif;color:var(--heading);margin:0 0 7px}
+.stage-arrival h4 svg{width:21px;height:21px;flex:none;color:#6c967e;margin-top:1px}
 .stage-arrival p{font-size:13px;line-height:1.75;margin:0}
 .stage-bag{padding:20px 0;border-top:1px solid #e1e6dc}
 .stage-bag-heading{display:flex;align-items:baseline;flex-wrap:wrap;gap:5px 14px;margin-bottom:12px}
 .stage-bag-heading h4{font:700 25px/1.3 Kalam,cursive;color:var(--heading);margin:0}
 .stage-bag-heading span{font-size:13px;font-style:italic;color:#6b8269}
-.stage-bag ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:14px}
-.stage-bag li{font-size:13px;line-height:1.65;padding-left:15px;position:relative}
-.stage-bag li:before{content:"";position:absolute;left:0;top:8px;width:5px;height:9px;border-radius:55% 40%;background:#82ad68;transform:rotate(-25deg)}
+.stage-bag ul{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}
+.stage-bag li{display:flex;flex-direction:column;align-items:center;gap:12px;font-size:13px;line-height:1.65;text-align:center}
+.stage-bag li img{width:110px;height:110px;object-fit:contain;flex:none}
 .stage-booking{background:#faf1e4;border-radius:5px 5px 28px 5px;padding:20px 23px;display:flex;gap:22px;align-items:center;justify-content:space-between;margin-top:3px}
 .stage-booking h4{font:700 26px/1.3 Kalam,cursive;color:var(--heading);margin:0 0 5px}
 .stage-booking p{font-size:13px;line-height:1.7;margin:0;max-width:380px}
@@ -210,6 +216,8 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-forces .stage-force-title{display:block;color:var(--heading)}
 .stage-dialog .stage-finale{background:#fff2e2;border-left:3px solid #f5ad67;padding:16px 20px}
 .stage-finale p{margin:0}
+.stage-finale-art{max-width:560px;margin:18px auto 22px}
+.stage-finale-art img{width:100%;height:auto;border-radius:5px 24px 5px 5px}
 .stage-facilitators{display:grid;grid-template-columns:1fr 1fr;gap:24px}
 .stage-facilitators h4{font:700 27px/1.25 Kalam,cursive;margin:0 0 10px;color:var(--heading)}
 .stage-facilitators p{font-size:14px;margin:0}
@@ -220,17 +228,19 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-facilitator:nth-child(2) .stage-portrait img{object-position:center 20%}
 .stage-dialog .dialog-actions{border-top:1px solid #dce4d8;padding-top:23px}
 @media(max-width:900px) and (min-width:601px){.stage-card .card-content{padding:21px}.stage-card h3{font-size:26px}.stage-date{font-size:25px}}
-@media(max-width:600px){.holiday-stages{margin-top:25px}.stage-grid{grid-template-columns:1fr;gap:25px}.stage-card{border-radius:5px 30px 5px 5px}.stage-visual{min-height:210px}.stage-card .card-content{padding:23px}.stage-card h3{font-size:30px}.stage-card .stage-description{max-width:none}.stage-card-actions{display:flex;flex-wrap:wrap;align-items:center;gap:17px 22px}.stage-dialog .dialog-inner{padding:35px 22px 25px}.stage-dialog .dialog-inner>h2{font-size:33px}.stage-dialog .stage-intro{font-size:14px}.stage-key-facts{grid-template-columns:1fr;gap:10px}.stage-fact{display:grid;grid-template-columns:106px 1fr;column-gap:16px;padding:14px 17px}.stage-fact-label{grid-column:1;margin-bottom:4px}.stage-fact-value{grid-column:1;font-size:29px;margin:0}.stage-fact small{grid-column:2;grid-row:1/3;align-self:center}.stage-arrival{grid-template-columns:1fr;gap:17px}.stage-bag ul{grid-template-columns:1fr;gap:9px}.stage-booking{flex-direction:column;align-items:flex-start;gap:17px;padding:19px}.stage-booking .button{max-width:100%}.stage-facilitators{grid-template-columns:1fr;gap:19px}.stage-dialog h3{font-size:26px}}
+@media(max-width:600px){.holiday-stages{margin-top:25px}.stage-grid{grid-template-columns:1fr;gap:25px}.stage-card{border-radius:5px 30px 5px 5px}.stage-visual{min-height:210px}.stage-card .card-content{padding:23px}.stage-card h3{font-size:30px}.stage-card .stage-description{max-width:none}.stage-card-actions{display:flex;flex-wrap:wrap;align-items:center;gap:17px 22px}.stage-dialog .dialog-inner{padding:35px 22px 25px}.stage-dialog .dialog-inner>h2{font-size:33px}.stage-dialog .stage-intro{font-size:14px}.stage-key-facts{grid-template-columns:1fr;gap:10px}.stage-fact{display:grid;grid-template-columns:106px 1fr;column-gap:16px;padding:14px 17px}.stage-fact-label{grid-column:1;margin-bottom:4px}.stage-fact-value{grid-column:1;font-size:29px;margin:0}.stage-fact small{grid-column:2;grid-row:1/3;align-self:center}.stage-arrival{grid-template-columns:1fr;gap:17px}.stage-bag ul{grid-template-columns:1fr;gap:15px}.stage-bag li{flex-direction:row;gap:16px;text-align:left}.stage-bag li img{width:76px;height:76px}.stage-booking{flex-direction:column;align-items:flex-start;gap:17px;padding:19px}.stage-booking .button{max-width:100%}.stage-facilitators{grid-template-columns:1fr;gap:19px}.stage-dialog h3{font-size:26px}}
 
-.stage-practical-shortcut{display:inline-flex;gap:10px;align-items:center;margin:0 0 23px;padding:0 0 3px;border:0;border-bottom:2px solid #e8b378;background:none;color:var(--heading);font-size:13px;font-weight:800;cursor:pointer}
 .stage-dialog .stage-tags{padding-right:30px;margin-bottom:17px}
 .stage-dialog .dialog-inner>h2{margin-bottom:16px}
-.stage-dialog-title-mark{background:linear-gradient(transparent 77%,#fbd8ad 77%,#fbd8ad 90%,transparent 90%);box-decoration-break:clone;-webkit-box-decoration-break:clone}
+.stage-dialog-title-mark{position:relative;display:inline-block;isolation:isolate;white-space:nowrap}
+.stage-dialog-title-mark:after{content:"";position:absolute;left:-2px;right:0;bottom:.12em;height:.28em;background:#e6edb4;z-index:-1;border-radius:60% 30% 50% 30%;transform:rotate(-1deg)}
 .stage-dialog .dialog-date{display:flex;align-items:center;flex-wrap:wrap;gap:4px 9px;color:#4e7970}
 .stage-dialog .dialog-date svg{width:21px;height:21px;flex:none}
 .stage-dialog .stage-intro>strong:first-child{display:block;font:700 24px/1.4 Kalam,cursive;color:var(--heading);margin-bottom:13px}
 .stage-dialog .stage-intro{padding-bottom:6px}
 .stage-section-heading{display:flex;align-items:center;gap:10px}
+.stage-section-heading>span{position:relative;isolation:isolate;padding-bottom:4px}
+.stage-section-heading>span:after{content:"";position:absolute;left:0;bottom:2px;width:72%;height:4px;background:#f7bc78;border-radius:75% 25% 65% 45%;transform:rotate(-1.5deg);z-index:-1}
 .stage-section-heading>.stage-section-icon{width:27px;height:27px;flex:none;color:#75a55d}
 .stage-section-heading:after{content:"✧";font:25px/1 Georgia,serif;color:#f29548;margin-left:5px}
 .stage-programme .stage-forces{gap:15px}
@@ -257,15 +267,15 @@ body .button:not(.secondary){color:#203f4d;}
   <!-- Emplacement réservé à la future photo de cette session. -->
   <div class="stage-visual" aria-hidden="true"><span>Le corps,<br>la voix, la main</span><small>IMAGINER · CRÉER · PARTAGER</small></div>
   <div class="card-content">
-    <div class="stage-tags"><span class="stage-tag">Stage théâtre</span><span class="stage-tag stage-age">6–11 ans</span></div>
+    <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
     <span class="stage-date" id="stage-fevrier-2027-date"><time datetime="2027-02-22">22–26 février 2027</time></span>
     <h3 id="stage-fevrier-2027-heading">Histoires &amp; Objets Inventés</h3>
     <p class="stage-discipline">Théâtre &amp; arts plastiques</p>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
     <dl class="stage-essentials">
-      <div><dt>Horaires</dt><dd>10h–17h <small>Accueil dès 9h</small></dd></div>
-      <div><dt>Groupe</dt><dd>14 enfants au plus</dd></div>
-      <div><dt>Tarif</dt><dd><strong>230 €</strong> le stage<small>200 € par enfant pour les fratries</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Horaires</dt><dd><strong>10h–17h</strong><small>Accueil dès 9h</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg>Groupe</dt><dd><strong>14</strong><small>enfants au plus</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</dt><dd><strong>230 €</strong><small>Fratries : 200 € / enfant</small></dd></div>
     </dl>
     <div class="stage-card-actions">
       <button type="button" class="button" data-open="stage-fevrier-2027-dialog" aria-haspopup="dialog" aria-controls="stage-fevrier-2027-dialog" aria-label="Programme et infos du stage du 22–26 février 2027">Programme &amp; infos <span aria-hidden="true">→</span></button>
@@ -276,15 +286,15 @@ body .button:not(.secondary){color:#203f4d;}
   <!-- Emplacement réservé à la future photo de cette session. -->
   <div class="stage-visual" aria-hidden="true"><span>Le corps,<br>la voix, la main</span><small>IMAGINER · CRÉER · PARTAGER</small></div>
   <div class="card-content">
-    <div class="stage-tags"><span class="stage-tag">Stage théâtre</span><span class="stage-tag stage-age">6–11 ans</span></div>
+    <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
     <span class="stage-date" id="stage-avril-2027-date"><time datetime="2027-04-26">26–30 avril 2027</time></span>
     <h3 id="stage-avril-2027-heading">Histoires &amp; Objets Inventés</h3>
     <p class="stage-discipline">Théâtre &amp; arts plastiques</p>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
     <dl class="stage-essentials">
-      <div><dt>Horaires</dt><dd>10h–17h <small>Accueil dès 9h</small></dd></div>
-      <div><dt>Groupe</dt><dd>14 enfants au plus</dd></div>
-      <div><dt>Tarif</dt><dd><strong>230 €</strong> le stage<small>200 € par enfant pour les fratries</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Horaires</dt><dd><strong>10h–17h</strong><small>Accueil dès 9h</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg>Groupe</dt><dd><strong>14</strong><small>enfants au plus</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</dt><dd><strong>230 €</strong><small>Fratries : 200 € / enfant</small></dd></div>
     </dl>
     <div class="stage-card-actions">
       <button type="button" class="button" data-open="stage-avril-2027-dialog" aria-haspopup="dialog" aria-controls="stage-avril-2027-dialog" aria-label="Programme et infos du stage du 26–30 avril 2027">Programme &amp; infos <span aria-hidden="true">→</span></button>
@@ -295,15 +305,15 @@ body .button:not(.secondary){color:#203f4d;}
   <!-- Emplacement réservé à la future photo de cette session. -->
   <div class="stage-visual" aria-hidden="true"><span>Le corps,<br>la voix, la main</span><small>IMAGINER · CRÉER · PARTAGER</small></div>
   <div class="card-content">
-    <div class="stage-tags"><span class="stage-tag">Stage théâtre</span><span class="stage-tag stage-age">6–11 ans</span></div>
+    <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
     <span class="stage-date" id="stage-juillet-2027-date"><time datetime="2027-07-12">12–16 juillet 2027</time></span>
     <h3 id="stage-juillet-2027-heading">Histoires &amp; Objets Inventés</h3>
     <p class="stage-discipline">Théâtre &amp; arts plastiques</p>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
     <dl class="stage-essentials">
-      <div><dt>Horaires</dt><dd>10h–17h <small>Accueil dès 9h</small></dd></div>
-      <div><dt>Groupe</dt><dd>14 enfants au plus</dd></div>
-      <div><dt>Tarif</dt><dd><strong>230 €</strong> le stage<small>200 € par enfant pour les fratries</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Horaires</dt><dd><strong>10h–17h</strong><small>Accueil dès 9h</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg>Groupe</dt><dd><strong>14</strong><small>enfants au plus</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</dt><dd><strong>230 €</strong><small>Fratries : 200 € / enfant</small></dd></div>
     </dl>
     <div class="stage-card-actions">
       <button type="button" class="button" data-open="stage-juillet-2027-dialog" aria-haspopup="dialog" aria-controls="stage-juillet-2027-dialog" aria-label="Programme et infos du stage du 12–16 juillet 2027">Programme &amp; infos <span aria-hidden="true">→</span></button>
@@ -321,8 +331,11 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
 <h2 id="stage-fevrier-2027-title">Histoires &amp; <span class="stage-dialog-title-mark">Objets Inventés</span></h2>
 <p class="dialog-date"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><strong>22–26 février 2027 · 10h–17h</strong> <span>· Du lundi au vendredi · Nantes</span></p>
-<button type="button" class="stage-practical-shortcut" data-stage-practical aria-controls="stage-fevrier-2027-pratique">Horaires, tarifs et inscription <span aria-hidden="true">↓</span></button>
 <p class="stage-intro"><strong>Il était une fois un souffle, un geste, une couleur, un mot… et un objet qui n’existait pas encore.</strong> Pendant cinq jours, les enfants partent à la rencontre de ce qui vit en eux. Le corps qui bouge et qui ressent, la voix qui ose, la main qui trace et qui façonne : <strong class="soft-mark">tout devient matière à inventer</strong>. Chacun, avec sa sensibilité, fait naître un personnage, rêve une histoire, fabrique l’objet qui la porte, et découvre qu’il a sa place dans un récit plus grand que lui.</p>
+<section aria-labelledby="stage-fevrier-2027-intervenants"><h3 class="stage-section-heading" id="stage-fevrier-2027-intervenants"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Qui accompagne les enfants ?</span></h3>
+<div class="stage-facilitators"><div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/philippe-leroy-stage.jpg" alt="Philippe Leroy, intervenant du stage Histoires &amp; Objets Inventés" width="368" height="550" loading="lazy" decoding="async"></figure><h4>Philippe Leroy</h4><p>Comédien et clown. Intervenant en prise de parole adulte, <strong>éducateur Montessori 6–12 ans (AMI)</strong>. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo.</p></div>
+<div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/manuella-cortes-thonon-stage.jpg" alt="Manuella Cortès-Thonon, intervenante du stage Histoires &amp; Objets Inventés" width="1080" height="1440" loading="lazy" decoding="async"></figure><h4>Manuella Cortès-Thonon</h4><p>Artiste peintre et chorégraphique, danseuse, plasticienne et <strong>praticienne Qi Gong</strong>. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.</p></div></div>
+</section>
 
 <section class="stage-programme" aria-labelledby="stage-fevrier-2027-forces">
 <h3 class="stage-section-heading" id="stage-fevrier-2027-forces"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/></svg><span>Trois forces à éveiller</span></h3>
@@ -340,11 +353,8 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-step"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/></svg><div><h4>Un cadre qui libère.</h4><p>Un espace préparé avec soin, des matériaux choisis, quelques règles partagées : dans ce cadre, l’enfant est libre de chercher, d’essayer, de se tromper et de recommencer, à son rythme. Les adultes observent, proposent, accompagnent, et laissent à chacun le temps de trouver son propre chemin.</p></div></div>
 </section>
 <section class="stage-finale" aria-labelledby="stage-fevrier-2027-histoire"><h3 class="stage-section-heading" id="stage-fevrier-2027-histoire"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/></svg><span>Une histoire où chacun trouve sa place</span></h3>
+<figure class="stage-finale-art"><img src="assets/img/stage-histoires-restitution.png" alt="Des enfants présentent leurs histoires et leurs objets fabriqués devant les familles, dans un décor de théâtre en carton." width="1536" height="1024" loading="lazy" decoding="async"></figure>
 <p>Le vendredi à <strong>16h30</strong>, les familles sont invitées à la restitution. Suite de récits singuliers ou grande histoire tissée de toutes les singularités : la forme naît du groupe, au fil de la semaine. Ce qui compte, c’est que <strong class="orange-mark">chaque enfant, chaque personnage et chaque objet y trouve sa place</strong>. Comme dans le grand récit du vivant, où chaque être a son rôle et contribue à l’ensemble, chacun apporte ici sa part, unique et nécessaire.</p>
-</section>
-<section aria-labelledby="stage-fevrier-2027-intervenants"><h3 class="stage-section-heading" id="stage-fevrier-2027-intervenants"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Qui accompagne les enfants ?</span></h3>
-<div class="stage-facilitators"><div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/philippe-leroy-stage.jpg" alt="Philippe Leroy, intervenant du stage Histoires &amp; Objets Inventés" width="368" height="550" loading="lazy" decoding="async"></figure><h4>Philippe Leroy</h4><p>Comédien et clown. Intervenant en prise de parole adulte, <strong>éducateur Montessori 6–12 ans (AMI)</strong>. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo.</p></div>
-<div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/manuella-cortes-thonon-stage.jpg" alt="Manuella Cortès-Thonon, intervenante du stage Histoires &amp; Objets Inventés" width="1080" height="1440" loading="lazy" decoding="async"></figure><h4>Manuella Cortès-Thonon</h4><p>Artiste peintre et chorégraphique, danseuse, plasticienne et <strong>praticienne Qi Gong</strong>. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.</p></div></div>
 </section>
 <section class="stage-practical" aria-labelledby="stage-fevrier-2027-pratique">
 <h3 class="stage-section-heading" id="stage-fevrier-2027-pratique"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><span>En pratique</span></h3>
@@ -354,11 +364,11 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</span><strong class="stage-fact-value">230 €</strong><small><strong>200 € par enfant</strong><br>pour les fratries</small></div>
 </div>
 <div class="stage-arrival">
-<div><h4>Rendez-vous aux Petons</h4><p>École Montessori « Les Petons dans l’Herbe »<br>Rue de la Petite Sensive · 44300 Nantes</p></div>
-<div><h4>Un moment à partager en famille</h4><p>Restitution le <strong>vendredi 26 février à 16h30.</strong></p></div>
+<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Rendez-vous aux Petons</span></h4><p>École Montessori « Les Petons dans l’Herbe »<br>6 rue de la Petite Sensive · 44300 Nantes</p></div>
+<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Un moment à partager en famille</span></h4><p>Restitution le <strong>vendredi 26 février à 16h30.</strong></p></div>
 </div>
 <div class="stage-bag"><div class="stage-bag-heading"><h4>Dans le sac…</h4><span>car la création, ça creuse !</span></div>
-<ul><li>Une <strong>gourde</strong>, un repas pour le midi et un goûter.</li><li>Une <strong>tenue souple</strong> pour bouger et jouer.</li><li>Une <strong>grande chemise</strong> en guise de blouse pour les arts plastiques.</li></ul></div>
+<ul><li><img src="assets/img/stage-sac-repas.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>gourde</strong>, un repas pour le midi et un goûter.</span></li><li><img src="assets/img/stage-sac-tenue.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>tenue souple</strong> pour bouger et jouer.</span></li><li><img src="assets/img/stage-sac-blouse.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>grande chemise</strong> en guise de blouse pour les arts plastiques.</span></li></ul></div>
 <div class="stage-booking"><div><h4>Pour s’inscrire</h4><p>Un <strong>acompte de 100 €</strong> valide l’inscription, par Wero ou virement bancaire. Contactez l’école pour connaître les modalités.</p></div><a class="button" href="contact-petons.html?sujet=vacances#ecrire">S’informer et s’inscrire <span aria-hidden="true">→</span></a></div>
 </section>
 </div></dialog>
@@ -367,8 +377,11 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
 <h2 id="stage-avril-2027-title">Histoires &amp; <span class="stage-dialog-title-mark">Objets Inventés</span></h2>
 <p class="dialog-date"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><strong>26–30 avril 2027 · 10h–17h</strong> <span>· Du lundi au vendredi · Nantes</span></p>
-<button type="button" class="stage-practical-shortcut" data-stage-practical aria-controls="stage-avril-2027-pratique">Horaires, tarifs et inscription <span aria-hidden="true">↓</span></button>
 <p class="stage-intro"><strong>Il était une fois un souffle, un geste, une couleur, un mot… et un objet qui n’existait pas encore.</strong> Pendant cinq jours, les enfants partent à la rencontre de ce qui vit en eux. Le corps qui bouge et qui ressent, la voix qui ose, la main qui trace et qui façonne : <strong class="soft-mark">tout devient matière à inventer</strong>. Chacun, avec sa sensibilité, fait naître un personnage, rêve une histoire, fabrique l’objet qui la porte, et découvre qu’il a sa place dans un récit plus grand que lui.</p>
+<section aria-labelledby="stage-avril-2027-intervenants"><h3 class="stage-section-heading" id="stage-avril-2027-intervenants"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Qui accompagne les enfants ?</span></h3>
+<div class="stage-facilitators"><div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/philippe-leroy-stage.jpg" alt="Philippe Leroy, intervenant du stage Histoires &amp; Objets Inventés" width="368" height="550" loading="lazy" decoding="async"></figure><h4>Philippe Leroy</h4><p>Comédien et clown. Intervenant en prise de parole adulte, <strong>éducateur Montessori 6–12 ans (AMI)</strong>. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo.</p></div>
+<div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/manuella-cortes-thonon-stage.jpg" alt="Manuella Cortès-Thonon, intervenante du stage Histoires &amp; Objets Inventés" width="1080" height="1440" loading="lazy" decoding="async"></figure><h4>Manuella Cortès-Thonon</h4><p>Artiste peintre et chorégraphique, danseuse, plasticienne et <strong>praticienne Qi Gong</strong>. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.</p></div></div>
+</section>
 
 <section class="stage-programme" aria-labelledby="stage-avril-2027-forces">
 <h3 class="stage-section-heading" id="stage-avril-2027-forces"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/></svg><span>Trois forces à éveiller</span></h3>
@@ -386,11 +399,8 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-step"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/></svg><div><h4>Un cadre qui libère.</h4><p>Un espace préparé avec soin, des matériaux choisis, quelques règles partagées : dans ce cadre, l’enfant est libre de chercher, d’essayer, de se tromper et de recommencer, à son rythme. Les adultes observent, proposent, accompagnent, et laissent à chacun le temps de trouver son propre chemin.</p></div></div>
 </section>
 <section class="stage-finale" aria-labelledby="stage-avril-2027-histoire"><h3 class="stage-section-heading" id="stage-avril-2027-histoire"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/></svg><span>Une histoire où chacun trouve sa place</span></h3>
+<figure class="stage-finale-art"><img src="assets/img/stage-histoires-restitution.png" alt="Des enfants présentent leurs histoires et leurs objets fabriqués devant les familles, dans un décor de théâtre en carton." width="1536" height="1024" loading="lazy" decoding="async"></figure>
 <p>Le vendredi à <strong>16h30</strong>, les familles sont invitées à la restitution. Suite de récits singuliers ou grande histoire tissée de toutes les singularités : la forme naît du groupe, au fil de la semaine. Ce qui compte, c’est que <strong class="orange-mark">chaque enfant, chaque personnage et chaque objet y trouve sa place</strong>. Comme dans le grand récit du vivant, où chaque être a son rôle et contribue à l’ensemble, chacun apporte ici sa part, unique et nécessaire.</p>
-</section>
-<section aria-labelledby="stage-avril-2027-intervenants"><h3 class="stage-section-heading" id="stage-avril-2027-intervenants"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Qui accompagne les enfants ?</span></h3>
-<div class="stage-facilitators"><div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/philippe-leroy-stage.jpg" alt="Philippe Leroy, intervenant du stage Histoires &amp; Objets Inventés" width="368" height="550" loading="lazy" decoding="async"></figure><h4>Philippe Leroy</h4><p>Comédien et clown. Intervenant en prise de parole adulte, <strong>éducateur Montessori 6–12 ans (AMI)</strong>. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo.</p></div>
-<div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/manuella-cortes-thonon-stage.jpg" alt="Manuella Cortès-Thonon, intervenante du stage Histoires &amp; Objets Inventés" width="1080" height="1440" loading="lazy" decoding="async"></figure><h4>Manuella Cortès-Thonon</h4><p>Artiste peintre et chorégraphique, danseuse, plasticienne et <strong>praticienne Qi Gong</strong>. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.</p></div></div>
 </section>
 <section class="stage-practical" aria-labelledby="stage-avril-2027-pratique">
 <h3 class="stage-section-heading" id="stage-avril-2027-pratique"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><span>En pratique</span></h3>
@@ -400,11 +410,11 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</span><strong class="stage-fact-value">230 €</strong><small><strong>200 € par enfant</strong><br>pour les fratries</small></div>
 </div>
 <div class="stage-arrival">
-<div><h4>Rendez-vous aux Petons</h4><p>École Montessori « Les Petons dans l’Herbe »<br>Rue de la Petite Sensive · 44300 Nantes</p></div>
-<div><h4>Un moment à partager en famille</h4><p>Restitution le <strong>vendredi 30 avril à 16h30.</strong></p></div>
+<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Rendez-vous aux Petons</span></h4><p>École Montessori « Les Petons dans l’Herbe »<br>6 rue de la Petite Sensive · 44300 Nantes</p></div>
+<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Un moment à partager en famille</span></h4><p>Restitution le <strong>vendredi 30 avril à 16h30.</strong></p></div>
 </div>
 <div class="stage-bag"><div class="stage-bag-heading"><h4>Dans le sac…</h4><span>car la création, ça creuse !</span></div>
-<ul><li>Une <strong>gourde</strong>, un repas pour le midi et un goûter.</li><li>Une <strong>tenue souple</strong> pour bouger et jouer.</li><li>Une <strong>grande chemise</strong> en guise de blouse pour les arts plastiques.</li></ul></div>
+<ul><li><img src="assets/img/stage-sac-repas.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>gourde</strong>, un repas pour le midi et un goûter.</span></li><li><img src="assets/img/stage-sac-tenue.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>tenue souple</strong> pour bouger et jouer.</span></li><li><img src="assets/img/stage-sac-blouse.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>grande chemise</strong> en guise de blouse pour les arts plastiques.</span></li></ul></div>
 <div class="stage-booking"><div><h4>Pour s’inscrire</h4><p>Un <strong>acompte de 100 €</strong> valide l’inscription, par Wero ou virement bancaire. Contactez l’école pour connaître les modalités.</p></div><a class="button" href="contact-petons.html?sujet=vacances#ecrire">S’informer et s’inscrire <span aria-hidden="true">→</span></a></div>
 </section>
 </div></dialog>
@@ -413,8 +423,11 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
 <h2 id="stage-juillet-2027-title">Histoires &amp; <span class="stage-dialog-title-mark">Objets Inventés</span></h2>
 <p class="dialog-date"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><strong>12–16 juillet 2027 · 10h–17h</strong> <span>· Du lundi au vendredi · Nantes</span></p>
-<button type="button" class="stage-practical-shortcut" data-stage-practical aria-controls="stage-juillet-2027-pratique">Horaires, tarifs et inscription <span aria-hidden="true">↓</span></button>
 <p class="stage-intro"><strong>Il était une fois un souffle, un geste, une couleur, un mot… et un objet qui n’existait pas encore.</strong> Pendant cinq jours, les enfants partent à la rencontre de ce qui vit en eux. Le corps qui bouge et qui ressent, la voix qui ose, la main qui trace et qui façonne : <strong class="soft-mark">tout devient matière à inventer</strong>. Chacun, avec sa sensibilité, fait naître un personnage, rêve une histoire, fabrique l’objet qui la porte, et découvre qu’il a sa place dans un récit plus grand que lui.</p>
+<section aria-labelledby="stage-juillet-2027-intervenants"><h3 class="stage-section-heading" id="stage-juillet-2027-intervenants"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Qui accompagne les enfants ?</span></h3>
+<div class="stage-facilitators"><div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/philippe-leroy-stage.jpg" alt="Philippe Leroy, intervenant du stage Histoires &amp; Objets Inventés" width="368" height="550" loading="lazy" decoding="async"></figure><h4>Philippe Leroy</h4><p>Comédien et clown. Intervenant en prise de parole adulte, <strong>éducateur Montessori 6–12 ans (AMI)</strong>. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo.</p></div>
+<div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/manuella-cortes-thonon-stage.jpg" alt="Manuella Cortès-Thonon, intervenante du stage Histoires &amp; Objets Inventés" width="1080" height="1440" loading="lazy" decoding="async"></figure><h4>Manuella Cortès-Thonon</h4><p>Artiste peintre et chorégraphique, danseuse, plasticienne et <strong>praticienne Qi Gong</strong>. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.</p></div></div>
+</section>
 
 <section class="stage-programme" aria-labelledby="stage-juillet-2027-forces">
 <h3 class="stage-section-heading" id="stage-juillet-2027-forces"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/></svg><span>Trois forces à éveiller</span></h3>
@@ -432,11 +445,8 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-step"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/></svg><div><h4>Un cadre qui libère.</h4><p>Un espace préparé avec soin, des matériaux choisis, quelques règles partagées : dans ce cadre, l’enfant est libre de chercher, d’essayer, de se tromper et de recommencer, à son rythme. Les adultes observent, proposent, accompagnent, et laissent à chacun le temps de trouver son propre chemin.</p></div></div>
 </section>
 <section class="stage-finale" aria-labelledby="stage-juillet-2027-histoire"><h3 class="stage-section-heading" id="stage-juillet-2027-histoire"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/></svg><span>Une histoire où chacun trouve sa place</span></h3>
+<figure class="stage-finale-art"><img src="assets/img/stage-histoires-restitution.png" alt="Des enfants présentent leurs histoires et leurs objets fabriqués devant les familles, dans un décor de théâtre en carton." width="1536" height="1024" loading="lazy" decoding="async"></figure>
 <p>Le vendredi à <strong>16h30</strong>, les familles sont invitées à la restitution. Suite de récits singuliers ou grande histoire tissée de toutes les singularités : la forme naît du groupe, au fil de la semaine. Ce qui compte, c’est que <strong class="orange-mark">chaque enfant, chaque personnage et chaque objet y trouve sa place</strong>. Comme dans le grand récit du vivant, où chaque être a son rôle et contribue à l’ensemble, chacun apporte ici sa part, unique et nécessaire.</p>
-</section>
-<section aria-labelledby="stage-juillet-2027-intervenants"><h3 class="stage-section-heading" id="stage-juillet-2027-intervenants"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Qui accompagne les enfants ?</span></h3>
-<div class="stage-facilitators"><div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/philippe-leroy-stage.jpg" alt="Philippe Leroy, intervenant du stage Histoires &amp; Objets Inventés" width="368" height="550" loading="lazy" decoding="async"></figure><h4>Philippe Leroy</h4><p>Comédien et clown. Intervenant en prise de parole adulte, <strong>éducateur Montessori 6–12 ans (AMI)</strong>. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo.</p></div>
-<div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/manuella-cortes-thonon-stage.jpg" alt="Manuella Cortès-Thonon, intervenante du stage Histoires &amp; Objets Inventés" width="1080" height="1440" loading="lazy" decoding="async"></figure><h4>Manuella Cortès-Thonon</h4><p>Artiste peintre et chorégraphique, danseuse, plasticienne et <strong>praticienne Qi Gong</strong>. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.</p></div></div>
 </section>
 <section class="stage-practical" aria-labelledby="stage-juillet-2027-pratique">
 <h3 class="stage-section-heading" id="stage-juillet-2027-pratique"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><span>En pratique</span></h3>
@@ -446,11 +456,11 @@ body .button:not(.secondary){color:#203f4d;}
 <div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</span><strong class="stage-fact-value">230 €</strong><small><strong>200 € par enfant</strong><br>pour les fratries</small></div>
 </div>
 <div class="stage-arrival">
-<div><h4>Rendez-vous aux Petons</h4><p>École Montessori « Les Petons dans l’Herbe »<br>Rue de la Petite Sensive · 44300 Nantes</p></div>
-<div><h4>Un moment à partager en famille</h4><p>Restitution le <strong>vendredi 16 juillet à 16h30.</strong></p></div>
+<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Rendez-vous aux Petons</span></h4><p>École Montessori « Les Petons dans l’Herbe »<br>6 rue de la Petite Sensive · 44300 Nantes</p></div>
+<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Un moment à partager en famille</span></h4><p>Restitution le <strong>vendredi 16 juillet à 16h30.</strong></p></div>
 </div>
 <div class="stage-bag"><div class="stage-bag-heading"><h4>Dans le sac…</h4><span>car la création, ça creuse !</span></div>
-<ul><li>Une <strong>gourde</strong>, un repas pour le midi et un goûter.</li><li>Une <strong>tenue souple</strong> pour bouger et jouer.</li><li>Une <strong>grande chemise</strong> en guise de blouse pour les arts plastiques.</li></ul></div>
+<ul><li><img src="assets/img/stage-sac-repas.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>gourde</strong>, un repas pour le midi et un goûter.</span></li><li><img src="assets/img/stage-sac-tenue.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>tenue souple</strong> pour bouger et jouer.</span></li><li><img src="assets/img/stage-sac-blouse.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>grande chemise</strong> en guise de blouse pour les arts plastiques.</span></li></ul></div>
 <div class="stage-booking"><div><h4>Pour s’inscrire</h4><p>Un <strong>acompte de 100 €</strong> valide l’inscription, par Wero ou virement bancaire. Contactez l’école pour connaître les modalités.</p></div><a class="button" href="contact-petons.html?sujet=vacances#ecrire">S’informer et s’inscrire <span aria-hidden="true">→</span></a></div>
 </section>
 </div></dialog>
@@ -494,9 +504,6 @@ body .button:not(.secondary){color:#203f4d;}
 </div></dialog>
 <footer class="cm-site-footer"><div class="cm-footer-wrap"><div class="cm-footer-grid"><div class="cm-footer-brand"><a href="index.html" aria-label="Les Petons dans l’Herbe — Accueil"><img src="assets/img/les-petons-dans-lherbe-ecole-montessori.webp" class="" alt="Les Petons dans l’Herbe — École Montessori" width="460" height="162" decoding="async"></a><address><p class="cm-footer-contact-line"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 0 1 16 0Z"></path><circle cx="12" cy="10" r="3"></circle></svg><span>6 rue de la Petite Sensive<br>44300 Nantes</span></p><p class="cm-footer-contact-line"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 17v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-1 1.7l-1.2.7a14 14 0 0 0 7.8 7.8l.7-1.2A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2Z"></path></svg><a href="tel:+33645095337">06 45 09 53 37</a></p><p class="cm-footer-contact-line"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 9 6a2 2 0 0 0 2 0l9-6"></path></svg><a href="mailto:contact@lespetons.fr">contact@lespetons.fr</a></p><p class="cm-footer-contact-line"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r=".8" fill="currentColor" stroke="none"></circle></svg><a href="https://www.instagram.com/lespetonsdanslherbe/" target="_blank" rel="noopener noreferrer" aria-label="Les Petons dans l’Herbe sur Instagram, nouvel onglet">@lespetonsdanslherbe</a></p></address></div><nav class="cm-footer-nav-group" aria-label="L’école"><h3>L’école</h3><a href="index.html">Accueil</a><a href="ecole-petons.html">L’école</a><a href="equipe-petons.html">L’équipe</a><a href="vie-pratique-petons.html">Informations pratiques</a><a href="actualites-petons.html" aria-current="page">Actualités</a></nav><nav class="cm-footer-nav-group" aria-label="Pédagogie et ambiances"><h3>Pédagogie et ambiances</h3><a href="pedagogie-petons.html">Notre pédagogie</a><a href="chenilles-petons.html">L’ambiance 3–6 ans aux Petons</a><a href="papillons-petons.html">L’ambiance 6–12 ans aux Petons</a></nav><nav class="cm-footer-nav-group" aria-label="Nous rejoindre"><h3>Nous rejoindre</h3><a href="inscriptions-petons.html">Inscriptions</a><a href="tarifs-petons.html">Tarifs</a><a href="contact-petons.html">Contact</a></nav></div><aside class="cm-footer-support" id="soutenir-footer" aria-labelledby="footer-support-title"><div class="cm-footer-support-art" aria-hidden="true"><img src="assets/img/soutien-ensemble-maison-petons-v2.webp" alt="" width="1536" height="1024" loading="lazy" decoding="async"></div><div class="cm-footer-support-copy"><span class="eyebrow">Dons & mécénat</span><h2 id="footer-support-title">Aux côtés des enfants</h2><p>Un don, du matériel, un savoir-faire : votre soutien a sa place.</p></div><a class="button" href="soutenir-les-petons.html">Soutenir l’école<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></a></aside><div class="cm-footer-bottom"><span>Les Petons dans l’Herbe · École Montessori éco-citoyenne</span><span>Nantes Nord · 3–12 ans</span></div></div></footer><script>(()=>{
  const dialogs=[...document.querySelectorAll('dialog')];let opener=null,previousOverflow='';
- document.querySelectorAll('[data-stage-practical]').forEach(button=>button.addEventListener('click',()=>{
-  button.closest('dialog').querySelector('.stage-practical').scrollIntoView({behavior:'instant',block:'start'});
- }));
  document.querySelectorAll('[data-open]').forEach(button=>button.addEventListener('click',()=>{
   const dialog=document.getElementById(button.dataset.open);if(!dialog)return;
   opener=button;previousOverflow=document.body.style.overflow;dialog.showModal();document.body.style.overflow='hidden';dialog.scrollTop=0;
