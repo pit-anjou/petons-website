@@ -197,6 +197,8 @@ body .button:not(.secondary){color:#203f4d;}
   dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
   dialog.addEventListener('close',()=>{document.body.style.overflow=previousOverflow;if(opener)opener.focus({preventScroll:true});});
  });
+ const linkedArticle=document.getElementById(window.location.hash.slice(1));
+ if(linkedArticle?.matches('.news-card')) linkedArticle.querySelector('[data-open]')?.click();
  const form=document.querySelector('#newsletter-form'),email=document.querySelector('#newsletter-email'),result=document.querySelector('#newsletter-result'),status=document.querySelector('#newsletter-status'),mailto=document.querySelector('#newsletter-mailto'),draft=document.querySelector('#newsletter-draft');let message='';
  form.addEventListener('submit',event=>{
   event.preventDefault();if(!form.reportValidity())return;
