@@ -156,21 +156,22 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-visual{position:relative;display:grid;place-content:center;text-align:center;height:250px;padding:28px;background:var(--stage-tint);border-top:5px solid var(--stage-accent);color:var(--heading);overflow:hidden}
 .stage-visual:before{content:"";position:absolute;inset:18px 25px;z-index:1;border:1px solid #31657335;border-radius:3px 34px 3px 26px;transform:rotate(-3deg);background:rgba(255,253,248,.16)}
 .stage-visual:after{content:"✧";position:absolute;z-index:2;right:32px;top:22px;color:#e9a64f;font:36px/1 Georgia,serif}
-.stage-visual span{position:relative;z-index:2;font:700 29px/1.25 Kalam,cursive;max-width:260px}
+.stage-card .stage-visual h3{position:relative;z-index:2;font:700 34px/1.25 Kalam,cursive;max-width:360px;margin:0}
 .stage-visual small{position:relative;z-index:2;font-size:11px;font-weight:800;letter-spacing:.8px;margin-top:10px;color:#244c56}
 .stage-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 5%;opacity:.28}
 .stage-card--avril .stage-visual img{object-position:center 58%}
 .stage-card--juillet .stage-visual img{object-position:center 52%}
 .stage-card .card-content{padding:25px 28px 28px}
-.stage-heading{display:grid;grid-template-columns:112px minmax(0,1fr);gap:22px;align-items:center;margin:7px 0 22px}
-.stage-date{text-align:center;color:var(--heading);border-right:1px solid #31657326;padding:7px 18px 7px 0}
+.stage-meta{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:22px;align-items:center;margin:0 0 23px}
+.stage-meta-details{min-width:0}
+.stage-card .stage-meta .stage-audience{margin-bottom:0}
+.stage-date{text-align:center;color:var(--heading);border-right:1px solid #31657326;padding:7px 24px 7px 0}
 .stage-date .stage-season{display:block;font-size:9px;font-weight:800;line-height:1.55;letter-spacing:.7px;text-transform:uppercase}
 .stage-date time{display:block;margin:8px 0 0}
 .stage-date strong{display:block;font:700 36px/1.05 Kalam,cursive;white-space:nowrap}
 .stage-date b{display:block;font:700 18px/1.2 Kalam,cursive;margin-top:3px}
-.stage-card .stage-heading h3{font-size:29px;line-height:1.25;margin:0}
-@media(max-width:900px){.stage-heading{grid-template-columns:84px minmax(0,1fr);gap:14px}.stage-date{padding-right:12px}.stage-date strong{font-size:30px}.stage-date b{font-size:16px}.stage-date .stage-season{font-size:8px;letter-spacing:.4px}.stage-card .stage-heading h3{font-size:25px}}
-@media(max-width:340px){.stage-heading{grid-template-columns:74px minmax(0,1fr);gap:11px}.stage-date strong{font-size:27px}.stage-card .stage-heading h3{font-size:23px}}
+@media(max-width:900px){.stage-meta{gap:14px}.stage-date{padding-right:18px}.stage-date strong{font-size:30px}.stage-date b{font-size:16px}.stage-date .stage-season{font-size:8px;letter-spacing:.4px}.stage-card .stage-visual h3{font-size:30px}}
+@media(max-width:340px){.stage-meta{gap:11px}.stage-date{padding-right:16px}.stage-date strong{font-size:27px}.stage-card .stage-visual h3{font-size:27px}}
 .stage-tags{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}.stage-tag{display:inline-block;background:#faead1;color:#88633e;border-radius:4px;padding:6px 11px;font-size:12px;font-weight:800}.stage-age{background:#e2f1ec;color:#47786e}
 .stage-card h3{font-size:29px;line-height:1.2;margin:0 0 17px}
 .stage-card .stage-description{font-size:14px;line-height:1.75;margin:0 0 18px}
@@ -254,7 +255,7 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-dialog-title-mark:after{content:"";position:absolute;left:-2px;right:0;bottom:.12em;height:.28em;background:#e6edb4;z-index:-1;border-radius:60% 30% 50% 30%;transform:rotate(-1deg)}
 .stage-dialog .dialog-date{display:flex;align-items:center;flex-wrap:wrap;gap:4px 9px;color:#4e7970}
 .stage-dialog .dialog-date svg{width:21px;height:21px;flex:none}
-.stage-dialog .stage-intro>strong:first-child{display:block;font:700 24px/1.4 Kalam,cursive;color:var(--heading);margin-bottom:13px}
+.stage-dialog .stage-intro>strong:first-child{display:block;font:700 19px/1.4 Kalam,cursive;color:var(--heading);margin-bottom:13px}
 .stage-dialog .stage-intro{padding-bottom:6px}
 .stage-section-heading{display:flex;align-items:center;gap:10px}
 .stage-section-heading>span{position:relative;isolation:isolate;padding-bottom:4px}
@@ -278,19 +279,20 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-finale h3{font-size:27px}
 .stage-facilitator{padding:20px 21px 22px;background:#f5f5ed;border:1px solid #e3e6d8;border-radius:5px 29px 5px 5px}
 .stage-facilitator:nth-child(2){background:#f0f6f2}
-@media(max-width:600px){.stage-section-heading{gap:8px}.stage-section-heading:after{display:none}.stage-section-heading>.stage-section-icon{width:23px;height:23px}.stage-dialog .stage-intro>strong:first-child{font-size:22px}.stage-forces li{padding:17px 17px 17px 47px}.stage-force-icon{left:12px;top:19px;width:25px;height:25px}.stage-forces .stage-force-title{font-size:22px}.stage-step{grid-template-columns:25px 1fr;gap:11px}.stage-step>svg{width:25px;height:25px}.stage-step h4{font-size:22px}.stage-dialog .stage-finale{padding:19px}.stage-facilitator{padding:21px}.stage-dialog .stage-tags{padding-right:23px}}
+@media(max-width:600px){.stage-section-heading{gap:8px}.stage-section-heading:after{display:none}.stage-section-heading>.stage-section-icon{width:23px;height:23px}.stage-dialog .stage-intro>strong:first-child{font-size:17px}.stage-forces li{padding:17px 17px 17px 47px}.stage-force-icon{left:12px;top:19px;width:25px;height:25px}.stage-forces .stage-force-title{font-size:22px}.stage-step{grid-template-columns:25px 1fr;gap:11px}.stage-step>svg{width:25px;height:25px}.stage-step h4{font-size:22px}.stage-dialog .stage-finale{padding:19px}.stage-facilitator{padding:21px}.stage-dialog .stage-tags{padding-right:23px}}
 </style>
 </head><body><a class="skip" href="#main">Aller au contenu</a><header class="cm-site-header"><div class="cm-header-inner"><a class="cm-brand" href="index.html" aria-label="Les Petons dans l’Herbe — Accueil"><img src="assets/img/les-petons-dans-lherbe-ecole-montessori.webp" class="" alt="Les Petons dans l’Herbe — École Montessori" width="460" height="162" decoding="async"></a><nav class="cm-nav" aria-label="Navigation principale"><ul class="cm-nav-list"><li><a href="index.html">Accueil</a></li><li class="cm-nav-group"><div class="cm-nav-parent"><a href="ecole-petons.html" class="is-current-parent">L’école</a><button class="cm-submenu-toggle" aria-expanded="false" aria-controls="cm-school-menu" aria-label="Afficher les informations pratiques, les tarifs et les actualités"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button></div><ul class="cm-submenu" id="cm-school-menu" hidden=""><li><a href="vie-pratique-petons.html">Informations pratiques</a></li><li><a href="tarifs-petons.html">Tarifs</a></li><li><a href="actualites-petons.html" aria-current="page">Actualités</a></li></ul></li><li><a href="equipe-petons.html">L’équipe</a></li><li class="cm-nav-group"><div class="cm-nav-parent"><a href="pedagogie-petons.html">Pédagogie et ambiances</a><button class="cm-submenu-toggle" aria-expanded="false" aria-controls="cm-ambiences-menu" aria-label="Afficher les deux ambiances"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></button></div><ul class="cm-submenu" id="cm-ambiences-menu" hidden><li><a href="chenilles-petons.html">L’ambiance 3–6 ans aux Petons</a></li><li><a href="papillons-petons.html">L’ambiance 6–12 ans aux Petons</a></li></ul></li><li><a href="inscriptions-petons.html">Inscriptions</a></li></ul></nav><a href="contact-petons.html" class="cm-header-contact">Rencontrons-nous<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"></path></svg></a><button class="cm-menu-toggle" aria-expanded="false" aria-controls="cm-mobile-menu" aria-label="Ouvrir le menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span>Menu</span></button></div><nav class="cm-mobile-nav" id="cm-mobile-menu" aria-label="Navigation mobile" hidden><ul><li><a href="index.html">Accueil</a></li><li><a href="ecole-petons.html" class="is-current-parent">L’école</a><ul class="cm-mobile-children"><li><a href="vie-pratique-petons.html">Informations pratiques</a></li><li><a href="tarifs-petons.html">Tarifs</a></li><li><a href="actualites-petons.html" aria-current="page">Actualités</a></li></ul></li><li><a href="equipe-petons.html">L’équipe</a></li><li><a href="pedagogie-petons.html">Pédagogie et ambiances</a><ul class="cm-mobile-children"><li><a href="chenilles-petons.html">L’ambiance 3–6 ans aux Petons</a></li><li><a href="papillons-petons.html">L’ambiance 6–12 ans aux Petons</a></li></ul></li><li><a href="inscriptions-petons.html">Inscriptions</a></li><li><a href="contact-petons.html">Rencontrons-nous</a></li></ul></nav></header>
 <main id="main"><section class="hero wrap agenda-hero" aria-labelledby="page-title"><div><span class="eyebrow">Les rendez-vous &amp; les nouvelles des Petons</span><h1 id="page-title">Agenda &amp;<br><span class="hero-underline">actualités</span><span class="hero-star tiny-star" aria-hidden="true">✧</span></h1></div><div class="hero-intro"><p>Une rencontre, une activité à découvrir, un moment à partager : <strong>retrouvez les occasions de rejoindre la vie de l’école.</strong></p><div class="agenda-shortcuts"><a href="#agenda">Les prochains rendez-vous ↓</a><a href="#journal">La vie de l’école ↓</a></div></div></section><section class="wrap priority-section" id="inscriptions-ouvertes" aria-label="Inscriptions ouvertes"><article class="enrol-feature" aria-labelledby="enrol-title"><div class="enrol-copy"><div class="enrol-meta"><span class="enrol-status"><span aria-hidden="true">●</span> Quelques places disponibles</span><p class="enrol-edition">Année scolaire 2026–2027 · 3–12 ans</p></div><h2 id="enrol-title">Rejoindre les Petons,<br>même en cours d’année.</h2><p>Un déménagement, un retour d’expatriation ou un nouveau projet pour votre enfant ? <strong>Une arrivée en cours d’année est possible.</strong> Prenons le temps de nous rencontrer et de préparer ensemble son accueil.</p><p class="enrol-january"><strong>Une rentrée en janvier ?</strong> C’est aussi possible, notamment pour les enfants nés en fin ou en début d’année. Les modalités sont à convenir avec l’équipe, selon les places disponibles.</p><div class="enrol-actions"><a class="button" href="contact-petons.html?sujet=visite#ecrire">Rencontrer l’équipe <span aria-hidden="true">→</span></a><a class="text-link" href="inscriptions-petons.html">Les étapes de l’inscription <span aria-hidden="true">→</span></a></div></div><aside class="enrol-places" aria-label="Places disponibles par ambiance"><div class="enrol-place-ticket"><strong>3</strong><span>places en<br><b>3–6 ans</b></span></div><div class="enrol-place-ticket"><strong>4</strong><span>places en<br><b>6–12 ans</b></span></div><p>Les Chenilles &amp; les Papillons</p></aside></article></section><section class="wrap agenda-section" id="agenda" aria-labelledby="agenda-title"><div class="section-title"><svg class="agenda-calendar" aria-hidden="true" width="34" height="36" viewBox="0 0 34 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L28 7L29 30L5 31Z M11 4L11 11 M23 3L23 10 M6 15L28 14 M11 20L14 20 M21 20L24 20 M11 25L14 25"/></svg><h2 id="agenda-title">Les prochains rendez-vous</h2><span class="tiny-star" aria-hidden="true">✧</span></div><p class="agenda-lead">Toutes les informations pour participer : la date, le public concerné et la marche à suivre.</p>
 <div class="holiday-stages"><p class="stage-section-label">Stages de vacances · 2027</p><div class="stage-grid">
 <article class="news-card stage-card stage-card--fevrier" id="stage-fevrier-2027" aria-labelledby="stage-fevrier-2027-heading stage-fevrier-2027-date" data-category="evenements">
-  <div class="stage-visual" aria-hidden="true"><img src="assets/img/stage-theatre-fevrier.png" alt="" width="1448" height="1086" loading="lazy" decoding="async"><span>Le corps,<br>la voix, la main</span><small>IMAGINER · CRÉER · PARTAGER</small></div>
+  <div class="stage-visual"><img src="assets/img/stage-theatre-fevrier.png" alt="" width="1448" height="1086" loading="lazy" decoding="async"><h3 id="stage-fevrier-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small></div>
   <div class="card-content">
-    <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
-    <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
-    <div class="stage-heading">
+    <div class="stage-meta">
       <div class="stage-date" id="stage-fevrier-2027-date"><span class="stage-season">Vacances<br>d’hiver</span><time datetime="2027-02-22" aria-label="Du 22 au 26 février 2027"><strong>22–26</strong><b>FÉVRIER<br>2027</b></time></div>
-      <h3 id="stage-fevrier-2027-heading">Histoires &amp; Objets Inventés</h3>
+      <div class="stage-meta-details">
+      <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
+      <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
+      </div>
     </div>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
     <dl class="stage-essentials">
@@ -304,13 +306,14 @@ body .button:not(.secondary){color:#203f4d;}
   </div>
 </article>
 <article class="news-card stage-card stage-card--avril" id="stage-avril-2027" aria-labelledby="stage-avril-2027-heading stage-avril-2027-date" data-category="evenements">
-  <div class="stage-visual" aria-hidden="true"><img src="assets/img/stage-theatre-avril-scene.png" alt="" width="1450" height="1085" loading="lazy" decoding="async"><span>Le corps,<br>la voix, la main</span><small>IMAGINER · CRÉER · PARTAGER</small></div>
+  <div class="stage-visual"><img src="assets/img/stage-theatre-avril-scene.png" alt="" width="1450" height="1085" loading="lazy" decoding="async"><h3 id="stage-avril-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small></div>
   <div class="card-content">
-    <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
-    <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
-    <div class="stage-heading">
+    <div class="stage-meta">
       <div class="stage-date" id="stage-avril-2027-date"><span class="stage-season">Vacances<br>de printemps</span><time datetime="2027-04-26" aria-label="Du 26 au 30 avril 2027"><strong>26–30</strong><b>AVRIL<br>2027</b></time></div>
-      <h3 id="stage-avril-2027-heading">Histoires &amp; Objets Inventés</h3>
+      <div class="stage-meta-details">
+      <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
+      <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
+      </div>
     </div>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
     <dl class="stage-essentials">
@@ -324,13 +327,14 @@ body .button:not(.secondary){color:#203f4d;}
   </div>
 </article>
 <article class="news-card stage-card stage-card--juillet" id="stage-juillet-2027" aria-labelledby="stage-juillet-2027-heading stage-juillet-2027-date" data-category="evenements">
-  <div class="stage-visual" aria-hidden="true"><img src="assets/img/stage-theatre-juillet.png" alt="" width="1448" height="1086" loading="lazy" decoding="async"><span>Le corps,<br>la voix, la main</span><small>IMAGINER · CRÉER · PARTAGER</small></div>
+  <div class="stage-visual"><img src="assets/img/stage-theatre-juillet.png" alt="" width="1448" height="1086" loading="lazy" decoding="async"><h3 id="stage-juillet-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small></div>
   <div class="card-content">
-    <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
-    <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
-    <div class="stage-heading">
+    <div class="stage-meta">
       <div class="stage-date" id="stage-juillet-2027-date"><span class="stage-season">Vacances<br>d’été</span><time datetime="2027-07-12" aria-label="Du 12 au 16 juillet 2027"><strong>12–16</strong><b>JUILLET<br>2027</b></time></div>
-      <h3 id="stage-juillet-2027-heading">Histoires &amp; Objets Inventés</h3>
+      <div class="stage-meta-details">
+      <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
+      <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
+      </div>
     </div>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
     <dl class="stage-essentials">
