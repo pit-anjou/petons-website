@@ -151,20 +151,21 @@ body .button:not(.secondary){color:#203f4d;}
 .stage-card{--stage-tint:#f0f4e5;--stage-accent:#b7cd48;min-width:0;padding:0;background:#fffdf8;border:1px solid #dde4d5;border-radius:5px 35px 5px 5px;overflow:hidden;display:flex;flex-direction:column;scroll-margin-top:25px}
 .stage-card--avril{--stage-tint:#edf6f2;--stage-accent:#80bdb0}
 .stage-card--juillet{--stage-tint:#fff2e2;--stage-accent:#f99443}
-.stage-card .stage-audience,.stage-dialog .stage-audience{font-size:12px;line-height:1.6;margin:0 0 15px;color:#4c7568}
-.stage-audience strong{font-weight:800}
+.stage-dialog .stage-audience{font-size:12px;line-height:1.6;margin:0 0 15px;color:#4c7568}
+.stage-audience strong,.stage-audience-label strong{font-weight:800}
 .stage-visual{position:relative;display:grid;place-content:center;text-align:center;height:250px;padding:28px;background:var(--stage-tint);border-top:5px solid var(--stage-accent);color:var(--heading);overflow:hidden}
 .stage-visual:before{content:"";position:absolute;inset:18px 25px;z-index:1;border:1px solid #31657335;border-radius:3px 34px 3px 26px;transform:rotate(-3deg);background:rgba(255,253,248,.16)}
 .stage-visual:after{content:"✧";position:absolute;z-index:2;right:32px;top:22px;color:#e9a64f;font:36px/1 Georgia,serif}
 .stage-card .stage-visual h3{position:relative;z-index:2;font:700 34px/1.25 Kalam,cursive;max-width:360px;margin:0}
 .stage-visual small{position:relative;z-index:2;font-size:11px;font-weight:800;letter-spacing:.8px;margin-top:10px;color:#244c56}
+.stage-visual .stage-audience-label{z-index:2;max-width:calc(100% - 34px);font-size:11px;font-weight:400;text-align:left}
 .stage-visual img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center 5%;opacity:.28}
 .stage-card--avril .stage-visual img{object-position:center 58%}
 .stage-card--juillet .stage-visual img{object-position:center 52%}
 .stage-card .card-content{padding:25px 28px 28px}
 .stage-meta{display:grid;grid-template-columns:max-content minmax(0,1fr);gap:22px;align-items:center;margin:0 0 23px}
 .stage-meta-details{min-width:0}
-.stage-card .stage-meta .stage-audience{margin-bottom:0}
+.stage-meta-details .stage-tags{margin-bottom:0}
 .stage-date{text-align:center;color:var(--heading);border-right:1px solid #31657326;padding:7px 24px 7px 0}
 .stage-date .stage-season{display:block;font-size:9px;font-weight:800;line-height:1.55;letter-spacing:.7px;text-transform:uppercase}
 .stage-date time{display:block;margin:8px 0 0}
@@ -285,13 +286,12 @@ body .button:not(.secondary){color:#203f4d;}
 <main id="main"><section class="hero wrap agenda-hero" aria-labelledby="page-title"><div><span class="eyebrow">Les rendez-vous &amp; les nouvelles des Petons</span><h1 id="page-title">Agenda &amp;<br><span class="hero-underline">actualités</span><span class="hero-star tiny-star" aria-hidden="true">✧</span></h1></div><div class="hero-intro"><p>Une rencontre, une activité à découvrir, un moment à partager : <strong>retrouvez les occasions de rejoindre la vie de l’école.</strong></p><div class="agenda-shortcuts"><a href="#agenda">Les prochains rendez-vous ↓</a><a href="#journal">La vie de l’école ↓</a></div></div></section><section class="wrap priority-section" id="inscriptions-ouvertes" aria-label="Inscriptions ouvertes"><article class="enrol-feature" aria-labelledby="enrol-title"><div class="enrol-copy"><div class="enrol-meta"><span class="enrol-status"><span aria-hidden="true">●</span> Quelques places disponibles</span><p class="enrol-edition">Année scolaire 2026–2027 · 3–12 ans</p></div><h2 id="enrol-title">Rejoindre les Petons,<br>même en cours d’année.</h2><p>Un déménagement, un retour d’expatriation ou un nouveau projet pour votre enfant ? <strong>Une arrivée en cours d’année est possible.</strong> Prenons le temps de nous rencontrer et de préparer ensemble son accueil.</p><p class="enrol-january"><strong>Une rentrée en janvier ?</strong> C’est aussi possible, notamment pour les enfants nés en fin ou en début d’année. Les modalités sont à convenir avec l’équipe, selon les places disponibles.</p><div class="enrol-actions"><a class="button" href="contact-petons.html?sujet=visite#ecrire">Rencontrer l’équipe <span aria-hidden="true">→</span></a><a class="text-link" href="inscriptions-petons.html">Les étapes de l’inscription <span aria-hidden="true">→</span></a></div></div><aside class="enrol-places" aria-label="Places disponibles par ambiance"><div class="enrol-place-ticket"><strong>3</strong><span>places en<br><b>3–6 ans</b></span></div><div class="enrol-place-ticket"><strong>4</strong><span>places en<br><b>6–12 ans</b></span></div><p>Les Chenilles &amp; les Papillons</p></aside></article></section><section class="wrap agenda-section" id="agenda" aria-labelledby="agenda-title"><div class="section-title"><svg class="agenda-calendar" aria-hidden="true" width="34" height="36" viewBox="0 0 34 36" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8L28 7L29 30L5 31Z M11 4L11 11 M23 3L23 10 M6 15L28 14 M11 20L14 20 M21 20L24 20 M11 25L14 25"/></svg><h2 id="agenda-title">Les prochains rendez-vous</h2><span class="tiny-star" aria-hidden="true">✧</span></div><p class="agenda-lead">Toutes les informations pour participer : la date, le public concerné et la marche à suivre.</p>
 <div class="holiday-stages"><p class="stage-section-label">Stages de vacances · 2027</p><div class="stage-grid">
 <article class="news-card stage-card stage-card--fevrier" id="stage-fevrier-2027" aria-labelledby="stage-fevrier-2027-heading stage-fevrier-2027-date" data-category="evenements">
-  <div class="stage-visual"><img src="assets/img/stage-theatre-fevrier.png" alt="" width="1448" height="1086" loading="lazy" decoding="async"><h3 id="stage-fevrier-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small></div>
+  <div class="stage-visual"><img src="assets/img/stage-theatre-fevrier.png" alt="" width="1448" height="1086" loading="lazy" decoding="async"><h3 id="stage-fevrier-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small><span class="visual-label stage-audience-label"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</span></div>
   <div class="card-content">
     <div class="stage-meta">
       <div class="stage-date" id="stage-fevrier-2027-date"><span class="stage-season">Vacances<br>d’hiver</span><time datetime="2027-02-22" aria-label="Du 22 au 26 février 2027"><strong>22–26</strong><b>FÉVRIER<br>2027</b></time></div>
       <div class="stage-meta-details">
       <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
-      <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
       </div>
     </div>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
@@ -306,13 +306,12 @@ body .button:not(.secondary){color:#203f4d;}
   </div>
 </article>
 <article class="news-card stage-card stage-card--avril" id="stage-avril-2027" aria-labelledby="stage-avril-2027-heading stage-avril-2027-date" data-category="evenements">
-  <div class="stage-visual"><img src="assets/img/stage-theatre-avril-scene.png" alt="" width="1450" height="1085" loading="lazy" decoding="async"><h3 id="stage-avril-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small></div>
+  <div class="stage-visual"><img src="assets/img/stage-theatre-avril-scene.png" alt="" width="1450" height="1085" loading="lazy" decoding="async"><h3 id="stage-avril-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small><span class="visual-label stage-audience-label"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</span></div>
   <div class="card-content">
     <div class="stage-meta">
       <div class="stage-date" id="stage-avril-2027-date"><span class="stage-season">Vacances<br>de printemps</span><time datetime="2027-04-26" aria-label="Du 26 au 30 avril 2027"><strong>26–30</strong><b>AVRIL<br>2027</b></time></div>
       <div class="stage-meta-details">
       <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
-      <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
       </div>
     </div>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
@@ -327,13 +326,12 @@ body .button:not(.secondary){color:#203f4d;}
   </div>
 </article>
 <article class="news-card stage-card stage-card--juillet" id="stage-juillet-2027" aria-labelledby="stage-juillet-2027-heading stage-juillet-2027-date" data-category="evenements">
-  <div class="stage-visual"><img src="assets/img/stage-theatre-juillet.png" alt="" width="1448" height="1086" loading="lazy" decoding="async"><h3 id="stage-juillet-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small></div>
+  <div class="stage-visual"><img src="assets/img/stage-theatre-juillet.png" alt="" width="1448" height="1086" loading="lazy" decoding="async"><h3 id="stage-juillet-2027-heading">Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small><span class="visual-label stage-audience-label"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</span></div>
   <div class="card-content">
     <div class="stage-meta">
       <div class="stage-date" id="stage-juillet-2027-date"><span class="stage-season">Vacances<br>d’été</span><time datetime="2027-07-12" aria-label="Du 12 au 16 juillet 2027"><strong>12–16</strong><b>JUILLET<br>2027</b></time></div>
       <div class="stage-meta-details">
       <div class="stage-tags"><span class="stage-tag">Stage théâtre &amp; arts plastiques</span><span class="stage-tag stage-age">6–11 ans</span></div>
-      <p class="stage-audience"><strong>Ouvert à tous</strong> · enfants des Petons et d’ailleurs</p>
       </div>
     </div>
     <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
