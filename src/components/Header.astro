@@ -1,0 +1,62 @@
+---
+import { brand, contactCta, currentFile, mainNav } from '../data/site';
+
+const current = currentFile(Astro.url.pathname);
+const isCurrent = (href: string) => href === current;
+const isParent = (item: (typeof mainNav)[number]) =>
+  item.children?.some((child) => isCurrent(child.href)) ?? false;
+const ariaCurrent = (href: string) => (isCurrent(href) ? 'page' : undefined);
+const parentClass = (item: (typeof mainNav)[number]) => (isParent(item) ? 'is-current-parent' : undefined);
+---
+<header class="cm-site-header">
+  <div class="cm-header-inner">
+    <a class="cm-brand" href={brand.href} aria-label={brand.label} aria-current={ariaCurrent(brand.href)}>
+      <img src={brand.logo.src} class="" alt={brand.logo.alt} width={brand.logo.width} height={brand.logo.height} decoding="async">
+    </a>
+    <nav class="cm-nav" aria-label="Navigation principale">
+      <ul class="cm-nav-list">
+        {mainNav.map((item) =>
+          item.submenu ? (
+            <li class="cm-nav-group">
+              <div class="cm-nav-parent">
+                <a href={item.href} class={parentClass(item)} aria-current={ariaCurrent(item.href)}>{item.label}</a>
+                <button class="cm-submenu-toggle" aria-expanded="false" aria-controls={item.submenu.id} aria-label={item.submenu.toggleLabel}>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+                </button>
+              </div>
+              <ul class="cm-submenu" id={item.submenu.id} hidden>
+                {item.children?.map((child) => (
+                  <li><a href={child.href} aria-current={ariaCurrent(child.href)}>{child.label}</a></li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li><a href={item.href} aria-current={ariaCurrent(item.href)}>{item.label}</a></li>
+          )
+        )}
+      </ul>
+    </nav>
+    <a href={contactCta.href} class="cm-header-contact" aria-current={ariaCurrent(contactCta.href)}>{contactCta.label}<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"></path></svg></a>
+    <button class="cm-menu-toggle" aria-expanded="false" aria-controls="cm-mobile-menu" aria-label="Ouvrir le menu">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"></path></svg><span>Menu</span>
+    </button>
+  </div>
+  <nav class="cm-mobile-nav" id="cm-mobile-menu" aria-label="Navigation mobile" hidden>
+    <ul>
+      {mainNav.map((item) => (
+        <li>
+          <a href={item.href} class={parentClass(item)} aria-current={ariaCurrent(item.href)}>{item.label}</a>
+          {item.children && (
+            <ul class="cm-mobile-children">
+              {item.children.map((child) => (
+                <li><a href={child.href} aria-current={ariaCurrent(child.href)}>{child.label}</a></li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+      <li><a href={contactCta.href} aria-current={ariaCurrent(contactCta.href)}>{contactCta.label}</a></li>
+    </ul>
+  </nav>
+</header>
+

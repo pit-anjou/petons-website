@@ -3,3 +3,6 @@
 .vercel
 Dockerfile.vercel
 .dockerignore
+node_modules
+dist
+.astro
