@@ -1,7 +1,7 @@
 /* A bright invitation using the site's aqua, orange and handwritten title font. */
 #open-house-announcement{font-family:Nunito,Arial,sans-serif;color:var(--heading,#316573)}
 #open-house-announcement [hidden],.oh-footer-access[hidden]{display:none!important}
-.oh-banner{background:var(--aqua,#00b9c1);color:#203f4d;position:relative;isolation:isolate}
+.oh-banner{background:#eff6f2;color:#203f4d;position:relative;isolation:isolate}
 .oh-banner::after{content:"";position:absolute;bottom:0;left:0;right:0;height:5px;background:var(--paper,#fffdf8);clip-path:polygon(0 60%,10% 15%,23% 55%,40% 0,58% 50%,73% 10%,88% 55%,100% 15%,100% 100%,0 100%);pointer-events:none}
 .oh-banner-inner{max-width:1216px;min-height:104px;margin:auto;padding:13px 24px 17px;display:flex;align-items:center;justify-content:center;gap:24px}
 .oh-banner-link{display:flex;align-items:center;justify-content:center;gap:44px;flex:1;min-width:0;text-decoration:none;color:inherit;line-height:1.4}
