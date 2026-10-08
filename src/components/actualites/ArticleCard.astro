@@ -1,0 +1,14 @@
+---
+// Carte d’un article de « La vie de l’école ».
+import type { Article } from '../../content/schemas';
+import Visuel from './Visuel.astro';
+
+interface Props {
+  id: string;
+  article: Article;
+}
+
+const { id, article } = Astro.props;
+const dialogue = `${id}-dialog`;
+---
+<article class="news-card past-feature" id={id} data-category="retours"><button type="button" class="cover-button" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue} aria-label={`Lire : ${article.titre}`}><Visuel visuel={article.visuel} /></button><div class="card-content"><div class="card-meta"><span class="category-label category-retours">{article.rubrique}</span><span class="article-date">{article.repere}</span></div><h3><button type="button" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue}>{article.titre}</button></h3><p>{article.resume}</p><button type="button" class="article-link" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue}>Lire l’article <span aria-hidden="true">→</span></button></div></article>

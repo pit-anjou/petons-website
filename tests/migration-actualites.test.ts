@@ -79,3 +79,16 @@ describe('rendez-vous', () => {
     }
   });
 });
+
+describe('articles', () => {
+  test('du plus récent au plus ancien', () => {
+    expect(apres.querySelectorAll('.past-feature').map((carte) => carte.id)).toEqual(['eco-ecole-solidarites', 'cross-des-petons']);
+  });
+  test('carte Éco-École', () => comparer(trouver(avant, '#eco-ecole-solidarites'), trouver(apres, '#eco-ecole-solidarites')));
+  test('fenêtre Éco-École', () => comparer(trouver(avant, '#solidarites-dialog'), trouver(apres, '#eco-ecole-solidarites-dialog')));
+  test('carte du cross (flèche « → » comme l’article Éco-École)', () => {
+    comparer(carteDe(avant, 'cross-dialog'), trouver(apres, '#cross-des-petons'), [['Lire l’article', 'Lire l’article →']]);
+  });
+  test('fenêtre du cross', () => comparer(trouver(avant, '#cross-dialog'), trouver(apres, '#cross-des-petons-dialog')));
+  test('la lettre des Petons est inchangée', () => comparer(trouver(avant, '#lettre'), trouver(apres, '#lettre')));
+});

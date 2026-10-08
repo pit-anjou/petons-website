@@ -1,0 +1,20 @@
+---
+// Fenêtre d’un article de « La vie de l’école ».
+import type { Article } from '../../content/schemas';
+import Blocs from './Blocs.astro';
+import Icone from './Icone.astro';
+import LiensAction from './LiensAction.astro';
+import TitreLignes from './TitreLignes.astro';
+
+interface Props {
+  id: string;
+  article: Article;
+}
+
+const { id, article } = Astro.props;
+const titre = `${id}-title`;
+---
+<dialog id={`${id}-dialog`} class="event-dialog article-dialog journal-dialog" aria-labelledby={titre}><div class="dialog-inner"><button class="dialog-close" type="button" data-close autofocus aria-label={`Fermer l’article : ${article.titre}`}><Icone nom="fermer" /></button><span class="eyebrow">{article.surtitre}</span><h2 id={titre}><TitreLignes texte={article.titreModale ?? article.titre} /></h2><p class="dialog-intro"><strong>{article.intro}</strong></p>
+<Blocs blocs={article.blocs} />
+<LiensAction liens={article.liens} />
+</div></dialog>
