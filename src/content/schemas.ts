@@ -100,9 +100,12 @@ const visuelSchema = z.object({
   message: 'Choisir une image ou une illustration animée, pas les deux',
 });
 
+/** https://…, http://…, mailto:…, tel:…, une page du site (contact-petons.html?sujet=visite) ou une ancre (#agenda). Refuse notamment javascript:. */
+const ADRESSE_AUTORISEE = /^(?:https?:\/\/[^\s/]\S*|mailto:\S+|tel:\S+|[\w-]+\.html(?:[?#]\S*)?|#\S*)$/i;
+
 const lienSchema = z.object({
   libelle: texteRequis,
-  url: texteRequis,
+  url: z.string().trim().regex(ADRESSE_AUTORISEE, 'Adresse attendue : https://…, mailto:…, tel:…, une page du site (contact-petons.html) ou une ancre (#agenda)'),
   style: z.enum(STYLES_LIEN).default('lien'),
   nouvelOnglet: z.boolean().default(false),
 }).strict();
@@ -136,7 +139,10 @@ export const rendezVousSchema = z.object({
   intro: z.string().optional(),
   pointsForts: z.array(elementIllustre).default([]),
   encadre: z.object({ titre: texteRequis, texte: z.string().optional() }).strict().optional(),
-}).strict();
+}).strict().refine((rendezVous) => !rendezVous.heureFin || Boolean(rendezVous.heureDebut), {
+  message: 'Une heure de fin demande une heure de début',
+  path: ['heureDebut'],
+});
 
 export const articleSchema = z.object({
   ...communs,
