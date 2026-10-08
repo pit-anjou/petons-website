@@ -1,0 +1,31 @@
+---
+// Fenêtre d’un rendez-vous. Elle prend le style « article » quand elle contient des blocs.
+import type { RendezVous } from '../../content/schemas';
+import { horaire, jourMois, jourSemaine, majuscule } from '../../lib/dates';
+import { enLigne } from '../../lib/markdown';
+import { illustrations } from '../illustrations';
+import Blocs from './Blocs.astro';
+import Icone from './Icone.astro';
+import LiensAction from './LiensAction.astro';
+import TitreLignes from './TitreLignes.astro';
+
+interface Props {
+  id: string;
+  rendezVous: RendezVous;
+}
+
+const { id, rendezVous } = Astro.props;
+const titre = `${id}-title`;
+const heures = horaire(rendezVous.heureDebut, rendezVous.heureFin, ' – ');
+const Illustration = rendezVous.visuel.illustration ? illustrations[rendezVous.visuel.illustration] : undefined;
+---
+<dialog id={`${id}-dialog`} class:list={['event-dialog', { 'article-dialog': rendezVous.blocs.length > 0 }]} aria-labelledby={titre}><div class="dialog-inner"><button class="dialog-close" type="button" data-close autofocus aria-label={`Fermer : ${rendezVous.titre}`}><Icone nom="fermer" /></button><span class="eyebrow">{rendezVous.surtitre}</span><h2 id={titre}><TitreLignes texte={rendezVous.titreModale ?? rendezVous.titre} /></h2><p class="dialog-date">{majuscule(jourSemaine(rendezVous.date))} {jourMois(rendezVous.date)}{heures && <Fragment> <span>· {heures}</span></Fragment>}</p>
+{Illustration && <Illustration class="dialog-art" label={rendezVous.visuel.alt} />}
+{rendezVous.intro && <p class="dialog-intro">{rendezVous.intro}</p>}
+{rendezVous.pointsForts.length > 0 && (
+<div class="visit-highlights">{rendezVous.pointsForts.map((point) => <div><Icone nom={point.icone} /><div><h3>{point.titre}</h3><p set:html={enLigne(point.texte)}></p></div></div>)}</div>
+)}
+<Blocs blocs={rendezVous.blocs} />
+{rendezVous.encadre && <div class="visit-practical"><strong>{rendezVous.encadre.titre}</strong>{rendezVous.encadre.texte && <span>{rendezVous.encadre.texte}</span>}</div>}
+<LiensAction liens={rendezVous.liens} />
+</div></dialog>

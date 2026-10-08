@@ -1,0 +1,20 @@
+---
+// Carte d’un rendez-vous (grille de l’agenda).
+import type { RendezVous } from '../../content/schemas';
+import { horaire, jourMois } from '../../lib/dates';
+import Icone from './Icone.astro';
+import Visuel from './Visuel.astro';
+
+interface Props {
+  id: string;
+  rendezVous: RendezVous;
+  /** La première carte charge son image immédiatement. */
+  premier: boolean;
+}
+
+const { id, rendezVous, premier } = Astro.props;
+const dialogue = `${id}-dialog`;
+const heures = horaire(rendezVous.heureDebut, rendezVous.heureFin);
+const date = heures ? `${jourMois(rendezVous.date)} · ${heures}` : jourMois(rendezVous.date);
+---
+<article class="news-card agenda-card" id={id} data-category="evenements"><button type="button" class="cover-button" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue} aria-label={`Lire : ${rendezVous.titre}`}><Visuel visuel={rendezVous.visuel} chargement={premier ? 'eager' : 'lazy'} /></button><div class="card-content"><div class="card-meta"><span class="category-label category-evenements">{rendezVous.mention}</span><span class="article-date">{date}</span></div><h3><button type="button" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue}>{rendezVous.titre}</button></h3><p>{rendezVous.resume}</p><button type="button" class="button event-action" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue}>{rendezVous.bouton}<Icone nom="fleche" /></button></div></article>

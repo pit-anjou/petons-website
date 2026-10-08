@@ -1,0 +1,17 @@
+---
+// Liens en bas d’une fenêtre. « sr-only » est la classe de texte masqué définie sur la page Actualités.
+import type { Lien } from '../../content/schemas';
+import Icone from './Icone.astro';
+
+interface Props {
+  liens: ReadonlyArray<Lien>;
+}
+
+const { liens } = Astro.props;
+const classe = (lien: Lien) => (lien.style === 'bouton' ? 'button' : 'text-link');
+---
+{liens.length > 0 && (
+<div class="dialog-actions">{liens.map((lien) => lien.nouvelOnglet
+  ? <a class={classe(lien)} href={lien.url} target="_blank" rel="noopener noreferrer">{lien.libelle} <span aria-hidden="true">↗</span><span class="sr-only"> (nouvel onglet)</span></a>
+  : <a class={classe(lien)} href={lien.url}>{lien.libelle}<Icone nom="fleche" /></a>)}</div>
+)}

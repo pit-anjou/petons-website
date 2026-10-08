@@ -59,3 +59,23 @@ describe('stages', () => {
     });
   }
 });
+
+describe('rendez-vous', () => {
+  test('triés par date', () => {
+    expect(apres.querySelectorAll('.agenda-card').map((carte) => carte.id)).toEqual(['un-carnaval-autour-de-la-sante', 'portes-ouvertes-de-printemps']);
+  });
+  test('carte Portes ouvertes', () => comparer(carteDe(avant, 'open-house-dialog'), trouver(apres, '#portes-ouvertes-de-printemps')));
+  test('fenêtre Portes ouvertes', () => comparer(trouver(avant, '#open-house-dialog'), trouver(apres, '#portes-ouvertes-de-printemps-dialog')));
+  test('carte Carnaval', () => comparer(carteDe(avant, 'carnaval-dialog'), trouver(apres, '#un-carnaval-autour-de-la-sante')));
+  test('fenêtre Carnaval (jour de la semaine ajouté)', () => {
+    comparer(trouver(avant, '#carnaval-dialog'), trouver(apres, '#un-carnaval-autour-de-la-sante-dialog'), [['17 février', 'Mercredi 17 février']]);
+  });
+  test('la fenêtre orpheline des inscriptions a disparu', () => {
+    expect(apres.querySelector('#inscriptions-dialog')).toBeNull();
+  });
+  test('les autres blocs de la section agenda sont inchangés', () => {
+    for (const selecteur of ['.agenda-hero', '#inscriptions-ouvertes', '#proposer-activite']) {
+      comparer(trouver(avant, selecteur), trouver(apres, selecteur));
+    }
+  });
+});

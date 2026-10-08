@@ -1,0 +1,35 @@
+---
+// Contenu d’une fenêtre : textes (Markdown), intertitres (avec logo facultatif) et photos légendées.
+import type { Bloc } from '../../content/schemas';
+import { dimensionsImage } from '../../lib/dimensions-image';
+import { enBlocs } from '../../lib/markdown';
+
+interface Props {
+  blocs: ReadonlyArray<Bloc>;
+}
+
+const { blocs } = Astro.props;
+const elements = await Promise.all(blocs.map(async (bloc) => {
+  switch (bloc.type) {
+    case 'texte':
+      return { type: 'texte' as const, html: enBlocs(bloc.contenu) };
+    case 'intertitre':
+      return {
+        type: 'intertitre' as const,
+        titre: bloc.titre,
+        logo: bloc.logo ? { src: bloc.logo, alt: bloc.logoAlt ?? '', ...(await dimensionsImage(bloc.logo)) } : undefined,
+      };
+    case 'photo':
+      return { type: 'photo' as const, src: bloc.image, alt: bloc.alt, legende: bloc.legende, ...(await dimensionsImage(bloc.image)) };
+  }
+}));
+---
+{elements.length > 0 && (
+<div class="article-body">{elements.map((element) => element.type === 'texte'
+  ? <Fragment set:html={element.html} />
+  : element.type === 'photo'
+    ? <figure class="article-photo"><img src={element.src} alt={element.alt} width={element.width} height={element.height} loading="lazy" decoding="async">{element.legende && <figcaption>{element.legende}</figcaption>}</figure>
+    : element.logo
+      ? <div class="article-heading-logo"><img src={element.logo.src} alt={element.logo.alt} width={element.logo.width} height={element.logo.height} loading="lazy" decoding="async"><h3>{element.titre}</h3></div>
+      : <h3>{element.titre}</h3>)}</div>
+)}
