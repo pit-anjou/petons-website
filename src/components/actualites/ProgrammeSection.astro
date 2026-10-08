@@ -1,0 +1,47 @@
+---
+// Une section de la fenêtre « Programme & infos » : titre avec icône, puis ses blocs.
+import type { SectionProgramme } from '../../content/schemas';
+import { dimensionsImage } from '../../lib/dimensions-image';
+import { enBlocs, enLigne } from '../../lib/markdown';
+import Icone from './Icone.astro';
+
+interface Props {
+  id: string;
+  section: SectionProgramme;
+  /** « vendredi 26 février à 16h30. », si le programme a une restitution. */
+  restitution?: string;
+}
+
+const { id, section, restitution } = Astro.props;
+const CLASSES = { simple: undefined, separee: 'stage-programme', 'mise-en-avant': 'stage-finale' } as const;
+const classeIllustration = section.presentation === 'mise-en-avant' ? 'stage-finale-art' : 'stage-programme-art';
+
+const blocs = await Promise.all(section.blocs.map(async (bloc) => {
+  switch (bloc.type) {
+    case 'intervenants':
+      return { ...bloc, personnes: await Promise.all(bloc.personnes.map(async (personne) => ({ ...personne, ...(await dimensionsImage(personne.photo)) }))) };
+    case 'illustration':
+      return { ...bloc, ...(await dimensionsImage(bloc.image)) };
+    default:
+      return bloc;
+  }
+}));
+---
+<section class={CLASSES[section.presentation]} aria-labelledby={id}><h3 class="stage-section-heading" id={id}><Icone nom={section.icone} class="stage-section-icon" /><span>{section.titre}</span></h3>
+{blocs.map((bloc) => {
+  switch (bloc.type) {
+    case 'texte':
+      return <Fragment set:html={enBlocs(bloc.contenu)} />;
+    case 'intervenants':
+      return <div class="stage-facilitators">{bloc.personnes.map((personne) => <div class="stage-facilitator"><figure class="stage-portrait"><img src={personne.photo} alt={personne.alt} width={personne.width} height={personne.height} loading="lazy" decoding="async"></figure><h4>{personne.nom}</h4><p set:html={enLigne(personne.presentation)}></p></div>)}</div>;
+    case 'forces':
+      return <ul class="stage-forces">{bloc.elements.map((element) => <li><Icone nom={element.icone} class="stage-force-icon" /><strong class="stage-force-title">{element.titre}</strong><Fragment set:html={enLigne(element.texte)} /></li>)}</ul>;
+    case 'etapes':
+      return bloc.elements.map((element) => <div class="stage-step"><Icone nom={element.icone} class="stage-section-icon" /><div><h4>{element.titre}</h4><p set:html={enLigne(element.texte)}></p></div></div>);
+    case 'illustration':
+      return <figure class={classeIllustration}><img src={bloc.image} alt={bloc.alt} width={bloc.width} height={bloc.height} loading="lazy" decoding="async"></figure>;
+    case 'restitution':
+      return restitution && <div class="stage-restitution-invite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><div><h4>{bloc.titre}</h4><p>Restitution le <strong>{restitution}</strong>{bloc.precision && <small>{bloc.precision}</small>}</p></div></div>;
+  }
+})}
+</section>
