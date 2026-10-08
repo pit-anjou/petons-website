@@ -1,19 +1,28 @@
-/* Automatic display is once per campaign; explicit invitations remain reopenable. */
+/* Display once per visit; explicit invitations remain reopenable at any time. */
 (()=>{
   const root=document.getElementById('open-house-announcement');
   if(!root)return;
   const banner=root.querySelector('.oh-banner'),card=root.querySelector('.oh-card');
-  const prefix=`petons:${root.dataset.campaign}:`,seenKey=prefix+'seen',bannerKey=prefix+'banner-dismissed';
+  const prefix=`petons:${root.dataset.campaign}:`,seenKey=prefix+'seen',bannerKey=prefix+'banner-dismissed',visitKey=prefix+'last-activity';
+  const visitTimeout=30*60*1000;
   const expires=Date.parse(root.dataset.end);
   const desktop=matchMedia('(min-width:900px) and (min-height:650px)');
   const stores=[];
-  for(const name of ['localStorage','sessionStorage']){
+  // Persistent campaign dismissals from older versions must not suppress a new visit.
+  for(const name of ['sessionStorage']){
     try{const storage=window[name],probe=prefix+'probe';storage.setItem(probe,'1');storage.removeItem(probe);stores.push(storage);}catch{}
   }
   const read=key=>stores.some(storage=>{try{return storage.getItem(key)==='1';}catch{return false;}});
   const remember=key=>stores.forEach(storage=>{try{storage.setItem(key,'1');}catch{}});
-  let interacted=false,timer,finished=false,opener=null;
-  const readyAt=Date.now()+8000;
+  const touchVisit=()=>stores.forEach(storage=>{try{storage.setItem(visitKey,String(Date.now()));}catch{}});
+  const staleVisit=()=>stores.some(storage=>{try{const last=Number(storage.getItem(visitKey));return !last||Date.now()-last>=visitTimeout;}catch{return false;}});
+  const resetVisit=()=>stores.forEach(storage=>{try{storage.removeItem(seenKey);storage.removeItem(bannerKey);}catch{}});
+  const navigation=performance.getEntriesByType('navigation')[0];
+  // Direct and external arrivals start a visit; internal links and reloads keep it.
+  const newArrival=navigation?.type==='navigate'&&(!document.referrer||new URL(document.referrer).origin!==location.origin);
+  if(newArrival||staleVisit())resetVisit();
+  touchVisit();
+  let interacted=false,timer,finished=false,opener=null,readyAt=Date.now()+8000;
   const active=()=>Number.isFinite(expires)&&Date.now()<expires;
   const manual=()=>card.hasAttribute('data-manual');
   const setExpanded=value=>document.querySelectorAll('[data-oh-reopen]').forEach(button=>button.setAttribute('aria-expanded',String(value)));
@@ -62,16 +71,26 @@
   });
   root.querySelectorAll('[data-oh-action]').forEach(link=>link.addEventListener('click',dismissCard));
   for(const type of ['scroll','pointerdown','keydown']){
-    addEventListener(type,()=>{interacted=true;attempt();},{once:true,passive:true});
+    addEventListener(type,()=>{interacted=true;attempt();},{passive:true});
   }
-  addEventListener('visibilitychange',()=>{if(!active())hideAll();else attempt();});
+  function resumeVisit(){
+    if(!active()){hideAll();return;}
+    if(staleVisit()){
+      resetVisit();hideCard();opener=null;
+      finished=false;interacted=false;readyAt=Date.now()+8000;banner.hidden=false;
+    }
+    touchVisit();attempt();
+  }
+  addEventListener('pagehide',touchVisit);
+  addEventListener('visibilitychange',()=>{
+    if(document.hidden)touchVisit();else resumeVisit();
+  });
   addEventListener('pageshow',event=>{
     if(!active())hideAll();
-    else if(event.persisted){if(read(seenKey)&&!manual())hideCard();if(read(bannerKey))banner.hidden=true;}
-  });
-  addEventListener('storage',event=>{
-    if(event.key===seenKey&&event.newValue==='1'&&!manual())hideCard();
-    if(event.key===bannerKey&&event.newValue==='1'){banner.hidden=true;if(!manual())hideCard();}
+    else if(event.persisted){
+      if(staleVisit())resumeVisit();
+      else{if(read(seenKey)&&!manual())hideCard();if(read(bannerKey))banner.hidden=true;}
+    }
   });
   desktop.addEventListener('change',()=>{if(!desktop.matches&&!card.hidden&&!manual())hideCard();else attempt();});
   document.addEventListener('click',event=>{
