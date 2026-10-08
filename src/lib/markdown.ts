@@ -19,7 +19,12 @@ const surlignage = (nom: string, marque: string, classe: string): TokenizerAndRe
   };
 };
 
+const echapper = (texte: string): string =>
+  texte.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
 const markdown = new Marked({
+  // Les éditeurs ne peuvent pas injecter de balises : le HTML brut est affiché comme du texte.
+  renderer: { html: ({ text }) => echapper(text) },
   extensions: [surlignage('surlignageVert', '==', 'soft-mark'), surlignage('surlignageOrange', '\\+\\+', 'orange-mark')],
 });
 

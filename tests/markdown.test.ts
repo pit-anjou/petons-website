@@ -22,3 +22,22 @@ test('enLigne accepte du gras dans un surlignage', () => {
 test('enBlocs produit des paragraphes', () => {
   expect(enBlocs('Un.\n\nDeux ==x==.')).toBe('<p>Un.</p>\n<p>Deux <strong class="soft-mark">x</strong>.</p>\n');
 });
+
+test('enLigne échappe le HTML brut au lieu de l’interpréter', () => {
+  const html = enLigne('<img src=x onerror=alert(1)> et <b>gras</b>');
+  expect(html).not.toContain('<img');
+  expect(html).not.toContain('<b>');
+  expect(html).toBe('&lt;img src=x onerror=alert(1)&gt; et &lt;b&gt;gras&lt;/b&gt;');
+});
+
+test('enBlocs échappe le HTML brut, y compris un bloc <script>', () => {
+  const html = enBlocs('<script>x</script>\n\nTexte avec <iframe src="a"></iframe>');
+  expect(html).not.toContain('<script');
+  expect(html).not.toContain('<iframe');
+  expect(html).toContain('&lt;script&gt;x&lt;/script&gt;');
+  expect(html).toContain('&lt;iframe src=&quot;a&quot;&gt;&lt;/iframe&gt;');
+});
+
+test('le Markdown courant reste inchangé par l’échappement du HTML brut', () => {
+  expect(enLigne('Tom & Jerry **ok**')).toBe('Tom &amp; Jerry <strong>ok</strong>');
+});
