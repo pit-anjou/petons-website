@@ -1,0 +1,19 @@
+---
+// Visuel d’une carte : photo, dessin (fond vert ou sable) ou illustration animée.
+import type { Visuel } from '../../content/schemas';
+import { dimensionsImage } from '../../lib/dimensions-image';
+import { illustrations } from '../illustrations';
+
+interface Props {
+  visuel: Visuel;
+  chargement?: 'eager' | 'lazy';
+}
+
+const { visuel, chargement = 'lazy' } = Astro.props;
+const Illustration = visuel.illustration ? illustrations[visuel.illustration] : undefined;
+const dimensions = visuel.image ? await dimensionsImage(visuel.image) : undefined;
+const peint = visuel.fond !== 'photo';
+---
+<div class={`article-visual article-visual--${visuel.fond}`}>{Illustration
+  ? <Illustration label={visuel.alt} />
+  : <img src={visuel.image} class={peint ? 'painted' : undefined} alt={visuel.alt} loading={chargement} decoding="async" width={dimensions?.width} height={dimensions?.height} style={peint ? undefined : `object-position:center ${visuel.cadrage}%`}>}{visuel.etiquette && <span class="visual-label">{visuel.etiquette}</span>}</div>

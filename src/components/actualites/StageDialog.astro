@@ -1,0 +1,50 @@
+---
+// Fenêtre « Programme & infos » d’une session de stage : contenu du programme + dates, prix et places de la session.
+import type { Programme, Stage } from '../../content/schemas';
+import { contact } from '../../data/site';
+import { deMois, jourMois, jourSemaine, plageStage } from '../../lib/dates';
+import { dimensionsImage } from '../../lib/dimensions-image';
+import { enLigne } from '../../lib/markdown';
+import Icone from './Icone.astro';
+import ProgrammeSection from './ProgrammeSection.astro';
+
+interface Props {
+  id: string;
+  stage: Stage;
+  programme: Programme;
+}
+
+const { id, stage, programme } = Astro.props;
+const plage = plageStage(stage.debut, stage.fin);
+const [premiereLigne = '', ...autresLignes] = programme.titre.split('\n').map((ligne) => ligne.trim()).filter(Boolean);
+const restitution = programme.restitution ? `${jourSemaine(stage.fin)} ${jourMois(stage.fin)} à ${programme.restitution}.` : undefined;
+const objets = programme.sac
+  ? await Promise.all(programme.sac.objets.map(async (objet) => ({ ...objet, ...(await dimensionsImage(objet.image)) })))
+  : [];
+---
+<dialog id={`${id}-dialog`} class="event-dialog stage-dialog" aria-labelledby={`${id}-title`}><div class="dialog-inner">
+<button class="dialog-close" type="button" data-close autofocus aria-label={`Fermer le programme du stage ${deMois(stage.debut)}`}><Icone nom="fermer" /></button>
+<div class="stage-tags"><span class="stage-tag">{programme.discipline}</span><span class="stage-tag stage-age">{programme.ages}</span></div>
+<p class="stage-audience" set:html={enLigne(programme.public)}></p>
+<h2 id={`${id}-title`}>{premiereLigne}{autresLignes.length > 0 && <Fragment> <span class="stage-dialog-title-mark">{autresLignes.join(' ')}</span></Fragment>}</h2>
+<p class="dialog-date"><Icone nom="calendrier" class="stage-section-icon" /><strong>{plage.courte} · {programme.horaires}</strong> <span>· {programme.jours} · {programme.lieu}</span></p>
+<p class="stage-intro" set:html={enLigne(programme.intro)}></p>
+{programme.sections.map((section, index) => <ProgrammeSection id={`${id}-section-${index + 1}`} section={section} restitution={restitution} />)}
+<section class="stage-practical" aria-labelledby={`${id}-pratique`}>
+<h3 class="stage-section-heading" id={`${id}-pratique`}><Icone nom="calendrier" class="stage-section-icon" /><span>En pratique</span></h3>
+<div class="stage-key-facts">
+<div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>La journée</span><strong class="stage-fact-value">{programme.horaires}</strong><small>Accueil dès <strong>{programme.accueil}</strong><br>{programme.jours}</small></div>
+<div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg>Le groupe</span><strong class="stage-fact-value">{stage.effectif} {programme.participants}</strong><small>Au plus, de <strong>{programme.agesDeA}</strong><br>Avec <strong>{programme.encadrement}</strong></small></div>
+<div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</span><strong class="stage-fact-value">{stage.prix} €</strong><small><strong>{stage.prixFratrie} € par enfant</strong><br>pour les fratries</small></div>
+</div>
+<div class="stage-arrival">
+<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Rendez-vous aux Petons</span></h4><p>École Montessori « Les Petons dans l’Herbe »<br>{contact.address.join(' · ')}</p></div>
+{restitution && <div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Un moment à partager en famille</span></h4><p>Restitution le <strong>{restitution}</strong></p></div>}
+</div>
+{programme.sac && (
+<div class="stage-bag"><div class="stage-bag-heading"><h4>{programme.sac.titre}</h4>{programme.sac.sousTitre && <span>{programme.sac.sousTitre}</span>}</div>
+<ul>{objets.map((objet) => <li><img src={objet.image} alt="" width={objet.width} height={objet.height} loading="lazy" decoding="async"><span set:html={enLigne(objet.texte)}></span></li>)}</ul></div>
+)}
+<div class="stage-booking"><div><h4>Pour s’inscrire</h4><p set:html={enLigne(programme.inscription)}></p></div><a class="button" href="contact-petons.html?sujet=vacances#ecrire">S’informer et s’inscrire <span aria-hidden="true">→</span></a></div>
+</section>
+</div></dialog>

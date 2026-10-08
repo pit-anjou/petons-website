@@ -1,0 +1,97 @@
+import { expect, test } from 'bun:test';
+import { articleSchema, rendezVousSchema, stageSchema, type Programme } from '../src/content/schemas';
+import { articlesAffiches, avecProgramme, rendezVousAffiches, stagesAffiches, verifierIdentifiants } from '../src/lib/actualites';
+
+const visuel = { image: 'assets/img/actualites/eco-ecole.svg', alt: 'Logo' };
+
+const stage = (id: string, debut: string, brouillon = false, programme = 'p.md') => ({
+  id,
+  data: stageSchema.parse({ programme, debut, fin: debut, vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', prix: 1, prixFratrie: 1, effectif: 1, brouillon }),
+});
+const rendezVous = (id: string, date: string, brouillon = false) => ({
+  id,
+  data: rendezVousSchema.parse({ titre: id, date, mention: 'm', resume: 'r', visuel, surtitre: 's', brouillon }),
+});
+const article = (id: string, date: string, brouillon = false) => ({
+  id,
+  data: articleSchema.parse({ titre: id, date, repere: 'r', resume: 'r', visuel, surtitre: 's', intro: 'i', brouillon }),
+});
+
+test('les stages sont triés du plus proche au plus lointain, sans les brouillons', () => {
+  const ids = stagesAffiches([stage('juillet', '2027-07-12'), stage('fevrier', '2027-02-22'), stage('cache', '2027-01-01', true)]).map((e) => e.id);
+  expect(ids).toEqual(['fevrier', 'juillet']);
+});
+
+test('les rendez-vous sont triés par date croissante, sans les brouillons', () => {
+  const ids = rendezVousAffiches([rendezVous('portes', '2027-03-20'), rendezVous('carnaval', '2027-02-17'), rendezVous('cache', '2027-01-01', true)]).map((e) => e.id);
+  expect(ids).toEqual(['carnaval', 'portes']);
+});
+
+test('les articles sont triés du plus récent au plus ancien, sans les brouillons', () => {
+  const ids = articlesAffiches([article('cross', '2026-06-01'), article('eco', '2026-09-25'), article('cache', '2026-12-01', true)]).map((e) => e.id);
+  expect(ids).toEqual(['eco', 'cross']);
+});
+
+test('à date égale, l’ordre suit le nom de fichier', () => {
+  const ids = stagesAffiches([stage('b', '2027-02-22'), stage('a', '2027-02-22')]).map((e) => e.id);
+  expect(ids).toEqual(['a', 'b']);
+});
+
+test('avecProgramme associe chaque stage à son programme', () => {
+  const programme = { nom: 'Enfants' } as Programme;
+  const [associe] = avecProgramme([stage('s', '2027-02-22', false, 'enfants.md')], [{ id: 'enfants', data: programme }]);
+  expect(associe!.programme).toBe(programme);
+  expect(associe!.id).toBe('s');
+});
+
+test('avecProgramme refuse un programme introuvable', () => {
+  expect(() => avecProgramme([stage('s', '2027-02-22', false, 'absent.md')], [])).toThrow('absent.md');
+});
+
+test('verifierIdentifiants accepte des identifiants distincts', () => {
+  expect(() => verifierIdentifiants(['stage-avril-2027', 'portes-ouvertes', 'cross'], ['agenda', 'main'])).not.toThrow();
+});
+
+test('verifierIdentifiants refuse un même nom de fichier dans deux collections', () => {
+  expect(() => verifierIdentifiants(['un-carnaval-autour-de-la-sante', 'cross', 'un-carnaval-autour-de-la-sante'], [])).toThrow(
+    'Deux actualités ont le même nom de fichier : « un-carnaval-autour-de-la-sante ». Renommez le titre de l’une d’elles avant de l’enregistrer.',
+  );
+});
+
+test('verifierIdentifiants refuse un identifiant déjà utilisé par la page', () => {
+  expect(() => verifierIdentifiants(['cross', 'agenda'], ['agenda', 'main'])).toThrow('« agenda » est déjà utilisé par la page');
+});
+
+test('verifierIdentifiants liste chaque identifiant en cause', () => {
+  expect(() => verifierIdentifiants(['a', 'a', 'main', 'b', 'b'], ['main'])).toThrow(/« a ».*« b ».*« main »|« a ».*« main ».*« b »/s);
+});
+
+test('avecProgramme associe le stage au nom de fichier réel, même avec majuscules, espaces et accents', () => {
+  const programme = { nom: 'Été' } as Programme;
+  const [associe] = avecProgramme(
+    [stage('s', '2027-02-22', false, 'Stage Été.md')],
+    [{ id: 'stage-ete', filePath: 'src/content/programmes/Stage Été.md', data: programme }],
+  );
+  expect(associe!.programme).toBe(programme);
+});
+
+test('avecProgramme se rabat sur l’id quand filePath est absent', () => {
+  const programme = { nom: 'Ados' } as Programme;
+  const [associe] = avecProgramme([stage('s', '2027-02-22', false, 'ados.md')], [{ id: 'ados', data: programme }]);
+  expect(associe!.programme).toBe(programme);
+});
+
+test('avecProgramme ne confond pas un id slugifié avec le nom de fichier réel', () => {
+  const programme = { nom: 'Été' } as Programme;
+  expect(() =>
+    avecProgramme([stage('s', '2027-02-22', false, 'stage-ete.md')], [{ id: 'stage-ete', filePath: 'src/content/programmes/Stage Été.md', data: programme }]),
+  ).toThrow('Stage « s » : programme « stage-ete.md » introuvable');
+});
+
+test('stageSchema accepte un nom de fichier de programme libre mais pas un chemin ni une autre extension', () => {
+  const base = { debut: '2027-02-22', fin: '2027-02-22', vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', prix: 1, prixFratrie: 1, effectif: 1 };
+  expect(stageSchema.safeParse({ ...base, programme: 'Stage Été.md' }).success).toBe(true);
+  expect(stageSchema.safeParse({ ...base, programme: '../x.md' }).success).toBe(false);
+  expect(stageSchema.safeParse({ ...base, programme: 'x.yml' }).success).toBe(false);
+  expect(stageSchema.safeParse({ ...base, programme: '' }).success).toBe(false);
+});

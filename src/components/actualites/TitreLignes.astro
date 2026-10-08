@@ -1,0 +1,9 @@
+---
+// Titre saisi sur plusieurs lignes dans Page CMS : chaque retour à la ligne devient <br>.
+interface Props {
+  texte: string;
+}
+
+const lignes = Astro.props.texte.split('\n').map((ligne) => ligne.trim()).filter(Boolean);
+---
+{lignes.map((ligne, index) => <Fragment>{index > 0 && <br />}{ligne}</Fragment>)}

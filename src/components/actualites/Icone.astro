@@ -1,0 +1,24 @@
+---
+// Icônes au trait (24×24, couleur du texte). Les noms de ICONES (src/content/schemas.ts) sont proposés dans Page CMS.
+const traces = {
+  fleche: '<path d="M5 12h14m-7-7 7 7-7 7"/>',
+  fermer: '<path d="m6 6 12 12M18 6 6 18"/>',
+  livre: '<path d="M12 6C8 3 5 3 2 4v15c4-1 7-1 10 2 3-3 6-3 10-2V4c-4-1-7-1-10 2Zm0 0v15"/>',
+  bulle: '<path d="M21 11a8 8 0 0 1-8 8H5l-3 3V11a9 9 0 0 1 19 0Z"/><path d="M7 9h9m-9 4h6"/>',
+  famille: '<circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/>',
+  pousse: '<path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/>',
+  crayon: '<path d="m4 16-1 5 5-1L21 7l-4-4L4 16Zm11-11 4 4M4 16l4 4"/>',
+  coeur: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
+  vent: '<path d="M3 8h12a3 3 0 1 0-3-3M2 12h17a3 3 0 1 1-3 3M4 16h6a3 3 0 1 1-3 3"/>',
+  etoile: '<path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/>',
+  calendrier: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/>',
+} as const;
+
+interface Props {
+  nom: keyof typeof traces;
+  class?: string;
+}
+
+const { nom, class: classe = 'icon' } = Astro.props;
+---
+<svg class={classe} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={traces[nom]}></svg>

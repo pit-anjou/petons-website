@@ -1,0 +1,690 @@
+# Page CMS (https://pagescms.org) : édition des actualités du site.
+# Chaque champ doit correspondre à src/content/schemas.ts (vérifié par tests/pages-cms.test.ts) :
+# Page CMS efface à l’enregistrement les champs qui ne sont pas déclarés ici.
+# Guide des éditeurs : docs/page-cms.md.
+
+media:
+  input: public/assets/img/actualites
+  output: assets/img/actualites
+  categories: [image]
+  extensions: [jpg, jpeg, png, webp, avif, gif, svg]
+  rename: safe
+
+settings:
+  commit:
+    identity: user
+    templates:
+      create: "Actualités : ajoute {path} (Page CMS)"
+      update: "Actualités : modifie {path} (Page CMS)"
+      delete: "Actualités : supprime {path} (Page CMS)"
+      rename: "Actualités : renomme {oldPath} en {newPath} (Page CMS)"
+
+components:
+  visuel:
+    type: object
+    label: Visuel de la carte
+    required: true
+    fields:
+      - name: image
+        label: Image
+        type: image
+        description: Une photo ou un dessin. Laisser vide si vous choisissez une illustration animée.
+      - name: illustration
+        label: Illustration animée
+        type: select
+        description: À la place d’une image. Ajouter une nouvelle illustration animée demande une intervention dans le code.
+        options:
+          values:
+            - value: carnaval
+              label: Carnaval
+      - name: alt
+        label: Description de l’image
+        type: string
+        required: true
+        description: Ce que montre l’image, en une phrase, pour les personnes qui ne la voient pas.
+      - name: fond
+        label: Présentation
+        type: select
+        default: photo
+        options:
+          values:
+            - value: photo
+              label: Photo plein cadre
+            - value: vert
+              label: Dessin sur fond vert
+            - value: sable
+              label: Dessin sur fond sable
+      - name: cadrage
+        label: Cadrage vertical de la photo (%)
+        type: number
+        default: 50
+        description: "0 montre le haut de la photo, 100 le bas."
+        options:
+          min: 0
+          max: 100
+      - name: etiquette
+        label: Étiquette sur l’image
+        type: string
+
+  lien:
+    type: object
+    label: Lien
+    fields:
+      - name: libelle
+        label: Texte du lien
+        type: string
+        required: true
+      - name: url
+        label: Adresse
+        type: string
+        required: true
+        description: "Une page du site : contact-petons.html?sujet=visite. Un autre site : https://…"
+      - name: style
+        label: Apparence
+        type: select
+        default: lien
+        options:
+          values:
+            - value: bouton
+              label: Bouton
+            - value: lien
+              label: Lien simple
+      - name: nouvelOnglet
+        label: Ouvrir dans un nouvel onglet
+        type: boolean
+        default: false
+
+  blocs:
+    type: block
+    label: Contenu de la fenêtre
+    list: true
+    blockKey: type
+    blocks:
+      - name: texte
+        label: Texte
+        fields:
+          - name: contenu
+            label: Texte
+            type: rich-text
+            required: true
+            options:
+              format: markdown
+              media: false
+      - name: intertitre
+        label: Intertitre
+        fields:
+          - name: titre
+            label: Intertitre
+            type: string
+            required: true
+          - name: logo
+            label: Logo à gauche (facultatif)
+            type: image
+          - name: logoAlt
+            label: Description du logo
+            type: string
+      - name: photo
+        label: Photo
+        fields:
+          - name: image
+            label: Photo
+            type: image
+            required: true
+          - name: alt
+            label: Description de la photo
+            type: string
+            required: true
+          - name: legende
+            label: Légende
+            type: string
+
+  icone:
+    type: select
+    label: Icône
+    required: true
+    options:
+      values:
+        - value: livre
+          label: Livre ouvert
+        - value: bulle
+          label: Bulle de dialogue
+        - value: famille
+          label: Personnes
+        - value: pousse
+          label: Pousse
+        - value: crayon
+          label: Crayon
+        - value: coeur
+          label: Cœur
+        - value: vent
+          label: Souffle
+        - value: etoile
+          label: Étoile
+        - value: calendrier
+          label: Calendrier
+
+  elementIllustre:
+    type: object
+    label: Élément
+    fields:
+      - name: icone
+        component: icone
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: texte
+        label: Texte
+        type: text
+        required: true
+        description: "**gras**, ==surligné vert==, ++surligné orange++"
+
+  blocsProgramme:
+    type: block
+    label: Contenu de la section
+    list: true
+    required: true
+    blockKey: type
+    blocks:
+      - name: texte
+        label: Texte
+        fields:
+          - name: contenu
+            label: Texte
+            type: text
+            required: true
+            description: "Paragraphes séparés par une ligne vide. **gras**, ==surligné vert==, ++surligné orange++"
+      - name: intervenants
+        label: Intervenants
+        fields:
+          - name: personnes
+            label: Personnes
+            type: object
+            list: true
+            required: true
+            fields:
+              - name: photo
+                label: Photo
+                type: image
+                required: true
+              - name: alt
+                label: Description de la photo
+                type: string
+                required: true
+              - name: nom
+                label: Nom
+                type: string
+                required: true
+              - name: presentation
+                label: Présentation
+                type: text
+                required: true
+                description: "**gras** pour mettre en valeur"
+      - name: forces
+        label: Liste illustrée (fond coloré)
+        fields:
+          - name: elements
+            label: Éléments
+            component: elementIllustre
+            list: true
+            required: true
+      - name: etapes
+        label: Étapes
+        fields:
+          - name: elements
+            label: Étapes
+            component: elementIllustre
+            list: true
+            required: true
+      - name: illustration
+        label: Illustration
+        fields:
+          - name: image
+            label: Image
+            type: image
+            required: true
+          - name: alt
+            label: Description de l’image
+            type: string
+            required: true
+      - name: restitution
+        label: Invitation à la restitution
+        fields:
+          - name: titre
+            label: Titre
+            type: string
+            required: true
+            description: "La date et l’heure s’ajoutent seules : « Restitution le vendredi 26 février à 16h30. »"
+          - name: precision
+            label: Précision
+            type: string
+
+content:
+  - name: programmes
+    label: Programmes de stage
+    description: "La carte et la fenêtre « Programme & infos » d’un stage. Une fiche par public (enfants, ados…) ; chaque session choisit sa fiche. Si un programme du même nom existe déjà (par exemple l’an passé), modifiez le nom de fichier proposé à la création."
+    type: collection
+    path: src/content/programmes
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.nom}.md"
+      field: create
+    operations:
+      rename: false
+    view:
+      fields: [nom]
+      primary: nom
+      sort: [nom]
+    fields:
+      - name: nom
+        label: Nom de la fiche
+        type: string
+        required: true
+        description: Visible seulement dans Page CMS, pour choisir la fiche d’une session.
+      - name: titre
+        label: Titre
+        type: text
+        required: true
+        description: Sur deux lignes ; la deuxième ligne est surlignée dans la fenêtre.
+      - name: accroche
+        label: Accroche sous le titre
+        type: string
+        required: true
+      - name: discipline
+        label: Discipline
+        type: string
+        required: true
+        description: "Exemple : Stage théâtre & arts plastiques"
+      - name: ages
+        label: Âges (étiquette)
+        type: string
+        required: true
+        description: "Exemple : 6–11 ans"
+      - name: agesDeA
+        label: Âges en toutes lettres
+        type: string
+        required: true
+        description: "Exemple : 6 à 11 ans"
+      - name: etiquette
+        label: Étiquette sur l’image de la carte
+        type: text
+        required: true
+        description: "Exemple : **Ouvert à tous** · enfants des Petons et d’ailleurs"
+      - name: description
+        label: Description sur la carte
+        type: text
+        required: true
+      - name: public
+        label: Public (en haut de la fenêtre)
+        type: text
+        required: true
+      - name: participants
+        label: Participants
+        type: string
+        required: true
+        description: "Exemple : enfants (affiché « 14 enfants »)"
+      - name: participantsCarte
+        label: Participants sur la carte (facultatif)
+        type: string
+        description: "Forme courte, par exemple « ados ». Vide = même mot."
+      - name: encadrement
+        label: Encadrement
+        type: string
+        required: true
+        description: "Exemple : deux intervenants"
+      - name: intro
+        label: Introduction de la fenêtre
+        type: text
+        required: true
+        description: "La première phrase en **gras** s’affiche en grand."
+      - name: horaires
+        label: Horaires
+        type: string
+        required: true
+        description: "Exemple : 10h–17h"
+      - name: accueil
+        label: Accueil dès
+        type: string
+        required: true
+        description: "Exemple : 9h"
+      - name: jours
+        label: Jours
+        type: string
+        required: true
+        description: "Exemple : Du lundi au vendredi"
+      - name: lieu
+        label: Ville
+        type: string
+        required: true
+      - name: restitution
+        label: Heure de la restitution (dernier jour)
+        type: string
+        pattern:
+          regex: "^\\d{1,2}h\\d{2}$"
+          message: "Format attendu : 16h30"
+      - name: sections
+        label: Sections de la fenêtre
+        type: object
+        list: true
+        required: true
+        fields:
+          - name: titre
+            label: Titre de la section
+            type: string
+            required: true
+          - name: icone
+            component: icone
+          - name: presentation
+            label: Présentation
+            type: select
+            default: simple
+            options:
+              values:
+                - value: simple
+                  label: Simple
+                - value: separee
+                  label: Séparée par un trait
+                - value: mise-en-avant
+                  label: Mise en avant (fond orangé)
+          - name: blocs
+            component: blocsProgramme
+      - name: sac
+        label: Dans le sac (facultatif)
+        type: object
+        fields:
+          - name: titre
+            label: Titre
+            type: string
+            required: true
+          - name: sousTitre
+            label: Sous-titre
+            type: string
+          - name: objets
+            label: Objets
+            type: object
+            list: true
+            required: true
+            fields:
+              - name: image
+                label: Dessin
+                type: image
+                required: true
+              - name: texte
+                label: Texte
+                type: text
+                required: true
+      - name: inscription
+        label: Pour s’inscrire
+        type: text
+        required: true
+
+  - name: stages
+    label: Stages de vacances
+    description: "Chaque session choisit son programme et fixe ses dates, son prix et ses places. Deux sessions qui commencent le même jour : ajoutez « -ados » (ou un autre mot) au nom de fichier proposé à la création."
+    type: collection
+    path: src/content/stages
+    format: yaml
+    filename:
+      template: "stage-{fields.debut}.yml"
+      field: create
+    operations:
+      rename: false
+    view:
+      fields: [debut, programme, vacances, brouillon]
+      primary: debut
+      sort: [debut]
+      default:
+        sort: debut
+        order: asc
+    fields:
+      - name: programme
+        label: Programme
+        type: reference
+        required: true
+        options:
+          collection: programmes
+          value: "{name}"
+          label: "{fields.nom}"
+          search: nom
+      - name: debut
+        label: Premier jour
+        type: date
+        required: true
+      - name: fin
+        label: Dernier jour (jour de la restitution)
+        type: date
+        required: true
+      - name: vacances
+        label: Vacances
+        type: select
+        required: true
+        options:
+          values:
+            - value: toussaint
+              label: Vacances de la Toussaint
+            - value: noel
+              label: Vacances de Noël
+            - value: hiver
+              label: Vacances d’hiver
+            - value: printemps
+              label: Vacances de printemps
+            - value: ete
+              label: Vacances d’été
+      - name: image
+        label: Image de la carte
+        type: image
+        required: true
+        description: Affichée en fond pâle derrière le titre du stage.
+      - name: cadrage
+        label: Cadrage vertical de l’image (%)
+        type: number
+        default: 5
+        description: "0 montre le haut de l’image, 100 le bas."
+        options:
+          min: 0
+          max: 100
+      - name: couleur
+        label: Couleur de la carte
+        type: select
+        default: vert
+        options:
+          values:
+            - value: vert
+              label: Vert
+            - value: menthe
+              label: Menthe
+            - value: orange
+              label: Orange
+            - value: bleu
+              label: Bleu
+      - name: prix
+        label: Prix du stage (€)
+        type: number
+        required: true
+        options:
+          min: 1
+      - name: prixFratrie
+        label: Prix par enfant pour les fratries (€)
+        type: number
+        required: true
+        options:
+          min: 1
+      - name: effectif
+        label: Nombre maximum de participants
+        type: number
+        required: true
+        options:
+          min: 1
+      - name: note
+        label: Note sous les étiquettes (facultatif)
+        type: string
+      - name: brouillon
+        label: Brouillon (masqué sur le site)
+        type: boolean
+        default: false
+
+  - name: rendez-vous
+    label: Prochains rendez-vous
+    description: "Fêtes, réunions, rencontres… Affichés par date, du plus proche au plus lointain. Si un rendez-vous ou un article porte déjà ce titre (par exemple l’an passé), modifiez le nom de fichier proposé à la création."
+    type: collection
+    path: src/content/rendez-vous
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.titre}.md"
+      field: create
+    operations:
+      rename: false
+    view:
+      fields: [titre, date, brouillon]
+      primary: titre
+      sort: [date, titre]
+      default:
+        sort: date
+        order: asc
+    fields:
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: titreModale
+        label: Titre dans la fenêtre (facultatif)
+        type: text
+        description: Passer à la ligne pour forcer un retour à la ligne. Laisser vide pour reprendre le titre.
+      - name: date
+        label: Date
+        type: date
+        required: true
+      - name: heureDebut
+        label: Heure de début
+        type: string
+        pattern:
+          regex: "^\\d{1,2}h\\d{2}$"
+          message: "Format attendu : 10h00"
+      - name: heureFin
+        label: Heure de fin
+        type: string
+        pattern:
+          regex: "^\\d{1,2}h\\d{2}$"
+          message: "Format attendu : 12h30"
+      - name: mention
+        label: Public ou condition
+        type: string
+        required: true
+        description: "Exemple : Sans inscription · Entrée libre"
+      - name: surDate
+        label: Libellé au-dessus de la date (facultatif)
+        type: string
+        description: "Vide = jour de la semaine. Exemple : À l’école"
+      - name: note
+        label: Note sous les étiquettes (facultatif)
+        type: string
+      - name: resume
+        label: Résumé sur la carte
+        type: text
+        required: true
+      - name: bouton
+        label: Texte du bouton de la carte
+        type: string
+        default: Voir les détails
+      - name: visuel
+        component: visuel
+      - name: surtitre
+        label: Surtitre de la fenêtre
+        type: string
+        required: true
+        description: "Exemple : Rencontrer l’école"
+      - name: intro
+        label: Introduction de la fenêtre
+        type: text
+      - name: pointsForts
+        label: Points forts
+        component: elementIllustre
+        list: true
+      - name: blocs
+        component: blocs
+      - name: encadre
+        label: Encadré pratique
+        type: object
+        fields:
+          - name: titre
+            label: Texte en gras
+            type: string
+            required: true
+          - name: texte
+            label: Précision
+            type: string
+      - name: liens
+        label: Liens en bas de la fenêtre
+        component: lien
+        list: true
+      - name: brouillon
+        label: Brouillon (masqué sur le site)
+        type: boolean
+        default: false
+
+  - name: articles
+    label: La vie de l’école
+    description: "Articles et retours sur les événements, du plus récent au plus ancien. Si un article ou un rendez-vous porte déjà ce titre (par exemple l’an passé), modifiez le nom de fichier proposé à la création."
+    type: collection
+    path: src/content/articles
+    format: yaml-frontmatter
+    filename:
+      template: "{fields.titre}.md"
+      field: create
+    operations:
+      rename: false
+    view:
+      fields: [titre, date, brouillon]
+      primary: titre
+      sort: [date, titre]
+      default:
+        sort: date
+        order: desc
+    fields:
+      - name: titre
+        label: Titre sur la carte
+        type: string
+        required: true
+      - name: titreModale
+        label: Titre dans la fenêtre (facultatif)
+        type: text
+        description: Passer à la ligne pour forcer un retour à la ligne. Laisser vide pour reprendre le titre.
+      - name: date
+        label: Date de l’événement
+        type: date
+        required: true
+        description: Sert seulement au classement, elle n’est pas affichée.
+      - name: rubrique
+        label: Rubrique
+        type: string
+        default: Retour sur un événement
+      - name: repere
+        label: Repère à côté de la rubrique
+        type: string
+        required: true
+        description: "Exemple : Vote Éco-École"
+      - name: resume
+        label: Résumé sur la carte
+        type: text
+        required: true
+      - name: visuel
+        component: visuel
+      - name: surtitre
+        label: Surtitre de la fenêtre
+        type: string
+        required: true
+        description: "Exemple : Éco-École · Septembre 2026"
+      - name: intro
+        label: Introduction (affichée en gras)
+        type: text
+        required: true
+      - name: blocs
+        component: blocs
+      - name: liens
+        label: Liens en bas de la fenêtre
+        component: lien
+        list: true
+      - name: brouillon
+        label: Brouillon (masqué sur le site)
+        type: boolean
+        default: false

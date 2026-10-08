@@ -1,0 +1,20 @@
+---
+// Carte d’un rendez-vous (grille de l’agenda).
+import type { RendezVous } from '../../content/schemas';
+import { dateIso, horaire, jourSemaine, moisMajuscule } from '../../lib/dates';
+import Icone from './Icone.astro';
+import Visuel from './Visuel.astro';
+
+interface Props {
+  id: string;
+  rendezVous: RendezVous;
+  /** La première carte charge son image immédiatement. */
+  premier: boolean;
+}
+
+const { id, rendezVous, premier } = Astro.props;
+const dialogue = `${id}-dialog`;
+const heures = horaire(rendezVous.heureDebut, rendezVous.heureFin);
+const surDate = rendezVous.surDate ?? jourSemaine(rendezVous.date);
+---
+<article class="news-card agenda-card" id={id} data-category="evenements"><button type="button" class="cover-button" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue} aria-label={`Lire : ${rendezVous.titre}`}><Visuel visuel={rendezVous.visuel} chargement={premier ? 'eager' : 'lazy'} /></button><div class="card-content"><div class="stage-meta agenda-meta"><div class="stage-date"><span class="stage-season">{surDate}</span><time datetime={dateIso(rendezVous.date)}><strong>{rendezVous.date.getUTCDate()}</strong><b>{moisMajuscule(rendezVous.date)}</b></time></div><div class="stage-meta-details"><div class="stage-tags"><span class="stage-tag">{rendezVous.mention}</span>{heures && <span class="stage-tag stage-age">{heures}</span>}</div>{rendezVous.note && <p class="stage-session-note">{rendezVous.note}</p>}</div></div><h3><button type="button" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue}>{rendezVous.titre}</button></h3><p>{rendezVous.resume}</p><button type="button" class="button event-action" data-open={dialogue} aria-haspopup="dialog" aria-controls={dialogue}>{rendezVous.bouton}<Icone nom="fleche" /></button></div></article>
