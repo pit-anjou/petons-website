@@ -1,12 +1,11 @@
-/* Display once per visit; explicit invitations remain reopenable at any time. */
+/* Keep the invitation available until explicitly dismissed for this visit. */
 (()=>{
   const root=document.getElementById('open-house-announcement');
   if(!root)return;
   const banner=root.querySelector('.oh-banner'),card=root.querySelector('.oh-card');
-  const prefix=`petons:${root.dataset.campaign}:`,seenKey=prefix+'seen',bannerKey=prefix+'banner-dismissed',visitKey=prefix+'last-activity';
+  const prefix=`petons:${root.dataset.campaign}:invitation-v2:`,seenKey=prefix+'dismissed',bannerKey=prefix+'banner-dismissed',visitKey=prefix+'last-activity';
   const visitTimeout=30*60*1000;
   const expires=Date.parse(root.dataset.end);
-  const desktop=matchMedia('(min-width:900px) and (min-height:650px)');
   const stores=[];
   // Persistent campaign dismissals from older versions must not suppress a new visit.
   for(const name of ['sessionStorage']){
@@ -22,7 +21,7 @@
   const newArrival=navigation?.type==='navigate'&&(!document.referrer||new URL(document.referrer).origin!==location.origin);
   if(newArrival||staleVisit())resetVisit();
   touchVisit();
-  let interacted=false,timer,finished=false,opener=null,readyAt=Date.now()+8000;
+  let timer,finished=false,opener=null,readyAt=Date.now()+2000;
   const active=()=>Number.isFinite(expires)&&Date.now()<expires;
   const manual=()=>card.hasAttribute('data-manual');
   const setExpanded=value=>document.querySelectorAll('[data-oh-reopen]').forEach(button=>button.setAttribute('aria-expanded',String(value)));
@@ -36,14 +35,14 @@
     card.toggleAttribute('data-manual',Boolean(trigger));
     const illustration=card.querySelector('img');
     if(!illustration.getAttribute('src'))illustration.src=illustration.dataset.src;
-    remember(seenKey);card.hidden=false;card.scrollTop=0;setExpanded(true);stop();
+    card.hidden=false;card.scrollTop=0;setExpanded(true);stop();
     if(trigger)card.querySelector('[data-oh-close-card]').focus({preventScroll:true});
   }
   function closeCard(){
     const focused=card.contains(document.activeElement);
     dismissCard();
     if(focused){
-      const target=opener?.isConnected?opener:(!banner.hidden?banner.querySelector('[data-oh-reopen]'):document.querySelector('.cm-brand'));
+      const target=opener?.isConnected?opener:(!banner.hidden?banner.querySelector('.oh-banner-cta'):document.querySelector('.cm-brand'));
       target?.focus({preventScroll:true});
     }
     opener=null;
@@ -53,11 +52,11 @@
     if(finished)return;
     if(!active()){hideAll();return;}
     if(read(seenKey)||read(bannerKey)){hideCard();return;}
-    // Automatic display stays off when storage is blocked or the screen is small.
-    if(!stores.length||!desktop.matches)return;
+    // Without session storage, keep the manual entry point to avoid repeated interruptions.
+    if(!stores.length)return;
     const remaining=readyAt-Date.now();
     if(remaining>0){timer=setTimeout(attempt,remaining);return;}
-    if(!interacted||document.hidden)return;
+    if(document.hidden)return;
     const busy=document.querySelector('dialog[open],.cm-menu-toggle[aria-expanded="true"]')||document.activeElement?.closest('form,input,textarea,select,[contenteditable="true"]');
     if(busy){timer=setTimeout(attempt,4000);return;}
     showCard();
@@ -70,14 +69,11 @@
     document.querySelector('.cm-brand')?.focus({preventScroll:true});
   });
   root.querySelectorAll('[data-oh-action]').forEach(link=>link.addEventListener('click',dismissCard));
-  for(const type of ['scroll','pointerdown','keydown']){
-    addEventListener(type,()=>{interacted=true;attempt();},{passive:true});
-  }
   function resumeVisit(){
     if(!active()){hideAll();return;}
     if(staleVisit()){
       resetVisit();hideCard();opener=null;
-      finished=false;interacted=false;readyAt=Date.now()+8000;banner.hidden=false;
+      finished=false;readyAt=Date.now()+2000;banner.hidden=false;
     }
     touchVisit();attempt();
   }
@@ -92,7 +88,6 @@
       else{if(read(seenKey)&&!manual())hideCard();if(read(bannerKey))banner.hidden=true;}
     }
   });
-  desktop.addEventListener('change',()=>{if(!desktop.matches&&!card.hidden&&!manual())hideCard();else attempt();});
   document.addEventListener('click',event=>{
     const trigger=event.target.closest('[data-oh-reopen]');
     if(trigger){showCard(trigger);return;}
@@ -109,7 +104,7 @@
     const url=new URL(location.href);
     if(url.searchParams.get('invitation')==='portes-ouvertes'){
       banner.hidden=false;
-      showCard(banner.querySelector('[data-oh-reopen]'));
+      showCard(banner.querySelector('.oh-banner-cta'));
       url.searchParams.delete('invitation');history.replaceState(null,'',url.pathname+url.search+url.hash);
     }
   }

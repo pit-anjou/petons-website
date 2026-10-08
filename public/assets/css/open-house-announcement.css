@@ -13,7 +13,7 @@
 .oh-banner-date>span{font-size:15px;font-weight:700}
 .oh-banner-date b{font-weight:800}
 .oh-banner-link:hover .oh-banner-date{text-decoration:underline;text-underline-offset:4px}
-.oh-banner-cta{display:inline-flex;align-items:center;justify-content:center;gap:14px;flex-shrink:0;padding:12px 20px;min-height:46px;border:0;border-radius:4px 20px 4px 20px;background:var(--paper,#fffdf8);color:#203f4d;cursor:pointer;font:800 14px/1.4 Nunito,Arial,sans-serif;box-shadow:0 3px 0 #203f4d20}
+.oh-banner-cta{display:inline-flex;text-decoration:none;align-items:center;justify-content:center;gap:14px;flex-shrink:0;padding:12px 20px;min-height:46px;border:0;border-radius:4px 20px 4px 20px;background:var(--paper,#fffdf8);color:#203f4d;cursor:pointer;font:800 14px/1.4 Nunito,Arial,sans-serif;box-shadow:0 3px 0 #203f4d20}
 .oh-banner-cta>span{font-size:23px;line-height:1}
 .oh-banner-cta:hover{background:#f5efdb;box-shadow:0 4px 0 #203f4d30}
 .oh-close{display:grid;place-items:center;width:44px;height:44px;min-width:44px;padding:10px;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer}
@@ -32,8 +32,8 @@
 .oh-card h2{position:relative;isolation:isolate;display:inline-block;font:700 41px/1.04 Kalam,cursive;color:var(--heading,#316573);letter-spacing:-.8px;margin:0 0 11px}
 .oh-card h2::after{content:"";position:absolute;bottom:-4px;left:0;right:1px;height:5px;border-radius:50% 20% 55% 10%;background:#dce8af;transform:rotate(-1.5deg);z-index:-1}
 .oh-card .oh-card-welcome{font-size:13px;font-weight:700;line-height:1.4;margin:0 0 12px}
-.oh-card .oh-card-hours{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:800;line-height:1.3;margin:0;padding:6px 9px;background:#fbecd6;border-radius:4px;color:#765434;white-space:nowrap}
-.oh-card-hours>span{border-left:1px solid #dcc8a9;padding-left:8px;font-size:11px;font-weight:700}
+.oh-card .oh-card-hours{display:inline-flex;align-items:center;gap:7px;font-size:13px;font-weight:800;line-height:1.3;margin:0;padding:5px 8px;background:#fbecd6;border-radius:4px;color:#765434;white-space:nowrap}
+.oh-card-hours>span{border-left:1px solid #dcc8a9;padding-left:7px;font-size:10px;font-weight:700}
 .oh-card-art{height:184px;margin:10px 14px 0;background:#fff}
 .oh-card-art img{width:100%;height:100%;object-fit:contain}
 .oh-card-copy{padding:13px 23px 24px}
@@ -47,7 +47,6 @@
 .oh-footer-access{margin-top:24px}
 .oh-footer-access button{display:inline-flex;align-items:center;gap:12px;min-height:44px;padding:0;border:0;background:transparent;color:var(--heading,#316573);font:800 14px/1.5 Nunito,Arial,sans-serif;text-align:left;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
 @media(max-width:1050px){.oh-banner-inner{gap:16px}.oh-banner-link{gap:22px}.oh-banner-heading>strong{font-size:32px}.oh-banner-date{font-size:15px}.oh-banner-cta{padding:11px 16px;font-size:13px}}
-@media(max-width:899px),(max-height:649px){.oh-card:not([data-manual]){display:none!important}}
 @media(max-width:760px){
  .oh-banner-inner{position:relative;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;padding:14px 58px 18px 22px}
  .oh-banner-link{display:contents}
@@ -76,5 +75,5 @@
  .oh-card-programme{padding:14px;gap:12px}
  .oh-card-programme>div+div{padding-left:12px}
 }
-@media(max-width:350px){.oh-banner-heading>strong{font-size:28px}.oh-banner-date{font-size:12px}.oh-banner-cta{max-width:96px}.oh-card-heading{margin-left:16px;margin-right:16px;grid-template-columns:76px minmax(0,1fr);gap:15px}.oh-card-calendar{padding-right:13px}.oh-card-calendar>strong{font-size:60px}.oh-calendar-month{font-size:13px}.oh-card h2{font-size:33px}.oh-card .oh-card-hours{gap:7px;padding:6px 8px;font-size:14px}.oh-card-hours>span{padding-left:7px;font-size:10px}.oh-card-art{height:156px}.oh-card-copy{padding-left:16px;padding-right:16px}.oh-card-programme h3{font-size:22px}.oh-card-programme{padding:12px;gap:10px}.oh-card-programme>div+div{padding-left:10px}.oh-card .oh-card-programme p{font-size:11px}}
+@media(max-width:350px){.oh-banner-heading>strong{font-size:28px}.oh-banner-date{font-size:12px}.oh-banner-cta{max-width:96px}.oh-card-heading{margin-left:16px;margin-right:16px;grid-template-columns:76px minmax(0,1fr);gap:15px}.oh-card-calendar{padding-right:13px}.oh-card-calendar>strong{font-size:60px}.oh-calendar-month{font-size:13px}.oh-card h2{font-size:33px}.oh-card .oh-card-hours{gap:7px;padding:5px 8px;font-size:13px}.oh-card-hours>span{padding-left:7px;font-size:10px}.oh-card-art{height:156px}.oh-card-copy{padding-left:16px;padding-right:16px}.oh-card-programme h3{font-size:22px}.oh-card-programme{padding:12px;gap:10px}.oh-card-programme>div+div{padding-left:10px}.oh-card .oh-card-programme p{font-size:11px}}
 @media print{#open-house-announcement,.oh-footer-access{display:none!important}}

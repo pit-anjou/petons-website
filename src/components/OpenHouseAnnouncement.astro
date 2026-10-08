@@ -3,7 +3,7 @@ import { openHouse } from '../data/openHouse';
 const parts = new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).formatToParts(new Date(openHouse.start));
 const datePart = (type: string) => parts.find(part => part.type === type)?.value;
 ---
-<link rel="stylesheet" href="assets/css/open-house-announcement.css">
+<link rel="stylesheet" href="assets/css/open-house-announcement.css?v=20261008-3">
 <div id="open-house-announcement" data-campaign={openHouse.id} data-end={openHouse.end}>
   <aside class="oh-banner" aria-label="Prochaines portes ouvertes" hidden>
     <div class="oh-banner-inner">
@@ -11,7 +11,7 @@ const datePart = (type: string) => parts.find(part => part.type === type)?.value
         <span class="oh-banner-heading"><strong>{openHouse.title}</strong><span>Venez découvrir l’école en famille</span></span>
         <span class="oh-banner-date"><time datetime={openHouse.start}>{openHouse.date}</time><span><b>{openHouse.hours}</b> · Entrée libre</span></span>
       </a>
-      <button class="oh-banner-cta" type="button" data-oh-reopen aria-controls="open-house-invitation" aria-expanded="false">Voir l’invitation <span aria-hidden="true">↗</span></button>
+      <a class="oh-banner-cta" href={openHouse.href} data-oh-action>Voir l’événement <span aria-hidden="true">↗</span></a>
       <button type="button" class="oh-close" data-oh-close-banner aria-label="Masquer le bandeau des portes ouvertes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
     </div>
   </aside>
@@ -40,4 +40,4 @@ const datePart = (type: string) => parts.find(part => part.type === type)?.value
     </div>
   </aside>
 </div>
-<script is:inline src="assets/js/open-house-announcement.js"></script>
+<script is:inline src="assets/js/open-house-announcement.js?v=20261008-3"></script>
