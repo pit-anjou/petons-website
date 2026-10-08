@@ -14,7 +14,7 @@ test('chaque bouton data-open ouvre une fenêtre qui existe', () => {
 test('chaque fenêtre a un bouton de fermeture et un titre', () => {
   for (const fenetre of page.querySelectorAll('dialog')) {
     expect(fenetre.querySelector('[data-close]')).not.toBeNull();
-    expect(fenetre.querySelector(`#${fenetre.getAttribute('aria-labelledby')}`)).not.toBeNull();
+    expect(fenetre.querySelector(`[id="${fenetre.getAttribute('aria-labelledby')}"]`)).not.toBeNull();
   }
 });
 
@@ -29,7 +29,7 @@ test('les ancres visées depuis les autres pages existent', async () => {
     const autre = await chargerHtml(`dist/${fichier}`);
     for (const lien of autre.querySelectorAll('a[href^="actualites-petons.html#"]')) {
       const ancre = lien.getAttribute('href')!.split('#')[1]!;
-      if (!page.querySelector(`#${ancre}`)) manquantes.push(`${fichier} → #${ancre}`);
+      if (!page.querySelector(`[id="${ancre}"]`)) manquantes.push(`${fichier} → #${ancre}`);
     }
   }
   expect(manquantes).toEqual([]);
