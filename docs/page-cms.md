@@ -11,7 +11,9 @@ Adresse : **https://app.pagescms.org**
 3. Choisir une rubrique, modifier ou ajouter une entrée, puis cliquer sur **Save**.
 4. La page est en ligne **1 à 2 minutes** plus tard.
 
-Pour préparer une entrée sans la montrer, cocher **Brouillon** : elle reste enregistrée mais n’apparaît pas sur le site.
+Pour préparer une entrée sans la montrer, cocher **Brouillon** : elle reste enregistrée mais n’apparaît pas sur le site. Un brouillon est vérifié comme les autres entrées : **un brouillon incomplet ou invalide bloque aussi la mise en ligne**.
+
+Les **prix, effectifs et cadrages** sont des nombres entiers (200, pas 200,50).
 
 **Si la modification n’apparaît pas après 5 minutes**, la mise en ligne a échoué : le site garde alors sa version précédente. Prévenir Philippe, en indiquant ce qui a été modifié.
 
@@ -22,6 +24,7 @@ Un **programme** contient tout ce qui ne change pas d’une session à l’autre
 - Pour créer un nouveau programme, le plus simple est de **dupliquer** une fiche existante, puis de l’adapter.
 - La fenêtre se compose de **sections** (titre et icône), elles-mêmes composées de **blocs** : *Texte*, *Intervenants*, *Liste illustrée* (comme « Trois forces à éveiller »), *Étapes*, *Illustration* et *Invitation à la restitution*. La partie « En pratique » se remplit seule à partir des horaires, du sac et du texte d’inscription.
 - Mise en forme dans les textes : `**gras**`, `==surligné vert==` et `++surligné orange++`.
+- **Ne pas supprimer un programme utilisé par une session publiée** : la mise en ligne échouerait.
 
 ## Sessions de stage
 
@@ -36,7 +39,8 @@ Chaque **session** choisit son programme, puis fixe ses dates, ses vacances, l�
 - La **fenêtre** s’ouvre au clic. Elle contient un surtitre, une introduction, puis des **blocs** à empiler dans l’ordre voulu : *Texte*, *Intertitre* (avec un logo facultatif) et *Photo* (avec description et légende).
 - Les rendez-vous sont classés par date. Les articles sont classés du plus récent au plus ancien, selon leur **date de l’événement** (non affichée).
 - Pour un rendez-vous passé, on peut le supprimer, ou en faire un article « Retour sur un événement ». Un rendez-vous et un article ne peuvent pas porter le même titre : **changer le titre de l’article, ou supprimer d’abord le rendez-vous**. Sinon la mise en ligne échoue, avec un message qui nomme les deux.
-- Les surlignages `==…==` et `++…++` ne sont prévus que dans les programmes de stage.
+- Seuls les textes des **programmes** et les **points forts** des rendez-vous acceptent `**gras**` et les surlignages `==…==` et `++…++`. Tous les autres champs des rendez-vous et des articles sont du texte simple, sauf les blocs « Texte », qui ont leur propre éditeur.
+- Le code HTML saisi dans un texte s’affiche tel quel, il n’est pas interprété.
 
 ## Images
 
