@@ -35,7 +35,7 @@ Chaque **session** choisit son programme, puis fixe ses dates, ses vacances, l�
 - La **carte** affiche le titre, la date ou le repère, le résumé et le visuel.
 - La **fenêtre** s’ouvre au clic. Elle contient un surtitre, une introduction, puis des **blocs** à empiler dans l’ordre voulu : *Texte*, *Intertitre* (avec un logo facultatif) et *Photo* (avec description et légende).
 - Les rendez-vous sont classés par date. Les articles sont classés du plus récent au plus ancien, selon leur **date de l’événement** (non affichée).
-- Pour un rendez-vous passé, on peut le supprimer, ou en faire un article « Retour sur un événement ».
+- Pour un rendez-vous passé, on peut le supprimer, ou en faire un article « Retour sur un événement ». Un rendez-vous et un article ne peuvent pas porter le même titre : **changer le titre de l’article, ou supprimer d’abord le rendez-vous**. Sinon la mise en ligne échoue, avec un message qui nomme les deux.
 - Les surlignages `==…==` et `++…++` ne sont prévus que dans les programmes de stage.
 
 ## Images

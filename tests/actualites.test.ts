@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { articleSchema, rendezVousSchema, stageSchema, type Programme } from '../src/content/schemas';
-import { articlesAffiches, avecProgramme, rendezVousAffiches, stagesAffiches } from '../src/lib/actualites';
+import { articlesAffiches, avecProgramme, rendezVousAffiches, stagesAffiches, verifierIdentifiants } from '../src/lib/actualites';
 
 const visuel = { image: 'assets/img/actualites/eco-ecole.svg', alt: 'Logo' };
 
@@ -46,4 +46,22 @@ test('avecProgramme associe chaque stage à son programme', () => {
 
 test('avecProgramme refuse un programme introuvable', () => {
   expect(() => avecProgramme([stage('s', '2027-02-22', false, 'absent.md')], [])).toThrow('absent.md');
+});
+
+test('verifierIdentifiants accepte des identifiants distincts', () => {
+  expect(() => verifierIdentifiants(['stage-avril-2027', 'portes-ouvertes', 'cross'], ['agenda', 'main'])).not.toThrow();
+});
+
+test('verifierIdentifiants refuse un même nom de fichier dans deux collections', () => {
+  expect(() => verifierIdentifiants(['un-carnaval-autour-de-la-sante', 'cross', 'un-carnaval-autour-de-la-sante'], [])).toThrow(
+    'Deux actualités ont le même nom de fichier : « un-carnaval-autour-de-la-sante ». Renommez le titre de l’une d’elles avant de l’enregistrer.',
+  );
+});
+
+test('verifierIdentifiants refuse un identifiant déjà utilisé par la page', () => {
+  expect(() => verifierIdentifiants(['cross', 'agenda'], ['agenda', 'main'])).toThrow('« agenda » est déjà utilisé par la page');
+});
+
+test('verifierIdentifiants liste chaque identifiant en cause', () => {
+  expect(() => verifierIdentifiants(['a', 'a', 'main', 'b', 'b'], ['main'])).toThrow(/« a ».*« b ».*« main »|« a ».*« main ».*« b »/s);
 });

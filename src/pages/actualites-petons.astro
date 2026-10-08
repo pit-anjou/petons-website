@@ -16,13 +16,22 @@ import ArticleCard from '../components/actualites/ArticleCard.astro';
 import ArticleDialog from '../components/actualites/ArticleDialog.astro';
 import RendezVousCard from '../components/actualites/RendezVousCard.astro';
 import RendezVousDialog from '../components/actualites/RendezVousDialog.astro';
-import { articlesAffiches, avecProgramme, rendezVousAffiches, stagesAffiches } from '../lib/actualites';
+import { articlesAffiches, avecProgramme, rendezVousAffiches, stagesAffiches, verifierIdentifiants } from '../lib/actualites';
 import { anneesStages } from '../lib/dates';
 
 // Contenus modifiables dans Page CMS : voir docs/page-cms.md.
 const stages = avecProgramme(stagesAffiches(await getCollection('stages')), await getCollection('programmes'));
 const rendezVous = rendezVousAffiches(await getCollection('rendezVous'));
 const articles = articlesAffiches(await getCollection('articles'));
+
+// Identifiants écrits en dur dans cette page, dans Header.astro, Footer.astro et src/data/site.ts : une actualité ne doit pas porter le même nom de fichier.
+const IDENTIFIANTS_PAGE = [
+  'agenda', 'agenda-priority-design', 'agenda-title', 'cm-ambiences-menu', 'cm-mobile-menu', 'cm-school-menu', 'enrol-title', 'footer-support-title',
+  'holiday-stages-design', 'inscriptions-ouvertes', 'journal', 'journal-title', 'letter-title', 'lettre', 'main',
+  'newsletter-copy', 'newsletter-draft', 'newsletter-email', 'newsletter-form', 'newsletter-mailto', 'newsletter-result', 'newsletter-status',
+  'page-title', 'proposer-activite', 'soutenir-footer',
+];
+verifierIdentifiants([...stages, ...rendezVous, ...articles].map(({ id }) => id), IDENTIFIANTS_PAGE);
 ---
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Agenda &amp; actualités | Les Petons dans l’Herbe · Nantes</title><meta name="description" content="Les annonces, événements à venir et retours en images des Petons dans l’Herbe à Nantes."><style is:inline>@font-face {
   font-family: 'Nunito';

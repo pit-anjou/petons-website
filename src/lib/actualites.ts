@@ -3,8 +3,13 @@ import type { Article, Programme, RendezVous, Stage } from '../content/schemas';
 
 export interface Entree<T> {
   readonly id: string;
+  /** Chemin du fichier source (fourni par Astro) ; son nom est celui que Page CMS cite dans `programme`. */
+  readonly filePath?: string;
   readonly data: T;
 }
+
+/** Nom de fichier réel d’une entrée. L’`id` d’Astro est slugifié (« Stage Été.md » donne « stage-ete »), pas le nom que Page CMS enregistre. */
+const nomDeFichier = (entree: Entree<unknown>): string => entree.filePath?.split('/').pop() ?? `${entree.id}.md`;
 
 const publiees = <T extends { brouillon: boolean }, E extends Entree<T>>(entrees: ReadonlyArray<E>): E[] =>
   entrees.filter((entree) => !entree.data.brouillon);
@@ -30,9 +35,24 @@ export const avecProgramme = <E extends Entree<Stage>>(
   programmes: ReadonlyArray<Entree<Programme>>,
 ): Array<E & { readonly programme: Programme }> =>
   stages.map((stage) => {
-    const trouve = programmes.find((programme) => `${programme.id}.md` === stage.data.programme);
+    const trouve = programmes.find((programme) => nomDeFichier(programme) === stage.data.programme);
     if (!trouve) {
       throw new Error(`Stage « ${stage.id} » : programme « ${stage.data.programme} » introuvable dans src/content/programmes/.`);
     }
     return { ...stage, programme: trouve.data };
   });
+
+/**
+ * Chaque actualité sert d’identifiant HTML à sa carte et à sa fenêtre : deux identifiants identiques
+ * (un rendez-vous et un article de même titre, par exemple) ouvriraient la mauvaise fenêtre sans aucune erreur.
+ * Lève une erreur qui liste les doublons entre collections et les identifiants déjà utilisés par la page.
+ */
+export const verifierIdentifiants = (ids: ReadonlyArray<string>, reserves: ReadonlyArray<string>): void => {
+  const doublons = [...new Set(ids.filter((id, index) => ids.indexOf(id) !== index))];
+  const dejaPris = [...new Set(ids.filter((id) => reserves.includes(id)))];
+  const messages = [
+    ...doublons.map((id) => `Deux actualités ont le même nom de fichier : « ${id} ». Renommez le titre de l’une d’elles avant de l’enregistrer.`),
+    ...dejaPris.map((id) => `Le nom de fichier « ${id} » est déjà utilisé par la page. Renommez le titre de cette actualité avant de l’enregistrer.`),
+  ];
+  if (messages.length > 0) throw new Error(messages.join('\n'));
+};
