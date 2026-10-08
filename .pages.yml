@@ -7,6 +7,7 @@ media:
   input: public/assets/img/actualites
   output: assets/img/actualites
   categories: [image]
+  extensions: [jpg, jpeg, png, webp, avif, gif, svg]
   rename: safe
 
 settings:
@@ -261,7 +262,7 @@ components:
 content:
   - name: programmes
     label: Programmes de stage
-    description: "La carte et la fenêtre « Programme & infos » d’un stage. Une fiche par public (enfants, ados…) ; chaque session choisit sa fiche."
+    description: "La carte et la fenêtre « Programme & infos » d’un stage. Une fiche par public (enfants, ados…) ; chaque session choisit sa fiche. Si un programme du même nom existe déjà (par exemple l’an passé), modifiez le nom de fichier proposé à la création."
     type: collection
     path: src/content/programmes
     format: yaml-frontmatter
@@ -419,7 +420,7 @@ content:
 
   - name: stages
     label: Stages de vacances
-    description: Chaque session choisit son programme et fixe ses dates, son prix et ses places.
+    description: "Chaque session choisit son programme et fixe ses dates, son prix et ses places. Deux sessions qui commencent le même jour : ajoutez « -ados » (ou un autre mot) au nom de fichier proposé à la création."
     type: collection
     path: src/content/stages
     format: yaml
@@ -524,7 +525,7 @@ content:
 
   - name: rendez-vous
     label: Prochains rendez-vous
-    description: Portes ouvertes, fêtes, réunions… Affichés par date, du plus proche au plus lointain.
+    description: "Portes ouvertes, fêtes, réunions… Affichés par date, du plus proche au plus lointain. Si un rendez-vous ou un article porte déjà ce titre (par exemple l’an passé), modifiez le nom de fichier proposé à la création."
     type: collection
     path: src/content/rendez-vous
     format: yaml-frontmatter
@@ -616,7 +617,7 @@ content:
 
   - name: articles
     label: La vie de l’école
-    description: Articles et retours sur les événements, du plus récent au plus ancien.
+    description: "Articles et retours sur les événements, du plus récent au plus ancien. Si un article ou un rendez-vous porte déjà ce titre (par exemple l’an passé), modifiez le nom de fichier proposé à la création."
     type: collection
     path: src/content/articles
     format: yaml-frontmatter

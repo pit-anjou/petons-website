@@ -1,7 +1,7 @@
 // .pages.yml doit décrire exactement les champs des schémas : Page CMS efface à
 // l’enregistrement les champs qu’il ne connaît pas, et le build refuse ceux qui manquent.
 import { describe, expect, test } from 'bun:test';
-import { articleSchema, programmeSchema, rendezVousSchema, stageSchema } from '../src/content/schemas';
+import { articleSchema, EXTENSIONS_IMAGE, programmeSchema, rendezVousSchema, stageSchema } from '../src/content/schemas';
 
 interface ChampCms {
   name: string;
@@ -16,7 +16,7 @@ interface ChampCms {
 }
 
 const config = Bun.YAML.parse(await Bun.file('.pages.yml').text()) as {
-  media: { input: string; output: string };
+  media: { input: string; output: string; extensions?: string[] };
   components: Record<string, Omit<ChampCms, 'name'>>;
   content: Array<{ name: string; path: string; format: string; fields: ChampCms[] }>;
 };
@@ -95,5 +95,15 @@ describe('.pages.yml', () => {
 
   test('les images envoyées vont dans assets/img/actualites', () => {
     expect(config.media).toMatchObject({ input: 'public/assets/img/actualites', output: 'assets/img/actualites' });
+  });
+
+  test('la médiathèque n’accepte que les extensions d’image du schéma', () => {
+    expect([...(config.media.extensions ?? [])].sort()).toEqual([...EXTENSIONS_IMAGE].sort());
+  });
+
+  test('chaque collection explique comment éviter un nom de fichier déjà pris', () => {
+    for (const entree of config.content as Array<{ name: string; description?: string }>) {
+      expect(entree.description ?? '').toContain('nom de fichier');
+    }
   });
 });

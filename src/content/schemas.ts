@@ -6,7 +6,9 @@ import { z } from 'astro/zod';
 
 const texteRequis = z.string().trim().min(1);
 const heure = z.string().regex(/^\d{1,2}h\d{2}$/, 'Heure attendue au format 10h00');
-const image = z.string().regex(/^assets\/img\/actualites\/[^/]+\.(?:avif|gif|jpe?g|png|svg|webp)$/i, 'Image attendue dans assets/img/actualites/');
+/** Extensions d’image acceptées ; .pages.yml (media.extensions) doit citer les mêmes. */
+export const EXTENSIONS_IMAGE = ['jpg', 'jpeg', 'png', 'webp', 'avif', 'gif', 'svg'] as const;
+const image = z.string().regex(new RegExp(`^assets/img/actualites/[^/]+\\.(?:${EXTENSIONS_IMAGE.join('|')})$`, 'i'), 'Image attendue dans assets/img/actualites/');
 const pourcentage = (parDefaut: number) => z.number().int().min(0).max(100).default(parDefaut);
 
 export const VACANCES = ['toussaint', 'noel', 'hiver', 'printemps', 'ete'] as const;
