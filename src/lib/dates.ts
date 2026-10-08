@@ -17,6 +17,9 @@ export const jourMois = (date: Date): string => `${numeroJour(date)} ${mois(date
 /** « samedi » */
 export const jourSemaine = (date: Date): string => JOURS[date.getUTCDay()]!;
 
+/** « Février », « Août » : le mois seul, avec une majuscule, sans l’année. */
+export const moisMajuscule = (date: Date): string => majuscule(mois(date));
+
 export const majuscule = (texte: string): string => texte.charAt(0).toLocaleUpperCase('fr-FR') + texte.slice(1);
 
 /** « de février », « d’avril » */

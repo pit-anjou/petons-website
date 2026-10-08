@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { anneesStages, dateIso, deMois, horaire, jourMois, jourSemaine, majuscule, plageStage } from '../src/lib/dates';
+import { anneesStages, dateIso, deMois, horaire, jourMois, jourSemaine, majuscule, moisMajuscule, plageStage } from '../src/lib/dates';
 
 // Minuit UTC, comme les dates lues dans les fichiers de contenu.
 const d = (iso: string) => new Date(iso);
@@ -11,6 +11,11 @@ describe('dates simples', () => {
   });
   test('jourSemaine', () => expect(jourSemaine(d('2027-02-17'))).toBe('mercredi'));
   test('majuscule', () => expect(majuscule('samedi')).toBe('Samedi'));
+  test('moisMajuscule : mois seul, majuscule, sans année', () => {
+    expect(moisMajuscule(d('2027-02-17'))).toBe('Février');
+    expect(moisMajuscule(d('2027-08-03'))).toBe('Août');
+    expect(moisMajuscule(d('2027-12-31'))).toBe('Décembre');
+  });
   test('dateIso', () => expect(dateIso(d('2027-02-22'))).toBe('2027-02-22'));
   test('deMois élide devant une voyelle', () => {
     expect(deMois(d('2027-02-22'))).toBe('de février');

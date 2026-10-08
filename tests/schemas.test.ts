@@ -111,3 +111,9 @@ test('un programme avec un bloc « restitution » mais sans heure est refusé', 
   expect(messages(resultat)).toEqual(['Un bloc « Restitution » demande l’heure de restitution']);
   expect(resultat.error?.issues[0]?.path).toEqual(['restitution']);
 });
+
+test('un rendez-vous accepte un libellé au-dessus de la date et une note facultatifs', () => {
+  const resultat = rendezVousSchema.safeParse(rendezVous({ surDate: 'À l’école', note: 'Sans inscription · En famille' }));
+  expect(resultat.success).toBe(true);
+  expect(rendezVousSchema.safeParse(rendezVous()).data?.surDate).toBeUndefined();
+});

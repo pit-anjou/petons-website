@@ -5,6 +5,7 @@ titreModale: |-
   autour de la santé
 date: 2027-02-17
 mention: Pour les enfants de l’école
+surDate: À l’école
 resume: "Clowns d’hôpital, médecins et autres déguisements : le thème de la santé s’invite au carnaval des enfants."
 visuel:
   illustration: carnaval

@@ -1,15 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
 import Header from '../components/Header.astro';
-import { openHouse } from '../data/openHouse';
-const openHouseEducators = [
-  { name: 'Antoine', ages: '3–6 ans', image: 'assets/img/antoine-educateur-montessori-de.webp' },
-  { name: 'Pauline', ages: '6–12 ans', image: 'assets/img/portrait-de-pauline.webp' },
-];
-const openHouseDateParts = new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).formatToParts(new Date(openHouse.start));
-const eventDatePart = (type: string) => openHouseDateParts.find(part => part.type === type)?.value;
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
+import { openHouse } from '../data/openHouse';
 import StageCard from '../components/actualites/StageCard.astro';
 import StageDialog from '../components/actualites/StageDialog.astro';
 import ArticleCard from '../components/actualites/ArticleCard.astro';
@@ -18,18 +12,25 @@ import RendezVousCard from '../components/actualites/RendezVousCard.astro';
 import RendezVousDialog from '../components/actualites/RendezVousDialog.astro';
 import { articlesAffiches, avecProgramme, rendezVousAffiches, stagesAffiches, verifierIdentifiants } from '../lib/actualites';
 import { anneesStages } from '../lib/dates';
+const openHouseEducators = [
+  { name: 'Antoine', ages: '3–6 ans', image: 'assets/img/antoine-educateur-montessori-de.webp' },
+  { name: 'Pauline', ages: '6–12 ans', image: 'assets/img/portrait-de-pauline.webp' },
+];
+const openHouseDateParts = new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).formatToParts(new Date(openHouse.start));
+const eventDatePart = (type: string) => openHouseDateParts.find(part => part.type === type)?.value;
 
 // Contenus modifiables dans Page CMS : voir docs/page-cms.md.
 const stages = avecProgramme(stagesAffiches(await getCollection('stages')), await getCollection('programmes'));
 const rendezVous = rendezVousAffiches(await getCollection('rendezVous'));
 const articles = articlesAffiches(await getCollection('articles'));
 
-// Identifiants écrits en dur dans cette page, dans Header.astro, Footer.astro et src/data/site.ts : une actualité ne doit pas porter le même nom de fichier.
+// Identifiants écrits en dur dans cette page, dans Header.astro (dont le bandeau OpenHouseAnnouncement.astro), Footer.astro et src/data/site.ts : une actualité ne doit pas porter le même nom de fichier.
 const IDENTIFIANTS_PAGE = [
-  'agenda', 'agenda-priority-design', 'agenda-title', 'cm-ambiences-menu', 'cm-mobile-menu', 'cm-school-menu', 'enrol-title', 'footer-support-title',
+  'agenda', 'agenda-priority-design', 'agenda-title', 'cm-ambiences-menu', 'cm-mobile-menu', 'cm-school-menu', 'dialog-title', 'enrol-title', 'footer-support-title',
   'holiday-stages-design', 'inscriptions-ouvertes', 'journal', 'journal-title', 'letter-title', 'lettre', 'main',
   'newsletter-copy', 'newsletter-draft', 'newsletter-email', 'newsletter-form', 'newsletter-mailto', 'newsletter-result', 'newsletter-status',
-  'page-title', 'proposer-activite', 'soutenir-footer',
+  'oh-card-title', 'open-house-announcement', 'open-house-dialog', 'open-house-gallery-title', 'open-house-invitation',
+  'page-title', 'portes-ouvertes', 'proposer-activite', 'soutenir-footer',
 ];
 verifierIdentifiants([...stages, ...rendezVous, ...articles].map(({ id }) => id), IDENTIFIANTS_PAGE);
 ---
@@ -388,7 +389,8 @@ body .button:not(.secondary){color:#203f4d;}
     <p>Découvrez notre école Montessori et écocitoyenne en famille : explorez les ambiances 3–6 ans et 6–12 ans, rencontrez les éducateurs et échangez avec les parents.</p>
     <button type="button" class="button event-action" data-open="open-house-dialog" aria-haspopup="dialog" aria-controls="open-house-dialog">Préparer ma visite<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"></path></svg></button>
   </div>
-</article>{rendezVous.map(({ id, data }, index) => <RendezVousCard id={id} rendezVous={data} premier={false} />)}</div><aside class="sessions-note" id="proposer-activite"><div><span class="eyebrow">Intervenants &amp; partenaires</span><h3>Envie de proposer un atelier ou un stage ?</h3><p>Nature, arts, sciences, mouvement… Proposez une activité pour les enfants dans les locaux de l’école : <strong>le mercredi, le week-end, pendant les vacances ou sur le temps périscolaire.</strong> Échangeons sur votre projet, son lien avec les valeurs des Petons et les modalités d’accueil.</p></div><a class="button" href="contact-petons.html?sujet=partenariat#ecrire" data-local-href="contact-petons.html?sujet=partenariat#ecrire">Présenter mon projet <span aria-hidden="true">→</span></a></aside></section><section class="journal-band"><div class="wrap journal-section" id="journal" aria-labelledby="journal-title"><span class="eyebrow">À lire &amp; à revivre</span><div class="section-title"><span class="tiny-star" aria-hidden="true">✧</span><h2 id="journal-title">La vie de l’école</h2><span class="tiny-star" aria-hidden="true">✧</span></div><p class="agenda-lead">Les projets, les rencontres et les souvenirs qui font grandir les Petons.</p>{articles.map(({ id, data }) => <ArticleCard id={id} article={data} />)}</div></section><section class="wrap section newsletter" id="lettre" aria-labelledby="letter-title">
+</article>
+{rendezVous.map(({ id, data }) => <RendezVousCard id={id} rendezVous={data} premier={false} />)}</div><aside class="sessions-note" id="proposer-activite"><div><span class="eyebrow">Intervenants &amp; partenaires</span><h3>Envie de proposer un atelier ou un stage ?</h3><p>Nature, arts, sciences, mouvement… Proposez une activité pour les enfants dans les locaux de l’école : <strong>le mercredi, le week-end, pendant les vacances ou sur le temps périscolaire.</strong> Échangeons sur votre projet, son lien avec les valeurs des Petons et les modalités d’accueil.</p></div><a class="button" href="contact-petons.html?sujet=partenariat#ecrire" data-local-href="contact-petons.html?sujet=partenariat#ecrire">Présenter mon projet <span aria-hidden="true">→</span></a></aside></section><section class="journal-band"><div class="wrap journal-section" id="journal" aria-labelledby="journal-title"><span class="eyebrow">À lire &amp; à revivre</span><div class="section-title"><span class="tiny-star" aria-hidden="true">✧</span><h2 id="journal-title">La vie de l’école</h2><span class="tiny-star" aria-hidden="true">✧</span></div><p class="agenda-lead">Les projets, les rencontres et les souvenirs qui font grandir les Petons.</p>{articles.map(({ id, data }) => <ArticleCard id={id} article={data} />)}</div></section><section class="wrap section newsletter" id="lettre" aria-labelledby="letter-title">
   <div class="newsletter-copy"><span class="eyebrow">La lettre des Petons</span><div class="section-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 9 6a2 2 0 0 0 2 0l9-6"></path></svg><h2 id="letter-title">Des nouvelles à partager</h2><span class="tiny-star" aria-hidden="true">✧</span></div><p>Une fois par mois, les temps forts de l’école et nos conseils Montessori, directement dans votre boîte mail.</p></div>
   <form class="newsletter-form" id="newsletter-form" action="mailto:contact@lespetons.fr" method="post" enctype="text/plain"><label for="newsletter-email">Votre adresse e-mail</label><input id="newsletter-email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr" maxlength="254" required><button class="button" type="submit">Demander à recevoir la lettre <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"></path></svg></button><p class="form-hint">Votre messagerie s’ouvrira pour envoyer votre demande d’abonnement.</p><div class="newsletter-result" id="newsletter-result" hidden><p id="newsletter-status" role="status"></p><div class="newsletter-actions"><a class="text-link" id="newsletter-mailto" href="mailto:contact@lespetons.fr">Ouvrir ma messagerie <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 9 6a2 2 0 0 0 2 0l9-6"></path></svg></a><button class="copy-button" id="newsletter-copy" type="button">Copier la demande <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"></rect><path d="M16 8V3H3v13h5"></path></svg></button></div><details><summary>Voir la demande</summary><textarea id="newsletter-draft" rows="7" readonly aria-label="Demande d’abonnement préparée"></textarea></details></div></form>
  </section></main>

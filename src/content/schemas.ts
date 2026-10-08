@@ -137,6 +137,10 @@ export const rendezVousSchema = z.object({
   heureDebut: heure.optional(),
   heureFin: heure.optional(),
   mention: texteRequis,
+  /** Libellé au-dessus de la date sur la carte ; absent = jour de la semaine. */
+  surDate: z.string().optional(),
+  /** Note affichée sous les étiquettes de la carte. */
+  note: z.string().optional(),
   bouton: texteRequis.default('Voir les détails'),
   intro: z.string().optional(),
   pointsForts: z.array(elementIllustre).default([]),

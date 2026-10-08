@@ -8,6 +8,7 @@ Le site est construit avec [Astro](https://astro.build). Le résultat publié re
 | --- | --- |
 | Le texte, les images ou la mise en page d'une page | `src/pages/<page>.astro` (ex. `src/pages/tarifs-petons.astro`) |
 | Les programmes et sessions de stage, rendez-vous et articles de la page Actualités | Page CMS (voir `docs/page-cms.md`) ou les fichiers de `src/content/programmes/`, `src/content/stages/`, `src/content/rendez-vous/`, `src/content/articles/` |
+| Les portes ouvertes de novembre (carte de l'agenda, fenêtre) et le bandeau d'annonce du site | `src/data/openHouse.ts` (textes, dates), `src/components/OpenHouseAnnouncement.astro` (bandeau) ; carte et fenêtre dans `src/pages/actualites-petons.astro` |
 | La mise en page des fenêtres de stage (types de blocs, « En pratique ») | `src/components/actualites/StageDialog.astro`, `ProgrammeSection.astro` |
 | Le menu, les liens du footer, l'adresse, le téléphone, l'email, Instagram, l'encart « Dons & mécénat » | `src/data/site.ts` (une seule fois pour tout le site) |
 | La structure HTML du header ou du footer | `src/components/Header.astro`, `src/components/Footer.astro` |

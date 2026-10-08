@@ -36,6 +36,7 @@ Chaque **session** choisit son programme, puis fixe ses dates, ses vacances, l�
 ## Prochains rendez-vous et articles
 
 - La **carte** affiche le titre, la date ou le repère, le résumé et le visuel.
+- Sur la carte d’un rendez-vous, deux champs facultatifs complètent la date : le **libellé au-dessus de la date** (vide = jour de la semaine, par exemple « À l’école ») et une **note sous les étiquettes** (par exemple « Sans inscription · En famille »).
 - La **fenêtre** s’ouvre au clic. Elle contient un surtitre, une introduction, puis des **blocs** à empiler dans l’ordre voulu : *Texte*, *Intertitre* (avec un logo facultatif) et *Photo* (avec description et légende).
 - Les rendez-vous sont classés par date. Les articles sont classés du plus récent au plus ancien, selon leur **date de l’événement** (non affichée).
 - Pour un rendez-vous passé, on peut le supprimer, ou en faire un article « Retour sur un événement ». Un rendez-vous et un article ne peuvent pas porter le même titre : **changer le titre de l’article, ou supprimer d’abord le rendez-vous**. Sinon la mise en ligne échoue, avec un message qui nomme les deux.
@@ -53,6 +54,7 @@ Chaque **session** choisit son programme, puis fixe ses dates, ses vacances, l�
 
 - Le bloc « Vie de l’école » de la **page d’accueil** : il pointe vers le stage de février et l’article Éco-École. Si l’un d’eux est supprimé, prévenir Philippe pour mettre l’accueil à jour.
 - L’encart « Inscriptions ouvertes » (places disponibles), les tarifs, les coordonnées et les autres pages.
+- Les portes ouvertes de novembre et le bandeau d’annonce du site : ils se modifient dans le code (`src/data/openHouse.ts`).
 
 ## Pour l’administrateur
 

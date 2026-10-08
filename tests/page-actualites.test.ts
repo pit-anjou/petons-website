@@ -34,3 +34,20 @@ test('les ancres visées depuis les autres pages existent', async () => {
   }
   expect(manquantes).toEqual([]);
 });
+
+test('les portes ouvertes écrites dans le code ouvrent leur fenêtre, en tête de l’agenda', () => {
+  const carte = page.querySelector('#portes-ouvertes');
+  expect(carte?.getAttribute('class')).toContain('open-house-card');
+  expect(page.querySelectorAll('#open-house-dialog').length).toBe(1);
+  expect(carte?.querySelector('[data-open="open-house-dialog"]')).not.toBeNull();
+  expect(page.querySelector('.agenda-grid')?.querySelector('.agenda-card')?.id).toBe('portes-ouvertes');
+});
+
+test('la carte d’un rendez-vous reprend le bloc de date harmonisé de l’agenda', () => {
+  const carte = page.querySelector('#un-carnaval-autour-de-la-sante');
+  const meta = carte?.querySelector('.card-content > .stage-meta.agenda-meta');
+  expect(meta?.querySelector('.stage-date .stage-season')?.text).toBe('À l’école');
+  expect(meta?.querySelector('.stage-date time')?.getAttribute('datetime')).toBe('2027-02-17');
+  expect(meta?.querySelector('.stage-date time')?.text).toBe('17Février');
+  expect(meta?.querySelector('.stage-tags .stage-tag')?.text).toBe('Pour les enfants de l’école');
+});

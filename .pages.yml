@@ -525,7 +525,7 @@ content:
 
   - name: rendez-vous
     label: Prochains rendez-vous
-    description: "Portes ouvertes, fêtes, réunions… Affichés par date, du plus proche au plus lointain. Si un rendez-vous ou un article porte déjà ce titre (par exemple l’an passé), modifiez le nom de fichier proposé à la création."
+    description: "Fêtes, réunions, rencontres… Affichés par date, du plus proche au plus lointain. Si un rendez-vous ou un article porte déjà ce titre (par exemple l’an passé), modifiez le nom de fichier proposé à la création."
     type: collection
     path: src/content/rendez-vous
     format: yaml-frontmatter
@@ -571,6 +571,13 @@ content:
         type: string
         required: true
         description: "Exemple : Sans inscription · Entrée libre"
+      - name: surDate
+        label: Libellé au-dessus de la date (facultatif)
+        type: string
+        description: "Vide = jour de la semaine. Exemple : À l’école"
+      - name: note
+        label: Note sous les étiquettes (facultatif)
+        type: string
       - name: resume
         label: Résumé sur la carte
         type: text
