@@ -1,0 +1,29 @@
+---
+import { openHouse } from '../data/openHouse';
+---
+<link rel="stylesheet" href="assets/css/open-house-announcement.css">
+<div id="open-house-announcement" data-campaign={openHouse.id} data-end={openHouse.end}>
+  <aside class="oh-banner" aria-label="Prochaines portes ouvertes" hidden>
+    <div class="oh-banner-inner">
+      <a class="oh-banner-link" href={openHouse.href} data-oh-action>
+        <strong>{openHouse.title}</strong>
+        <span>{openHouse.date} · {openHouse.hours}</span>
+        <span class="oh-banner-cta">Venez en famille <span aria-hidden="true">→</span></span>
+      </a>
+      <button type="button" class="oh-close" data-oh-close-banner aria-label="Masquer le bandeau des portes ouvertes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+    </div>
+  </aside>
+  <aside class="oh-card" aria-labelledby="oh-card-title" hidden>
+    <button type="button" class="oh-close" data-oh-close-card aria-label="Fermer l’annonce des portes ouvertes"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+    <div class="oh-card-art"><img data-src={openHouse.illustration} alt="" width="1200" height="800" decoding="async"></div>
+    <div class="oh-card-copy">
+      <p class="oh-card-kicker">Venez découvrir l’école en famille</p>
+      <h2 id="oh-card-title">{openHouse.title}</h2>
+      <p class="oh-card-school">École Montessori &amp; écocitoyenne</p>
+      <p class="oh-card-date"><time datetime={openHouse.start}>{openHouse.date}</time><span>{openHouse.hours} · Entrée libre</span></p>
+      <p class="oh-card-details">Ambiances 3–6 ans et 6–12 ans.<br>Visitez l’école et rencontrez les éducateurs et les parents.</p>
+      <a class="oh-card-button" href={openHouse.href} data-oh-action>Découvrir la journée <span aria-hidden="true">→</span></a>
+    </div>
+  </aside>
+</div>
+<script is:inline src="assets/js/open-house-announcement.js"></script>

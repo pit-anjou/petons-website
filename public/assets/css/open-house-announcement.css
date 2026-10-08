@@ -1,0 +1,36 @@
+/* Shared, non-blocking event announcement. Keep the site's existing palette. */
+#open-house-announcement{font-family:Nunito,Arial,sans-serif;color:var(--heading,#316573)}
+#open-house-announcement [hidden]{display:none!important}
+.oh-banner{background:var(--pale,#f0f5e8);border-bottom:1px solid var(--line,#dfe6dc)}
+.oh-banner-inner{max-width:1216px;min-height:48px;margin:auto;padding:0 24px;display:flex;align-items:center;justify-content:center;gap:12px}
+.oh-banner-link{display:flex;align-items:center;justify-content:center;gap:12px 22px;flex-wrap:wrap;padding:9px 0;text-decoration:none;color:inherit;font-size:14px;line-height:1.5}
+.oh-banner-link:hover .oh-banner-cta{text-decoration:underline;text-underline-offset:4px}
+.oh-banner-link strong{font-weight:800}
+.oh-banner-cta{font-weight:800;white-space:nowrap}
+.oh-banner-cta>span{padding-left:5px}
+.oh-close{display:grid;place-items:center;width:44px;height:44px;min-width:44px;padding:10px;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer}
+.oh-close svg{width:21px;height:21px}
+.oh-close:hover{background:#3165730d}
+#open-house-announcement :is(a,button):focus-visible{outline:3px solid var(--heading,#316573);outline-offset:3px}
+.oh-card{position:fixed;z-index:90;right:24px;bottom:24px;width:340px;max-height:calc(100dvh - 48px);overflow:auto;background:var(--paper,#fffdf8);border:1px solid #dfe6dc;border-radius:6px 24px 6px 6px;box-shadow:0 10px 40px #294c5b24}
+.oh-card>.oh-close{position:absolute;top:5px;right:5px;z-index:1;background:var(--paper,#fffdf8)}
+.oh-card-art{height:127px;background:white;padding:6px 34px 0}
+.oh-card-art img{width:100%;height:100%;object-fit:contain}
+.oh-card-copy{padding:13px 23px 23px}
+.oh-card .oh-card-kicker{font-size:11px;line-height:1.5;font-weight:800;margin:0 0 6px;color:var(--heading,#316573)}
+.oh-card h2{font:700 32px/1.15 Kalam,cursive;color:var(--heading,#316573);letter-spacing:-.3px;margin:0 0 6px}
+.oh-card .oh-card-school{font-size:13px;line-height:1.4;font-weight:800;margin:0 0 13px}
+.oh-card .oh-card-date{padding:10px 12px;background:#fce8d5;border-radius:3px 13px 3px 3px;font-size:16px;font-weight:800;line-height:1.4;margin:0 0 12px}
+.oh-card-date>span{display:block;font-size:14px;font-weight:700;margin-top:3px}
+.oh-card .oh-card-details{font-size:13px;line-height:1.6;color:var(--body,#385567);margin:0 0 14px}
+.oh-card-button{display:flex;justify-content:space-between;align-items:center;gap:12px;min-height:44px;padding:11px 17px;border-radius:26px;background:var(--orange,#f89141);color:#294c5b;font-size:14px;line-height:1.4;font-weight:800;text-decoration:none}
+.oh-card-button:hover{background:#ffa35b}
+@media(max-width:899px),(max-height:649px){.oh-card{display:none!important}}
+@media(max-width:700px){
+ .oh-banner-inner{padding:5px 12px 5px 18px;justify-content:space-between;gap:6px}
+ .oh-banner-link{display:grid;justify-content:start;gap:0;padding:3px 0;font-size:12px;line-height:1.55}
+ .oh-banner-link strong{font-size:14px}
+ .oh-banner-link strong::after{content:" →";margin-left:5px}
+ .oh-banner-cta{display:none}
+}
+@media print{#open-house-announcement{display:none!important}}
