@@ -65,3 +65,33 @@ test('verifierIdentifiants refuse un identifiant déjà utilisé par la page', (
 test('verifierIdentifiants liste chaque identifiant en cause', () => {
   expect(() => verifierIdentifiants(['a', 'a', 'main', 'b', 'b'], ['main'])).toThrow(/« a ».*« b ».*« main »|« a ».*« main ».*« b »/s);
 });
+
+test('avecProgramme associe le stage au nom de fichier réel, même avec majuscules, espaces et accents', () => {
+  const programme = { nom: 'Été' } as Programme;
+  const [associe] = avecProgramme(
+    [stage('s', '2027-02-22', false, 'Stage Été.md')],
+    [{ id: 'stage-ete', filePath: 'src/content/programmes/Stage Été.md', data: programme }],
+  );
+  expect(associe!.programme).toBe(programme);
+});
+
+test('avecProgramme se rabat sur l’id quand filePath est absent', () => {
+  const programme = { nom: 'Ados' } as Programme;
+  const [associe] = avecProgramme([stage('s', '2027-02-22', false, 'ados.md')], [{ id: 'ados', data: programme }]);
+  expect(associe!.programme).toBe(programme);
+});
+
+test('avecProgramme ne confond pas un id slugifié avec le nom de fichier réel', () => {
+  const programme = { nom: 'Été' } as Programme;
+  expect(() =>
+    avecProgramme([stage('s', '2027-02-22', false, 'stage-ete.md')], [{ id: 'stage-ete', filePath: 'src/content/programmes/Stage Été.md', data: programme }]),
+  ).toThrow('Stage « s » : programme « stage-ete.md » introuvable');
+});
+
+test('stageSchema accepte un nom de fichier de programme libre mais pas un chemin ni une autre extension', () => {
+  const base = { debut: '2027-02-22', fin: '2027-02-22', vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', prix: 1, prixFratrie: 1, effectif: 1 };
+  expect(stageSchema.safeParse({ ...base, programme: 'Stage Été.md' }).success).toBe(true);
+  expect(stageSchema.safeParse({ ...base, programme: '../x.md' }).success).toBe(false);
+  expect(stageSchema.safeParse({ ...base, programme: 'x.yml' }).success).toBe(false);
+  expect(stageSchema.safeParse({ ...base, programme: '' }).success).toBe(false);
+});

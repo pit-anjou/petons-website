@@ -75,7 +75,7 @@ export const programmeSchema = z.object({
 
 /** Une session de stage : elle choisit son programme et fixe ses dates, son prix et son nombre de places. */
 export const stageSchema = z.object({
-  programme: z.string().regex(/^[a-z0-9-]+\.md$/, 'Choisir un programme'),
+  programme: z.string().regex(/^[^/]+\.md$/, 'Choisir un programme'),
   debut: z.coerce.date(),
   fin: z.coerce.date(),
   vacances: z.enum(VACANCES),
