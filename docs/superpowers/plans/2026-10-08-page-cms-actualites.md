@@ -2,23 +2,28 @@
 
 > **Pour les agents :** SOUS-SKILL REQUIS : utiliser superpowers:subagent-driven-development (recommandé) ou superpowers:executing-plans pour exécuter ce plan tâche par tâche. Les étapes utilisent des cases à cocher (`- [ ]`).
 
-**Objectif :** permettre à l'équipe des Petons de créer, modifier et supprimer les stages de vacances, les prochains rendez-vous et les articles de « La vie de l'école » depuis Page CMS (app.pagescms.org), sans toucher au HTML. Chaque enregistrement est publié directement sur `main`.
+**Objectif :** permettre à l'équipe des Petons de créer, modifier et supprimer les programmes et sessions de stages de vacances, les prochains rendez-vous et les articles de « La vie de l'école » depuis Page CMS (app.pagescms.org), sans toucher au HTML. Chaque enregistrement est publié directement sur `main`.
 
-**Architecture :** le contenu codé en dur dans `src/pages/actualites-petons.astro` passe dans trois *content collections* Astro (`src/content/stages/*.yml`, `src/content/rendez-vous/*.md`, `src/content/articles/*.md`), validées par des schémas zod stricts. La page les affiche avec des composants qui reproduisent le HTML actuel. Un fichier `.pages.yml` décrit ces mêmes champs pour Page CMS. Page CMS écrit dans le dépôt GitHub, et Vercel reconstruit le site à chaque commit sur `main`. Si le build échoue, Vercel garde la version précédente en ligne.
+**Architecture :** le contenu codé en dur dans `src/pages/actualites-petons.astro` passe dans quatre *content collections* Astro (`src/content/programmes/*.md`, `src/content/stages/*.yml`, `src/content/rendez-vous/*.md`, `src/content/articles/*.md`), validées par des schémas zod stricts. La page les affiche avec des composants qui reproduisent le HTML actuel. Un fichier `.pages.yml` décrit ces mêmes champs pour Page CMS. Page CMS écrit dans le dépôt GitHub, et Vercel reconstruit le site à chaque commit sur `main`. Si le build échoue, Vercel garde la version précédente en ligne.
 
 **Stack technique :** Astro 7.3.6 (zod 4 via `astro/zod`, chargeur `glob` de `astro/loaders`), Bun 1.3 (`bun test`, `Bun.YAML`), `marked` (Markdown des blocs de texte), `node-html-parser` (tests), Page CMS 2.x hébergé (GitHub App), Vercel.
 
-**Spec :** pas de spec séparée. Les décisions validées avec Philippe le 8 octobre 2026 sont dans la section « Décisions » ci-dessous.
+**Spec :** pas de document séparé. Les décisions de la section « Décisions » ci-dessous ont été validées une à une par Philippe le 8 octobre 2026, dans la conversation qui a produit ce plan.
 
 ## Décisions
 
-- **Périmètre : la page Actualités seulement.** Sont éditables : les sessions de stage, les rendez-vous de l'agenda et les articles de « La vie de l'école ». Ne changent pas : l'encart « Inscriptions ouvertes » (places 3/4), les tarifs, les coordonnées (`src/data/site.ts`) et le bloc « Vie de l'école » de la page d'accueil.
-- **Publication directe sur `main`**, sans branche de relecture.
-- **Le programme du stage « Histoires & Objets Inventés » reste dans le code** (`src/data/stage-programme.ts`). Il existe en deux variantes de texte, enfants et adolescents. Dans Page CMS, un stage est une *session* : public, dates, vacances, image, couleur, prix, effectif, note. Un stage avec un autre programme demandera une intervention dans le code.
+- **Périmètre : la page Actualités seulement.** Sont éditables : les programmes et les sessions de stage, les rendez-vous de l'agenda et les articles de « La vie de l'école ». Ne changent pas : l'encart « Inscriptions ouvertes » (places 3/4), les tarifs, les coordonnées (`src/data/site.ts`) et le bloc « Vie de l'école » de la page d'accueil.
+- **Publication directe sur `main`**, sans branche de relecture. La recette de Page CMS se fait avant la fusion, sur la branche de travail poussée sur GitHub (tâche 9).
+- **Plusieurs programmes de stage, créés par les éditeurs dans Page CMS.** Un *programme* (collection `programmes`) décrit la carte (titre, accroche, âges, description) et la fenêtre « Programme & infos » : des sections composées de blocs (texte, intervenants, forces, étapes, illustration, invitation à la restitution), plus « En pratique » (horaires, sac, inscription). Une *session* (collection `stages`) choisit son programme dans une liste, et fixe ses dates, vacances, image, couleur, prix, places et note.
+- **Une fiche de programme par public.** « Histoires & Objets Inventés » devient deux fiches, enfants (6–11 ans) et ados (12–16 ans). Un texte commun aux deux se corrige dans les deux fiches.
+- **Mise en forme des textes courts :** `**gras**`, `==surligné vert==` (classe `soft-mark`) et `++surligné orange++` (classe `orange-mark`).
 - **Les fenêtres des rendez-vous et des articles sont composées de blocs** (texte en Markdown, intertitre avec logo facultatif, photo avec légende). Ce découpage permet d'intercaler des photos légendées, ce qu'un champ de texte riche seul ne permet pas.
-- **Les images éditables sont dans un dossier dédié, `public/assets/img/actualites/`.** Les éditeurs ne peuvent donc pas supprimer depuis Page CMS une image utilisée par une autre page. Les 4 images de stage y sont déplacées. Les 5 images partagées avec d'autres pages y sont copiées.
+- **Les images éditables sont dans un dossier dédié, `public/assets/img/actualites/`.** Les éditeurs ne peuvent donc pas supprimer depuis Page CMS une image utilisée par une autre page. Les 15 images qui ne servent qu'aux stages y sont déplacées. Les 5 images partagées avec d'autres pages y sont copiées.
+- **Brouillon :** une case permet de préparer une session, un rendez-vous ou un article sans le publier.
+- **Hors périmètre :** le bloc « Vie de l'école » de la page d'accueil reste en dur. Il ne suit pas les modifications faites dans Page CMS.
+- **Date du cross :** `2026-06-01`, une approximation acceptée. Elle ne sert qu'au classement.
 - **Ancres stables :** `#stage-fevrier-2027` et `#eco-ecole-solidarites` sont liées depuis `index.astro`. Les noms de fichiers des contenus reprennent ces identifiants, et le renommage est désactivé dans Page CMS.
-- **Changements visibles assumés** (à montrer à la relecture) :
+- **Changements visibles acceptés par Philippe** :
   1. Les rendez-vous sont triés par date : le Carnaval (17 février) passe avant les Portes ouvertes (20 mars).
   2. La date de la fenêtre du Carnaval affiche le jour : « Mercredi 17 février ».
   3. La fenêtre de l'article Éco-École passe de 690 à 760 px de large, comme celle du cross.
@@ -34,6 +39,7 @@
 - Tous les textes visibles et les libellés de Page CMS sont en français, avec l'apostrophe typographique `’`.
 - Pas d'Effect TS : le dépôt n'en utilise pas. TypeScript simple, dans le style de `src/data/site.ts`.
 - Les dates des contenus sont lues à minuit UTC : utiliser uniquement les accesseurs `getUTC*`.
+- Les textes mis en forme passent par `enLigne` ou `enBlocs` (`src/lib/markdown.ts`), jamais par `marked` directement.
 - Chaque champ d'un schéma de `src/content/schemas.ts` doit exister dans `.pages.yml`, et inversement : Page CMS efface à l'enregistrement les champs qu'il ne connaît pas (`settings.content.merge` vaut `false` par défaut).
 - `bun run check` (build puis tests) doit passer avant chaque commit.
 - Messages de commit en français, à l'impératif présent (« Ajoute… », « Passe… »), comme dans l'historique.
@@ -42,16 +48,17 @@
 
 | Fichier | Rôle |
 | --- | --- |
-| `src/content/schemas.ts` | Schémas zod des 3 collections (importables par `bun test`). |
+| `src/content/schemas.ts` | Schémas zod des 4 collections (importables par `bun test`). |
 | `src/content.config.ts` | Déclare les collections Astro (chargeur `glob`). |
-| `src/content/stages/*.yml` | Une session de stage par fichier. |
+| `src/content/programmes/*.md` | Un programme de stage par fichier (en-tête YAML seul). |
+| `src/content/stages/*.yml` | Une session de stage par fichier, qui cite son programme. |
 | `src/content/rendez-vous/*.md` | Un rendez-vous par fichier (en-tête YAML seul). |
 | `src/content/articles/*.md` | Un article par fichier (en-tête YAML seul). |
 | `src/lib/dates.ts` | Formats de dates en français (fonctions pures). |
-| `src/lib/actualites.ts` | Filtrage des brouillons et tri (fonctions pures). |
+| `src/lib/actualites.ts` | Filtrage des brouillons, tri et association des sessions à leur programme (fonctions pures). |
+| `src/lib/markdown.ts` | Markdown des textes saisis dans Page CMS, avec les deux surlignages. |
 | `src/lib/dimensions-image.ts` | Lit largeur et hauteur d'une image de `public/` au build. |
-| `src/data/stage-programme.ts` | Textes fixes du programme et variantes enfants/ados. |
-| `src/components/actualites/*.astro` | Cartes et fenêtres des stages, rendez-vous et articles, et leurs briques (`Visuel`, `Blocs`, `LiensAction`, `Icone`, `TitreLignes`). |
+| `src/components/actualites/*.astro` | Cartes et fenêtres des stages, rendez-vous et articles, et leurs briques (`ProgrammeSection`, `Visuel`, `Blocs`, `LiensAction`, `Icone`, `TitreLignes`). |
 | `src/components/illustrations/Carnaval.astro`, `index.ts` | Illustration animée du carnaval et table des illustrations proposées dans Page CMS. |
 | `.pages.yml` | Configuration de Page CMS. |
 | `tests/outils/html.ts` | Lecture et comparaison de HTML pour les tests. |
@@ -417,24 +424,31 @@ git commit -m "Ajoute les formats de dates en français des actualités"
 ### Tâche 3 : schémas, collections, médias et contenus migrés
 
 **Fichiers :**
-- Créer : `src/content/schemas.ts`, `src/content.config.ts`, `src/lib/actualites.ts`, `src/lib/dimensions-image.ts`
+- Modifier : `package.json`, `bun.lock` (ajout de `marked`)
+- Créer : `src/content/schemas.ts`, `src/content.config.ts`, `src/lib/actualites.ts`, `src/lib/dimensions-image.ts`, `src/lib/markdown.ts`
+- Créer : `src/content/programmes/histoires-objets-inventes-enfants.md`, `histoires-objets-inventes-ados.md`
 - Créer : `src/content/stages/stage-fevrier-2027.yml`, `stage-avril-2027.yml`, `stage-juillet-2027.yml`, `stage-ados-juillet-2027.yml`
 - Créer : `src/content/rendez-vous/portes-ouvertes-de-printemps.md`, `un-carnaval-autour-de-la-sante.md`
 - Créer : `src/content/articles/eco-ecole-solidarites.md`, `cross-des-petons.md`
-- Créer : `public/assets/img/actualites/` (9 images copiées)
-- Créer : `tests/actualites.test.ts`, `tests/dimensions-image.test.ts`, `tests/contenus.test.ts`
+- Créer : `public/assets/img/actualites/` (20 images copiées)
+- Créer : `tests/markdown.test.ts`, `tests/actualites.test.ts`, `tests/dimensions-image.test.ts`, `tests/contenus.test.ts`
 
 **Interfaces :**
-- Produit (dans `src/content/schemas.ts`) : `stageSchema`, `rendezVousSchema`, `articleSchema`, les listes `PUBLICS`, `VACANCES`, `COULEURS_STAGE`, `FONDS`, `ILLUSTRATIONS`, `ICONES`, `STYLES_LIEN`, et les types `Stage`, `RendezVous`, `Article`, `Visuel`, `Bloc`, `Lien`.
-- Produit (dans `src/lib/actualites.ts`) : `interface Entree<T> { id: string; data: T }`, `stagesAffiches(entrees)`, `rendezVousAffiches(entrees)`, `articlesAffiches(entrees)`. Chacune filtre les brouillons et trie (stages et rendez-vous du plus proche au plus lointain, articles du plus récent au plus ancien).
+- Produit (dans `src/content/schemas.ts`) : `programmeSchema`, `stageSchema`, `rendezVousSchema`, `articleSchema` ; les listes `VACANCES`, `COULEURS_STAGE`, `PRESENTATIONS_SECTION`, `FONDS`, `ILLUSTRATIONS`, `ICONES`, `STYLES_LIEN` ; les types `Programme`, `SectionProgramme`, `Stage`, `RendezVous`, `Article`, `Visuel`, `Bloc`, `Lien`.
+- Produit (dans `src/lib/actualites.ts`) : `interface Entree<T> { id: string; data: T }`, `stagesAffiches(entrees)`, `rendezVousAffiches(entrees)`, `articlesAffiches(entrees)`, `avecProgramme(stages, programmes)`. Les trois premières filtrent les brouillons et trient (stages et rendez-vous du plus proche au plus lointain, articles du plus récent au plus ancien). `avecProgramme` ajoute à chaque stage la propriété `programme: Programme`, ou lève une erreur si le fichier cité n'existe pas.
+- Produit (dans `src/lib/markdown.ts`) : `enLigne(texte: string): string` (Markdown d'une ligne, sans `<p>`) et `enBlocs(texte: string): string` (paragraphes). En plus de `**gras**`, ils reconnaissent `==texte==` (`<strong class="soft-mark">`) et `++texte++` (`<strong class="orange-mark">`).
 - Produit (dans `src/lib/dimensions-image.ts`) : `dimensionsImage(src: string): Promise<{ width: number; height: number }>`, où `src` vaut par exemple `assets/img/actualites/x.png`.
-- Produit : les collections Astro `stages`, `rendezVous`, `articles`. L'identifiant d'une entrée est son nom de fichier sans extension.
+- Produit : les collections Astro `programmes`, `stages`, `rendezVous`, `articles`. L'identifiant d'une entrée est son nom de fichier sans extension. Le champ `programme` d'un stage contient le nom de fichier complet du programme (`histoires-objets-inventes-enfants.md`) : c'est ce qu'enregistre le champ « référence » de Page CMS avec `value: "{name}"`.
 
 - [ ] **Étape 1 : copier les images dans le dossier média de Page CMS**
 
 ```bash
 mkdir -p public/assets/img/actualites
 for f in stage-theatre-fevrier.png stage-theatre-avril-scene.png stage-theatre-juillet.png stage-ados-apercu-scene.png \
+  philippe-leroy-stage.jpg manuella-cortes-thonon-stage.jpg \
+  stage-trois-forces-fil-imagination.png stage-corps-voix-main-v2.png stage-histoires-restitution-v2.png \
+  stage-ados-trois-forces-v3.png stage-ados-corps-voix-main-v3.png stage-ados-restitution-v3.png \
+  stage-sac-repas.png stage-sac-tenue.png stage-sac-blouse.png \
   une-educatrice-accueille-une-mere-et-son-2.webp eco-ecole-vote-solidarites-2026-retouche.jpg \
   un-enfant-prepare-son-dossard-pour-le.webp le-diplome-remis-a-un-enfant-a-larrivee.webp eco-ecole.svg; do
   cp "public/assets/img/$f" public/assets/img/actualites/
@@ -442,22 +456,100 @@ done
 ls public/assets/img/actualites | wc -l
 ```
 
-Résultat attendu : `9`. Les 4 images de stage d'origine sont supprimées à la tâche 4, une fois la page passée aux nouvelles adresses.
+Résultat attendu : `20`. Les 15 premières images ne servent qu'à la page Actualités : leurs originaux sont supprimés à la tâche 4, une fois la page passée aux nouvelles adresses. Les 5 dernières servent aussi sur d'autres pages : elles restent en double.
 
-- [ ] **Étape 2 : écrire les tests du tri et des dimensions**
+- [ ] **Étape 2 : ajouter marked et écrire le test du Markdown**
+
+```bash
+bun add marked
+```
+
+Créer `tests/markdown.test.ts` :
+
+```ts
+import { expect, test } from 'bun:test';
+import { enBlocs, enLigne } from '../src/lib/markdown';
+
+test('enLigne met en gras sans ajouter de paragraphe', () => {
+  expect(enLigne('**Ouvert à tous** · enfants')).toBe('<strong>Ouvert à tous</strong> · enfants');
+});
+
+test('enLigne reconnaît les surlignages vert (==) et orange (++)', () => {
+  expect(enLigne('veut ==penser par lui-même==. Et ++donne forme à ses idées++, ok')).toBe(
+    'veut <strong class="soft-mark">penser par lui-même</strong>. Et <strong class="orange-mark">donne forme à ses idées</strong>, ok',
+  );
+});
+
+test('enLigne laisse == et ++ isolés tels quels', () => {
+  expect(enLigne('a == b et 3 ++ 4')).toBe('a == b et 3 ++ 4');
+});
+
+test('enLigne accepte du gras dans un surlignage', () => {
+  expect(enLigne('==**gras** dedans==')).toBe('<strong class="soft-mark"><strong>gras</strong> dedans</strong>');
+});
+
+test('enBlocs produit des paragraphes', () => {
+  expect(enBlocs('Un.\n\nDeux ==x==.')).toBe('<p>Un.</p>\n<p>Deux <strong class="soft-mark">x</strong>.</p>\n');
+});
+```
+
+Lancer : `bun test tests/markdown.test.ts`
+Résultat attendu : ÉCHEC avec `Cannot find module '../src/lib/markdown'`.
+
+- [ ] **Étape 3 : écrire le Markdown**
+
+Créer `src/lib/markdown.ts`. Ce code a été testé avec marked 18 :
+
+```ts
+// Markdown des textes saisis dans Page CMS : **gras**, ==surligné vert==, ++surligné orange++.
+// Les surlignages reprennent les classes soft-mark et orange-mark de la page Actualités.
+import { Marked, type TokenizerAndRendererExtension } from 'marked';
+
+const surlignage = (nom: string, marque: string, classe: string): TokenizerAndRendererExtension => {
+  const motif = new RegExp(`^${marque}(?=\\S)([\\s\\S]*?\\S)${marque}`);
+  return {
+    name: nom,
+    level: 'inline',
+    start: (source) => source.indexOf(marque.replace(/\\/g, '')),
+    tokenizer(source) {
+      const trouve = motif.exec(source);
+      if (!trouve) return undefined;
+      return { type: nom, raw: trouve[0], tokens: this.lexer.inlineTokens(trouve[1]!) };
+    },
+    renderer(jeton) {
+      return `<strong class="${classe}">${this.parser.parseInline(jeton.tokens!)}</strong>`;
+    },
+  };
+};
+
+const markdown = new Marked({
+  extensions: [surlignage('surlignageVert', '==', 'soft-mark'), surlignage('surlignageOrange', '\\+\\+', 'orange-mark')],
+});
+
+/** Texte d’une ligne (étiquette, présentation…), sans paragraphe autour. */
+export const enLigne = (texte: string): string => markdown.parseInline(texte, { async: false }) as string;
+
+/** Texte en paragraphes. */
+export const enBlocs = (texte: string): string => markdown.parse(texte, { async: false }) as string;
+```
+
+Lancer : `bun test tests/markdown.test.ts`
+Résultat attendu : `5 pass`, `0 fail`.
+
+- [ ] **Étape 4 : écrire les tests du tri, des programmes et des dimensions**
 
 Créer `tests/actualites.test.ts` :
 
 ```ts
 import { expect, test } from 'bun:test';
-import { articleSchema, rendezVousSchema, stageSchema } from '../src/content/schemas';
-import { articlesAffiches, rendezVousAffiches, stagesAffiches } from '../src/lib/actualites';
+import { articleSchema, rendezVousSchema, stageSchema, type Programme } from '../src/content/schemas';
+import { articlesAffiches, avecProgramme, rendezVousAffiches, stagesAffiches } from '../src/lib/actualites';
 
 const visuel = { image: 'assets/img/actualites/eco-ecole.svg', alt: 'Logo' };
 
-const stage = (id: string, debut: string, brouillon = false) => ({
+const stage = (id: string, debut: string, brouillon = false, programme = 'p.md') => ({
   id,
-  data: stageSchema.parse({ public: 'enfants', debut, fin: debut, vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', prix: 1, prixFratrie: 1, effectif: 1, brouillon }),
+  data: stageSchema.parse({ programme, debut, fin: debut, vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', prix: 1, prixFratrie: 1, effectif: 1, brouillon }),
 });
 const rendezVous = (id: string, date: string, brouillon = false) => ({
   id,
@@ -487,6 +579,17 @@ test('à date égale, l’ordre suit le nom de fichier', () => {
   const ids = stagesAffiches([stage('b', '2027-02-22'), stage('a', '2027-02-22')]).map((e) => e.id);
   expect(ids).toEqual(['a', 'b']);
 });
+
+test('avecProgramme associe chaque stage à son programme', () => {
+  const programme = { nom: 'Enfants' } as Programme;
+  const [associe] = avecProgramme([stage('s', '2027-02-22', false, 'enfants.md')], [{ id: 'enfants', data: programme }]);
+  expect(associe!.programme).toBe(programme);
+  expect(associe!.id).toBe('s');
+});
+
+test('avecProgramme refuse un programme introuvable', () => {
+  expect(() => avecProgramme([stage('s', '2027-02-22', false, 'absent.md')], [])).toThrow('absent.md');
+});
 ```
 
 Créer `tests/dimensions-image.test.ts` :
@@ -505,12 +608,10 @@ test('échoue si l’image n’existe pas', async () => {
 });
 ```
 
-- [ ] **Étape 3 : vérifier que les tests échouent**
-
 Lancer : `bun test tests/actualites.test.ts tests/dimensions-image.test.ts`
 Résultat attendu : ÉCHEC avec `Cannot find module '../src/content/schemas'` et `Cannot find module '../src/lib/dimensions-image'`.
 
-- [ ] **Étape 4 : écrire les schémas**
+- [ ] **Étape 5 : écrire les schémas**
 
 Créer `src/content/schemas.ts` :
 
@@ -518,6 +619,7 @@ Créer `src/content/schemas.ts` :
 // Schémas des actualités modifiables dans Page CMS.
 // Chaque champ doit aussi être déclaré dans .pages.yml (vérifié par tests/pages-cms.test.ts) :
 // Page CMS efface à l’enregistrement les champs qu’il ne connaît pas.
+// Les textes « en ligne » acceptent **gras**, ==surligné vert== et ++surligné orange++ (src/lib/markdown.ts).
 import { z } from 'astro/zod';
 
 const texteRequis = z.string().trim().min(1);
@@ -525,17 +627,73 @@ const heure = z.string().regex(/^\d{1,2}h\d{2}$/, 'Heure attendue au format 10h0
 const image = z.string().regex(/^assets\/img\/actualites\/[^/]+\.(?:avif|gif|jpe?g|png|svg|webp)$/i, 'Image attendue dans assets/img/actualites/');
 const pourcentage = (parDefaut: number) => z.number().int().min(0).max(100).default(parDefaut);
 
-export const PUBLICS = ['enfants', 'ados'] as const;
 export const VACANCES = ['toussaint', 'noel', 'hiver', 'printemps', 'ete'] as const;
 export const COULEURS_STAGE = ['vert', 'menthe', 'orange', 'bleu'] as const;
+export const PRESENTATIONS_SECTION = ['simple', 'separee', 'mise-en-avant'] as const;
 export const FONDS = ['photo', 'vert', 'sable'] as const;
 export const ILLUSTRATIONS = ['carnaval'] as const;
-export const ICONES = ['livre', 'bulle', 'famille'] as const;
+export const ICONES = ['livre', 'bulle', 'famille', 'pousse', 'crayon', 'coeur', 'vent', 'etoile', 'calendrier'] as const;
 export const STYLES_LIEN = ['bouton', 'lien'] as const;
 
-/** Une session du stage « Histoires & Objets Inventés ». */
+/** Élément d’une liste illustrée : une « force » ou une « étape » d’un programme. */
+const elementIllustre = z.object({ icone: z.enum(ICONES), titre: texteRequis, texte: texteRequis }).strict();
+
+const blocProgrammeSchema = z.discriminatedUnion('type', [
+  z.object({ type: z.literal('texte'), contenu: texteRequis }).strict(),
+  z.object({
+    type: z.literal('intervenants'),
+    personnes: z.array(z.object({ photo: image, alt: texteRequis, nom: texteRequis, presentation: texteRequis }).strict()).min(1),
+  }).strict(),
+  z.object({ type: z.literal('forces'), elements: z.array(elementIllustre).min(1) }).strict(),
+  z.object({ type: z.literal('etapes'), elements: z.array(elementIllustre).min(1) }).strict(),
+  z.object({ type: z.literal('illustration'), image, alt: texteRequis }).strict(),
+  z.object({ type: z.literal('restitution'), titre: texteRequis, precision: z.string().optional() }).strict(),
+]);
+
+const sectionSchema = z.object({
+  titre: texteRequis,
+  icone: z.enum(ICONES),
+  presentation: z.enum(PRESENTATIONS_SECTION).default('simple'),
+  blocs: z.array(blocProgrammeSchema).min(1),
+}).strict();
+
+/** Contenu de la fenêtre « Programme & infos » d’un stage. Une fiche par public. */
+export const programmeSchema = z.object({
+  /** Nom de la fiche, visible seulement dans Page CMS. */
+  nom: texteRequis,
+  /** Une ligne par retour : <br> sur la carte, 2e ligne surlignée dans la fenêtre. */
+  titre: texteRequis,
+  accroche: texteRequis,
+  discipline: texteRequis,
+  ages: texteRequis,
+  agesDeA: texteRequis,
+  etiquette: texteRequis,
+  description: texteRequis,
+  public: texteRequis,
+  participants: texteRequis,
+  participantsCarte: z.string().optional(),
+  encadrement: texteRequis,
+  intro: texteRequis,
+  horaires: texteRequis,
+  accueil: texteRequis,
+  jours: texteRequis,
+  lieu: texteRequis,
+  restitution: heure.optional(),
+  sections: z.array(sectionSchema).min(1),
+  sac: z.object({
+    titre: texteRequis,
+    sousTitre: z.string().optional(),
+    objets: z.array(z.object({ image, texte: texteRequis }).strict()).min(1),
+  }).strict().optional(),
+  inscription: texteRequis,
+}).strict().refine(
+  (programme) => Boolean(programme.restitution) || !programme.sections.some((section) => section.blocs.some((bloc) => bloc.type === 'restitution')),
+  { message: 'Un bloc « Restitution » demande l’heure de restitution', path: ['restitution'] },
+);
+
+/** Une session de stage : elle choisit son programme et fixe ses dates, son prix et son nombre de places. */
 export const stageSchema = z.object({
-  public: z.enum(PUBLICS),
+  programme: z.string().regex(/^[a-z0-9-]+\.md$/, 'Choisir un programme'),
   debut: z.coerce.date(),
   fin: z.coerce.date(),
   vacances: z.enum(VACANCES),
@@ -594,7 +752,7 @@ export const rendezVousSchema = z.object({
   mention: texteRequis,
   bouton: texteRequis.default('Voir les détails'),
   intro: z.string().optional(),
-  pointsForts: z.array(z.object({ icone: z.enum(ICONES), titre: texteRequis, texte: texteRequis }).strict()).default([]),
+  pointsForts: z.array(elementIllustre).default([]),
   encadre: z.object({ titre: texteRequis, texte: z.string().optional() }).strict().optional(),
 }).strict();
 
@@ -605,6 +763,8 @@ export const articleSchema = z.object({
   intro: texteRequis,
 }).strict();
 
+export type Programme = z.infer<typeof programmeSchema>;
+export type SectionProgramme = Programme['sections'][number];
 export type Stage = z.infer<typeof stageSchema>;
 export type RendezVous = z.infer<typeof rendezVousSchema>;
 export type Article = z.infer<typeof articleSchema>;
@@ -613,13 +773,13 @@ export type Bloc = RendezVous['blocs'][number];
 export type Lien = RendezVous['liens'][number];
 ```
 
-- [ ] **Étape 5 : écrire le tri et la lecture des dimensions**
+- [ ] **Étape 6 : écrire le tri, l'association aux programmes et la lecture des dimensions**
 
 Créer `src/lib/actualites.ts` :
 
 ```ts
-// Filtrage des brouillons et tri des actualités. Ces fonctions ne dépendent pas d’Astro, pour être testées par bun test.
-import type { Article, RendezVous, Stage } from '../content/schemas';
+// Filtrage des brouillons, tri et association aux programmes. Ces fonctions ne dépendent pas d’Astro, pour être testées par bun test.
+import type { Article, Programme, RendezVous, Stage } from '../content/schemas';
 
 export interface Entree<T> {
   readonly id: string;
@@ -643,6 +803,19 @@ export const rendezVousAffiches = <E extends Entree<RendezVous>>(entrees: Readon
 /** Articles publiés, du plus récent au plus ancien. */
 export const articlesAffiches = <E extends Entree<Article>>(entrees: ReadonlyArray<E>): E[] =>
   publiees<Article, E>(entrees).sort(parDate<Article, E>((article) => article.date, -1));
+
+/** Ajoute à chaque stage le programme qu’il cite ; un programme introuvable fait échouer le build. */
+export const avecProgramme = <E extends Entree<Stage>>(
+  stages: ReadonlyArray<E>,
+  programmes: ReadonlyArray<Entree<Programme>>,
+): Array<E & { readonly programme: Programme }> =>
+  stages.map((stage) => {
+    const trouve = programmes.find((programme) => `${programme.id}.md` === stage.data.programme);
+    if (!trouve) {
+      throw new Error(`Stage « ${stage.id} » : programme « ${stage.data.programme} » introuvable dans src/content/programmes/.`);
+    }
+    return { ...stage, programme: trouve.data };
+  });
 ```
 
 Créer `src/lib/dimensions-image.ts` :
@@ -663,12 +836,12 @@ export const dimensionsImage = async (src: string): Promise<{ width: number; hei
 
 `process.cwd()` est volontaire : au build, `import.meta.url` désigne le dossier des fichiers compilés, pas `src/`.
 
-- [ ] **Étape 6 : vérifier que les tests passent**
+- [ ] **Étape 7 : vérifier que les tests passent**
 
-Lancer : `bun test tests/actualites.test.ts tests/dimensions-image.test.ts`
-Résultat attendu : `6 pass`, `0 fail`.
+Lancer : `bun test tests/markdown.test.ts tests/actualites.test.ts tests/dimensions-image.test.ts`
+Résultat attendu : `13 pass`, `0 fail`.
 
-- [ ] **Étape 7 : déclarer les collections**
+- [ ] **Étape 8 : déclarer les collections**
 
 Créer `src/content.config.ts` :
 
@@ -676,24 +849,25 @@ Créer `src/content.config.ts` :
 // Collections de la page Actualités, modifiables dans Page CMS (voir .pages.yml et docs/page-cms.md).
 import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
-import { articleSchema, rendezVousSchema, stageSchema } from './content/schemas';
+import { articleSchema, programmeSchema, rendezVousSchema, stageSchema } from './content/schemas';
 
 export const collections = {
+  programmes: defineCollection({ loader: glob({ pattern: '*.md', base: './src/content/programmes' }), schema: programmeSchema }),
   stages: defineCollection({ loader: glob({ pattern: '*.yml', base: './src/content/stages' }), schema: stageSchema }),
   rendezVous: defineCollection({ loader: glob({ pattern: '*.md', base: './src/content/rendez-vous' }), schema: rendezVousSchema }),
   articles: defineCollection({ loader: glob({ pattern: '*.md', base: './src/content/articles' }), schema: articleSchema }),
 };
 ```
 
-- [ ] **Étape 8 : écrire le test des contenus**
+- [ ] **Étape 9 : écrire le test des contenus**
 
 Créer `tests/contenus.test.ts` :
 
 ```ts
-// Chaque fichier de contenu respecte son schéma et ses images existent.
+// Chaque fichier de contenu respecte son schéma, ses images existent et chaque stage cite un programme existant.
 import { describe, expect, test } from 'bun:test';
 import { Glob } from 'bun';
-import { articleSchema, rendezVousSchema, stageSchema } from '../src/content/schemas';
+import { articleSchema, programmeSchema, rendezVousSchema, stageSchema } from '../src/content/schemas';
 
 const lireDonnees = async (chemin: string): Promise<unknown> => {
   const texte = await Bun.file(chemin).text();
@@ -711,6 +885,7 @@ const imagesCitees = (valeur: unknown): string[] => {
 };
 
 const collections = [
+  { dossier: 'src/content/programmes', motif: '*.md', schema: programmeSchema },
   { dossier: 'src/content/stages', motif: '*.yml', schema: stageSchema },
   { dossier: 'src/content/rendez-vous', motif: '*.md', schema: rendezVousSchema },
   { dossier: 'src/content/articles', motif: '*.md', schema: articleSchema },
@@ -733,17 +908,235 @@ for (const { dossier, motif, schema } of collections) {
     }
   });
 }
+
+test('chaque stage cite un programme existant', async () => {
+  for (const fichier of new Glob('*.yml').scanSync('src/content/stages')) {
+    const { programme } = (await lireDonnees(`src/content/stages/${fichier}`)) as { programme: string };
+    expect(await Bun.file(`src/content/programmes/${programme}`).exists()).toBe(true);
+  }
+});
 ```
 
 Lancer : `bun test tests/contenus.test.ts`
 Résultat attendu : ÉCHEC, car les dossiers de contenu n'existent pas encore (erreur `ENOENT` à la lecture des dossiers, ou échec de « contient au moins une entrée »).
 
-- [ ] **Étape 9 : écrire les 4 sessions de stage**
+- [ ] **Étape 10 : écrire les 2 programmes**
+
+En YAML, toute valeur qui commence par `*` ou qui contient « : » (deux-points suivi d'une espace) doit être entre guillemets. Les textes reprennent mot pour mot la page d'origine. En cas de doute sur un caractère (`’`, `«`, `…`, `–`), recopier depuis `tests/fixtures/actualites-avant.html`.
+
+Créer `src/content/programmes/histoires-objets-inventes-enfants.md` :
+
+```markdown
+---
+nom: Histoires & Objets Inventés — enfants de 6 à 11 ans
+titre: |-
+  Histoires &
+  Objets Inventés
+accroche: IMAGINER · CRÉER · PARTAGER
+discipline: Stage théâtre & arts plastiques
+ages: 6–11 ans
+agesDeA: 6 à 11 ans
+etiquette: "**Ouvert à tous** · enfants des Petons et d’ailleurs"
+description: "Le corps qui bouge, la voix qui ose, la main qui façonne : **cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.**"
+public: "**Ouvert à tous les enfants de 6 à 11 ans,** des Petons ou d’ailleurs."
+participants: enfants
+encadrement: deux intervenants
+intro: "**Il était une fois un souffle, un geste, une couleur, un mot… et un objet qui n’existait pas encore.** Pendant cinq jours, les enfants partent à la rencontre de ce qui vit en eux. Le corps qui bouge et qui ressent, la voix qui ose, la main qui trace et qui façonne : ==tout devient matière à inventer==. Chacun, avec sa sensibilité, fait naître un personnage, rêve une histoire, fabrique l’objet qui la porte, et découvre qu’il a sa place dans un récit plus grand que lui."
+horaires: 10h–17h
+accueil: 9h
+jours: Du lundi au vendredi
+lieu: Nantes
+restitution: 16h30
+sections:
+  - titre: Qui accompagne les enfants ?
+    icone: famille
+    blocs:
+      - type: intervenants
+        personnes:
+          - photo: assets/img/actualites/philippe-leroy-stage.jpg
+            alt: Philippe Leroy, intervenant du stage Histoires & Objets Inventés
+            nom: Philippe Leroy
+            presentation: "**Comédien et clown.** Intervenant en prise de parole adulte, **éducateur Montessori 6–12 ans (AMI)**. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo."
+          - photo: assets/img/actualites/manuella-cortes-thonon-stage.jpg
+            alt: Manuella Cortès-Thonon, intervenante du stage Histoires & Objets Inventés
+            nom: Manuella Cortès-Thonon
+            presentation: Artiste peintre et chorégraphique, danseuse, **plasticienne** et **praticienne Qi Gong**. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.
+  - titre: Trois forces à éveiller
+    icone: pousse
+    presentation: separee
+    blocs:
+      - type: texte
+        contenu: "Vers six ans, l’enfant entre dans un nouvel âge. Plus robuste, plus stable, débordant d’énergie, il ne se contente plus de découvrir le monde : il veut le comprendre, s’y mesurer et y trouver sa place. Le stage accueille ces besoins profonds et invite chacun à entrer en connexion avec ses potentiels, à travers trois forces qui grandissent ensemble."
+      - type: forces
+        elements:
+          - icone: livre
+            titre: Un esprit pour penser et imaginer
+            texte: "C’est l’âge des « pourquoi » et des « comment ». L’esprit raisonneur s’éveille : il cherche les causes, les liens entre les choses, veut ==penser par lui-même==. Son imagination, immense, l’emmène bien au-delà de ce qu’il voit et touche. Il a besoin de grands récits, de questions ouvertes et d’espace pour inventer : si nous semons des graines, son imagination les fait germer."
+          - icone: crayon
+            titre: Une main pour construire et fabriquer
+            texte: "C’est par la main que l’intelligence prend corps. En transformant la matière, l’enfant ++donne forme à ses idées++, éprouve ses hypothèses, se trompe et recommence. Il aime les vrais défis, les grands chantiers, l’effort qui a du sens. Le corps tout entier s’y engage : le mouvement prépare le geste, le geste guide le trait, et le trait devient objet."
+          - icone: coeur
+            titre: Un cœur pour aimer et partager
+            texte: "C’est aussi l’âge du groupe et de la conscience morale. L’enfant recherche ses pairs, a besoin d’appartenir, de coopérer, de s’accorder sur des règles communes ; il s’interroge sur le juste et l’injuste avec une exigence nouvelle. Dans le jeu et la création collective, il apprend à écouter, ==à accueillir la différence==, à prendre sa part et à faire place à l’autre."
+      - type: illustration
+        image: assets/img/actualites/stage-trois-forces-fil-imagination.png
+        alt: Des enfants imaginent une histoire, fabriquent un oiseau et dansent ensemble.
+  - titre: Le corps, la voix, la main
+    icone: crayon
+    blocs:
+      - type: etapes
+        elements:
+          - icone: vent
+            titre: On commence par se poser.
+            texte: "Respirer, écouter, sentir : quelques gestes simples inspirés du Qi Gong ouvrent la journée et rassemblent le groupe. Les sens s’éveillent et deviennent autant de portes vers l’imaginaire. Puis le mouvement s’invite, avec ses rythmes, ses silences et ses élans, et le corps devient un premier langage."
+          - icone: bulle
+            titre: Peu à peu, le jeu prend sa place.
+            texte: "Improvisation, jeux de regard, un soupçon de clown : chacun apprivoise sa voix, ose la parole devant les autres et laisse apparaître un personnage qui lui ressemble… ou pas du tout."
+          - icone: crayon
+            titre: Et la main prend le relais.
+            texte: "Le trait suit le geste, la couleur suit l’émotion. Avec des matériaux glanés, assemblés, transformés, naît l’objet qui portera l’histoire : un accessoire, un talisman, un trésor, une clé."
+          - icone: pousse
+            titre: Un cadre qui libère.
+            texte: "Un espace préparé avec soin, des matériaux choisis, quelques règles partagées : dans ce cadre, l’enfant est libre de chercher, d’essayer, de se tromper et de recommencer, à son rythme. Les adultes observent, proposent, accompagnent, et laissent à chacun le temps de trouver son propre chemin."
+      - type: illustration
+        image: assets/img/actualites/stage-corps-voix-main-v2.png
+        alt: Des enfants respirent calmement, jouent une scène et peignent un objet fabriqué pour leur histoire.
+  - titre: Une histoire où chacun trouve sa place
+    icone: etoile
+    presentation: mise-en-avant
+    blocs:
+      - type: restitution
+        titre: Un moment à partager en famille
+        precision: Les familles sont invitées à nous rejoindre.
+      - type: illustration
+        image: assets/img/actualites/stage-histoires-restitution-v2.png
+        alt: Des enfants présentent leurs histoires et leurs objets fabriqués devant les familles, dans un décor de théâtre en carton.
+      - type: texte
+        contenu: "Suite de récits singuliers ou grande histoire tissée de toutes les singularités : la forme naît du groupe, au fil de la semaine. Ce qui compte, c’est que ++chaque enfant, chaque personnage et chaque objet y trouve sa place++. Comme dans le grand récit du vivant, où chaque être a son rôle et contribue à l’ensemble, chacun apporte ici sa part, unique et nécessaire."
+sac:
+  titre: Dans le sac…
+  sousTitre: car la création, ça creuse !
+  objets:
+    - image: assets/img/actualites/stage-sac-repas.png
+      texte: Une **gourde**, un repas pour le midi et un goûter.
+    - image: assets/img/actualites/stage-sac-tenue.png
+      texte: Une **tenue souple** pour bouger et jouer.
+    - image: assets/img/actualites/stage-sac-blouse.png
+      texte: Une **grande chemise** en guise de blouse pour les arts plastiques.
+inscription: Un **acompte de 100 €** valide l’inscription, par Wero ou virement bancaire. Contactez l’école pour connaître les modalités.
+---
+```
+
+Créer `src/content/programmes/histoires-objets-inventes-ados.md`. C'est la même fiche, sauf aux endroits où la page d'origine diffère pour les adolescents :
+
+```markdown
+---
+nom: Histoires & Objets Inventés — adolescents de 12 à 16 ans
+titre: |-
+  Histoires &
+  Objets Inventés
+accroche: IMAGINER · CRÉER · PARTAGER
+discipline: Stage théâtre & arts plastiques
+ages: 12–16 ans
+agesDeA: 12 à 16 ans
+etiquette: "**Ouvert à tous** · ados des Petons et d’ailleurs"
+description: "Le corps qui bouge, la voix qui ose, la main qui façonne : **cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.**"
+public: "**Ouvert à tous les adolescents de 12 à 16 ans,** des Petons ou d’ailleurs."
+participants: adolescents
+participantsCarte: ados
+encadrement: deux intervenants
+intro: "**Il était une fois un souffle, un geste, une couleur, un mot… et un objet qui n’existait pas encore.** Pendant cinq jours, les adolescents partent à la rencontre de ce qui vit en eux. Le corps qui bouge et qui ressent, la voix qui ose, la main qui trace et qui façonne : ==tout devient matière à inventer==. Chacun, avec sa sensibilité, fait naître un personnage, rêve une histoire, fabrique l’objet qui la porte, et découvre qu’il a sa place dans un récit plus grand que lui."
+horaires: 10h–17h
+accueil: 9h
+jours: Du lundi au vendredi
+lieu: Nantes
+restitution: 16h30
+sections:
+  - titre: Qui accompagne les adolescents ?
+    icone: famille
+    blocs:
+      - type: intervenants
+        personnes:
+          - photo: assets/img/actualites/philippe-leroy-stage.jpg
+            alt: Philippe Leroy, intervenant du stage Histoires & Objets Inventés
+            nom: Philippe Leroy
+            presentation: "**Comédien et clown.** Intervenant en prise de parole adulte, **éducateur Montessori 6–12 ans (AMI)**. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo."
+          - photo: assets/img/actualites/manuella-cortes-thonon-stage.jpg
+            alt: Manuella Cortès-Thonon, intervenante du stage Histoires & Objets Inventés
+            nom: Manuella Cortès-Thonon
+            presentation: Artiste peintre et chorégraphique, danseuse, **plasticienne** et **praticienne Qi Gong**. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.
+  - titre: Trois forces à éveiller
+    icone: pousse
+    presentation: separee
+    blocs:
+      - type: texte
+        contenu: "À l’adolescence, chacun cherche à mieux comprendre le monde, à s’y mesurer et à y trouver sa place. Exprimer ses idées, expérimenter et créer avec les autres ouvrent de nouveaux possibles. Le stage accueille ces besoins profonds et invite chacun à entrer en connexion avec ses potentiels, à travers trois forces qui grandissent ensemble."
+      - type: forces
+        elements:
+          - icone: livre
+            titre: Un esprit pour penser et imaginer
+            texte: "Les « pourquoi » et les « comment » ouvrent de nouvelles pistes. L’esprit critique s’affirme : il cherche les causes, les liens entre les choses, veut ==penser par lui-même==. Son imagination, immense, l’emmène bien au-delà de ce qu’il voit et touche. Il a besoin de grands récits, de questions ouvertes et d’espace pour inventer : si nous semons des graines, son imagination les fait germer."
+          - icone: crayon
+            titre: Une main pour construire et fabriquer
+            texte: "C’est par la main que l’intelligence prend corps. En transformant la matière, l’adolescent ++donne forme à ses idées++, éprouve ses hypothèses, se trompe et recommence. Il aime les vrais défis, les grands chantiers, l’effort qui a du sens. Le corps tout entier s’y engage : le mouvement prépare le geste, le geste guide le trait, et le trait devient objet."
+          - icone: coeur
+            titre: Un cœur pour aimer et partager
+            texte: "Le groupe et le besoin d’appartenance occupent une place importante. L’adolescent recherche ses pairs, a besoin d’appartenir, de coopérer, de s’accorder sur des règles communes ; il s’interroge sur le juste et l’injuste avec une exigence nouvelle. Dans le jeu et la création collective, il apprend à écouter, ==à accueillir la différence==, à prendre sa part et à faire place à l’autre."
+      - type: illustration
+        image: assets/img/actualites/stage-ados-trois-forces-v3.png
+        alt: Des adolescents échangent leurs idées, dessinent et fabriquent ensemble un masque et des éléments de décor.
+  - titre: Le corps, la voix, la main
+    icone: crayon
+    blocs:
+      - type: etapes
+        elements:
+          - icone: vent
+            titre: On commence par se poser.
+            texte: "Respirer, écouter, sentir : quelques gestes simples inspirés du Qi Gong ouvrent la journée et rassemblent le groupe. Les sens s’éveillent et deviennent autant de portes vers l’imaginaire. Puis le mouvement s’invite, avec ses rythmes, ses silences et ses élans, et le corps devient un premier langage."
+          - icone: bulle
+            titre: Peu à peu, le jeu prend sa place.
+            texte: "Improvisation, jeux de regard, un soupçon de clown : chacun apprivoise sa voix, ose la parole devant les autres et laisse apparaître un personnage qui lui ressemble… ou pas du tout."
+          - icone: crayon
+            titre: Et la main prend le relais.
+            texte: "Le trait suit le geste, la couleur suit l’émotion. Avec des matériaux glanés, assemblés, transformés, naît l’objet qui portera l’histoire : un accessoire, un talisman, un trésor, une clé."
+          - icone: pousse
+            titre: Un cadre qui libère.
+            texte: "Un espace préparé avec soin, des matériaux choisis, quelques règles partagées : dans ce cadre, l’adolescent est libre de chercher, d’essayer, de se tromper et de recommencer, à son rythme. Les adultes observent, proposent, accompagnent, et laissent à chacun le temps de trouver son propre chemin."
+      - type: illustration
+        image: assets/img/actualites/stage-ados-corps-voix-main-v3.png
+        alt: Des adolescents improvisent, jouent avec leurs gestes et peignent un décor de théâtre.
+  - titre: Une histoire où chacun trouve sa place
+    icone: etoile
+    presentation: mise-en-avant
+    blocs:
+      - type: restitution
+        titre: Un moment à partager en famille
+        precision: Les familles sont invitées à nous rejoindre.
+      - type: illustration
+        image: assets/img/actualites/stage-ados-restitution-v3.png
+        alt: Des adolescents présentent leurs histoires et leurs objets fabriqués devant les familles, dans un décor de théâtre en carton.
+      - type: texte
+        contenu: "Suite de récits singuliers ou grande histoire tissée de toutes les singularités : la forme naît du groupe, au fil de la semaine. Ce qui compte, c’est que ++chaque adolescent, chaque personnage et chaque objet y trouve sa place++. Comme dans le grand récit du vivant, où chaque être a son rôle et contribue à l’ensemble, chacun apporte ici sa part, unique et nécessaire."
+sac:
+  titre: Dans le sac…
+  sousTitre: car la création, ça creuse !
+  objets:
+    - image: assets/img/actualites/stage-sac-repas.png
+      texte: Une **gourde**, un repas pour le midi et un goûter.
+    - image: assets/img/actualites/stage-sac-tenue.png
+      texte: Une **tenue souple** pour bouger et jouer.
+    - image: assets/img/actualites/stage-sac-blouse.png
+      texte: Une **grande chemise** en guise de blouse pour les arts plastiques.
+inscription: Un **acompte de 100 €** valide l’inscription, par Wero ou virement bancaire. Contactez l’école pour connaître les modalités.
+---
+```
+
+- [ ] **Étape 11 : écrire les 4 sessions de stage**
 
 Créer `src/content/stages/stage-fevrier-2027.yml` :
 
 ```yaml
-public: enfants
+programme: histoires-objets-inventes-enfants.md
 debut: 2027-02-22
 fin: 2027-02-26
 vacances: hiver
@@ -757,7 +1150,7 @@ effectif: 14
 Créer `src/content/stages/stage-avril-2027.yml` :
 
 ```yaml
-public: enfants
+programme: histoires-objets-inventes-enfants.md
 debut: 2027-04-26
 fin: 2027-04-30
 vacances: printemps
@@ -772,7 +1165,7 @@ effectif: 14
 Créer `src/content/stages/stage-juillet-2027.yml` :
 
 ```yaml
-public: enfants
+programme: histoires-objets-inventes-enfants.md
 debut: 2027-07-12
 fin: 2027-07-16
 vacances: ete
@@ -787,7 +1180,7 @@ effectif: 14
 Créer `src/content/stages/stage-ados-juillet-2027.yml` :
 
 ```yaml
-public: ados
+programme: histoires-objets-inventes-ados.md
 debut: 2027-07-19
 fin: 2027-07-23
 vacances: ete
@@ -800,7 +1193,7 @@ effectif: 14
 note: Une session dédiée aux adolescents.
 ```
 
-- [ ] **Étape 10 : écrire les 2 rendez-vous**
+- [ ] **Étape 12 : écrire les 2 rendez-vous**
 
 En YAML, toute valeur qui contient « : » (deux-points suivi d'une espace) doit être entre guillemets.
 
@@ -875,7 +1268,7 @@ liens:
 ---
 ```
 
-- [ ] **Étape 11 : écrire les 2 articles**
+- [ ] **Étape 13 : écrire les 2 articles**
 
 Le champ `date` sert seulement au classement et n'est affiché nulle part. Pour le cross, `2026-06-01` est une approximation (l'article était présent dès la création du site) : **la faire confirmer par Philippe à la relecture**. Seule contrainte : rester antérieure au 25 septembre 2026, pour garder l'ordre actuel.
 
@@ -992,31 +1385,35 @@ blocs:
 ---
 ```
 
-- [ ] **Étape 12 : vérifier tests et build**
+- [ ] **Étape 14 : vérifier tests et build**
 
 Lancer : `bun run check`
 Résultat attendu : le build se termine par `12 page(s) built` sans `[ERROR]`. Le build valide aussi les contenus avec les schémas. Les tests : `0 fail`. La page Actualités n'a pas encore changé.
 
-- [ ] **Étape 13 : committer**
+- [ ] **Étape 15 : committer**
 
 ```bash
-git add src/content src/content.config.ts src/lib/actualites.ts src/lib/dimensions-image.ts public/assets/img/actualites tests/
-git commit -m "Passe les stages, rendez-vous et articles en collections de contenu"
+git add package.json bun.lock src/content src/content.config.ts src/lib public/assets/img/actualites tests/
+git commit -m "Passe les programmes, stages, rendez-vous et articles en collections de contenu"
 ```
 
 ---
 
-### Tâche 4 : stages affichés depuis la collection
+### Tâche 4 : stages affichés depuis les sessions et les programmes
 
 **Fichiers :**
-- Créer : `src/data/stage-programme.ts`, `src/components/actualites/StageCard.astro`, `src/components/actualites/StageDialog.astro`
+- Créer : `src/components/actualites/Icone.astro`, `TitreLignes.astro`, `StageCard.astro`, `StageDialog.astro`, `ProgrammeSection.astro`
 - Modifier : `src/pages/actualites-petons.astro` (en-tête, cartes de stage lignes 296–378, fenêtres de stage lignes 384–433, CSS lignes 157–173)
-- Supprimer : les 4 images de stage d'origine dans `public/assets/img/`
+- Supprimer : les 15 images d'origine qui ne servent qu'aux stages, dans `public/assets/img/`
 - Modifier : `tests/migration-actualites.test.ts`
 
 **Interfaces :**
-- Consomme : `Stage` (`src/content/schemas.ts`), `plageStage`, `dateIso`, `majuscule`, `jourMois`, `jourSemaine`, `deMois`, `anneesStages` (`src/lib/dates.ts`), `dimensionsImage`, `stagesAffiches`.
-- Produit : `programme` et `publics` (`src/data/stage-programme.ts`) ; `<StageCard id={string} stage={Stage} />` ; `<StageDialog id={string} stage={Stage} />`. La fenêtre a pour identifiant `${id}-dialog` et son titre `${id}-title`.
+- Consomme : `Programme`, `SectionProgramme`, `Stage` (`src/content/schemas.ts`) ; `plageStage`, `dateIso`, `majuscule`, `jourMois`, `jourSemaine`, `deMois`, `anneesStages` (`src/lib/dates.ts`) ; `dimensionsImage` ; `enLigne`, `enBlocs` ; `stagesAffiches`, `avecProgramme` ; `contact` (`src/data/site.ts`).
+- Produit :
+  - `<Icone nom={…} class?={string} />`, où `nom` vaut l'une des valeurs de `ICONES` ou `fleche` ou `fermer`, et la classe vaut `icon` par défaut ;
+  - `<TitreLignes texte={string} />` (les retours à la ligne deviennent `<br>`) ;
+  - `<StageCard id stage programme />` et `<StageDialog id stage programme />`, la fenêtre ayant pour identifiant `${id}-dialog` et son titre `${id}-title` ;
+  - `<ProgrammeSection id section restitution? />`.
 
 - [ ] **Étape 1 : étendre le test de migration aux stages**
 
@@ -1054,6 +1451,12 @@ const comparer = (ancien: HTMLElement, nouveau: HTMLElement, changementsAssumes:
   expect(nomsImages(nouveau)).toEqual(nomsImages(ancien));
 };
 
+/** Mêmes passages surlignés (soft-mark, orange-mark), dans le même ordre. */
+const memesSurlignages = (ancien: HTMLElement, nouveau: HTMLElement) => {
+  const surlignages = (racine: HTMLElement) => racine.querySelectorAll('.soft-mark, .orange-mark').map((e) => `${e.classNames}:${e.text}`);
+  expect(surlignages(nouveau)).toEqual(surlignages(ancien));
+};
+
 test('la photo d’origine contient 8 cartes et 9 fenêtres', () => {
   expect(avant.querySelectorAll('.news-card')).toHaveLength(8);
   expect(avant.querySelectorAll('dialog')).toHaveLength(9);
@@ -1072,7 +1475,10 @@ describe('stages', () => {
 
   for (const id of ids) {
     test(`carte ${id}`, () => comparer(trouver(avant, `#${id}`), trouver(apres, `#${id}`)));
-    test(`fenêtre ${id}`, () => comparer(trouver(avant, `#${id}-dialog`), trouver(apres, `#${id}-dialog`)));
+    test(`fenêtre ${id}`, () => {
+      comparer(trouver(avant, `#${id}-dialog`), trouver(apres, `#${id}-dialog`));
+      memesSurlignages(trouver(avant, `#${id}-dialog`), trouver(apres, `#${id}-dialog`));
+    });
   }
 });
 ```
@@ -1084,90 +1490,49 @@ C'est un test de caractérisation : il doit passer **avant** la modification (ce
 Lancer : `bun run check`
 Résultat attendu : `0 fail`.
 
-- [ ] **Étape 3 : écrire le programme du stage**
+- [ ] **Étape 3 : écrire les icônes et le titre sur plusieurs lignes**
 
-Créer `src/data/stage-programme.ts` :
+Créer `src/components/actualites/Icone.astro`. Les tracés reprennent les icônes de la page d'origine :
 
-```ts
-// Programme du stage « Histoires & Objets Inventés ».
-// Les sessions (dates, prix, effectif…) se modifient dans Page CMS : src/content/stages/.
-// Ce texte reste dans le code : il change rarement et sa mise en forme est riche.
-
-export const programme = {
-  discipline: 'Stage théâtre & arts plastiques',
-  horaires: '10h–17h',
-  accueil: '9h',
-  restitution: '16h30',
+```astro
+---
+// Icônes au trait (24×24, couleur du texte). Les noms de ICONES (src/content/schemas.ts) sont proposés dans Page CMS.
+const traces = {
+  fleche: '<path d="M5 12h14m-7-7 7 7-7 7"/>',
+  fermer: '<path d="m6 6 12 12M18 6 6 18"/>',
+  livre: '<path d="M12 7C9 4 5 4 2 5v15c4-1 7-1 10 2 3-3 6-3 10-2V5c-4-1-7-1-10 2Zm0 0v15"/>',
+  bulle: '<path d="M21 11a8 8 0 0 1-8 8H5l-3 3V11a9 9 0 0 1 19 0Z"/><path d="M7 10h9M7 14h6"/>',
+  famille: '<circle cx="9" cy="7" r="3"/><path d="M2 21v-3a7 7 0 0 1 14 0v3m1-17a3 3 0 0 1 0 6m2 4a6 6 0 0 1 3 5v2"/>',
+  pousse: '<path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/>',
+  crayon: '<path d="m4 16-1 5 5-1L21 7l-4-4L4 16Zm11-11 4 4M4 16l4 4"/>',
+  coeur: '<path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/>',
+  vent: '<path d="M3 8h12a3 3 0 1 0-3-3M2 12h17a3 3 0 1 1-3 3M4 16h6a3 3 0 1 1-3 3"/>',
+  etoile: '<path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/>',
+  calendrier: '<rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/>',
 } as const;
 
-/** Complète « Vacances » sur la carte : « Vacances d’hiver ». */
-export const vacances = {
-  toussaint: 'de la Toussaint',
-  noel: 'de Noël',
-  hiver: 'd’hiver',
-  printemps: 'de printemps',
-  ete: 'd’été',
-} as const;
-
-interface Illustration {
-  readonly src: string;
-  readonly alt: string;
-  readonly width: number;
-  readonly height: number;
+interface Props {
+  nom: keyof typeof traces;
+  class?: string;
 }
 
-export interface VariantePublic {
-  /** « 6–11 ans » */
-  readonly ages: string;
-  /** « 6 à 11 ans » */
-  readonly agesDeA: string;
-  /** Sur la carte : « enfants » ou « ados » */
-  readonly court: string;
-  readonly pluriel: string;
-  /** Commence par une voyelle : « l’enfant », « l’adolescent ». */
-  readonly singulier: string;
-  /** Inséré dans « Fermer le programme du stage… » */
-  readonly qualificatif: string;
-  readonly forcesIntro: string;
-  /** Début de la force « esprit », avant « : il cherche les causes… » */
-  readonly espritDebut: string;
-  /** Début de la force « cœur », avant « L’enfant recherche ses pairs… » */
-  readonly coeurDebut: string;
-  readonly forces: Illustration;
-  readonly corps: Illustration;
-  readonly restitution: Illustration;
+const { nom, class: classe = 'icon' } = Astro.props;
+---
+<svg class={classe} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={traces[nom]}></svg>
+```
+
+Créer `src/components/actualites/TitreLignes.astro` :
+
+```astro
+---
+// Titre saisi sur plusieurs lignes dans Page CMS : chaque retour à la ligne devient <br>.
+interface Props {
+  texte: string;
 }
 
-export const publics: Record<'enfants' | 'ados', VariantePublic> = {
-  enfants: {
-    ages: '6–11 ans',
-    agesDeA: '6 à 11 ans',
-    court: 'enfants',
-    pluriel: 'enfants',
-    singulier: 'enfant',
-    qualificatif: '',
-    forcesIntro: 'Vers six ans, l’enfant entre dans un nouvel âge. Plus robuste, plus stable, débordant d’énergie, il ne se contente plus de découvrir le monde : il veut le comprendre, s’y mesurer et y trouver sa place. Le stage accueille ces besoins profonds et invite chacun à entrer en connexion avec ses potentiels, à travers trois forces qui grandissent ensemble.',
-    espritDebut: 'C’est l’âge des « pourquoi » et des « comment ». L’esprit raisonneur s’éveille',
-    coeurDebut: 'C’est aussi l’âge du groupe et de la conscience morale.',
-    forces: { src: 'assets/img/stage-trois-forces-fil-imagination.png', alt: 'Des enfants imaginent une histoire, fabriquent un oiseau et dansent ensemble.', width: 2075, height: 758 },
-    corps: { src: 'assets/img/stage-corps-voix-main-v2.png', alt: 'Des enfants respirent calmement, jouent une scène et peignent un objet fabriqué pour leur histoire.', width: 2073, height: 758 },
-    restitution: { src: 'assets/img/stage-histoires-restitution-v2.png', alt: 'Des enfants présentent leurs histoires et leurs objets fabriqués devant les familles, dans un décor de théâtre en carton.', width: 1536, height: 1024 },
-  },
-  ados: {
-    ages: '12–16 ans',
-    agesDeA: '12 à 16 ans',
-    court: 'ados',
-    pluriel: 'adolescents',
-    singulier: 'adolescent',
-    qualificatif: ' adolescents',
-    forcesIntro: 'À l’adolescence, chacun cherche à mieux comprendre le monde, à s’y mesurer et à y trouver sa place. Exprimer ses idées, expérimenter et créer avec les autres ouvrent de nouveaux possibles. Le stage accueille ces besoins profonds et invite chacun à entrer en connexion avec ses potentiels, à travers trois forces qui grandissent ensemble.',
-    espritDebut: 'Les « pourquoi » et les « comment » ouvrent de nouvelles pistes. L’esprit critique s’affirme',
-    coeurDebut: 'Le groupe et le besoin d’appartenance occupent une place importante.',
-    forces: { src: 'assets/img/stage-ados-trois-forces-v3.png', alt: 'Des adolescents échangent leurs idées, dessinent et fabriquent ensemble un masque et des éléments de décor.', width: 2075, height: 758 },
-    corps: { src: 'assets/img/stage-ados-corps-voix-main-v3.png', alt: 'Des adolescents improvisent, jouent avec leurs gestes et peignent un décor de théâtre.', width: 2073, height: 758 },
-    restitution: { src: 'assets/img/stage-ados-restitution-v3.png', alt: 'Des adolescents présentent leurs histoires et leurs objets fabriqués devant les familles, dans un décor de théâtre en carton.', width: 1536, height: 1024 },
-  },
-};
+const lignes = Astro.props.texte.split('\n').map((ligne) => ligne.trim()).filter(Boolean);
+---
+{lignes.map((ligne, index) => <Fragment>{index > 0 && <br />}{ligne}</Fragment>)}
 ```
 
 - [ ] **Étape 4 : écrire la carte de stage**
@@ -1177,36 +1542,46 @@ Créer `src/components/actualites/StageCard.astro`. Il reprend le HTML des ligne
 ```astro
 ---
 // Carte d’une session de stage (section « Les prochains rendez-vous »).
-import type { Stage } from '../../content/schemas';
-import { programme, publics, vacances } from '../../data/stage-programme';
+import type { Programme, Stage } from '../../content/schemas';
 import { dateIso, majuscule, plageStage } from '../../lib/dates';
 import { dimensionsImage } from '../../lib/dimensions-image';
+import { enLigne } from '../../lib/markdown';
+import TitreLignes from './TitreLignes.astro';
+
+/** Complète « Vacances » sur la carte : « Vacances d’hiver ». */
+const LIBELLES_VACANCES = {
+  toussaint: 'de la Toussaint',
+  noel: 'de Noël',
+  hiver: 'd’hiver',
+  printemps: 'de printemps',
+  ete: 'd’été',
+} as const;
 
 interface Props {
   id: string;
   stage: Stage;
+  programme: Programme;
 }
 
-const { id, stage } = Astro.props;
-const variante = publics[stage.public];
+const { id, stage, programme } = Astro.props;
 const plage = plageStage(stage.debut, stage.fin);
 const { width, height } = await dimensionsImage(stage.image);
 const dialogue = `${id}-dialog`;
 ---
 <article class={`news-card stage-card stage-card--${stage.couleur}`} id={id} aria-labelledby={`${id}-heading ${id}-date`} data-category="evenements">
-  <div class="stage-visual"><img src={stage.image} alt="" width={width} height={height} loading="lazy" decoding="async" style={`object-position:center ${stage.cadrage}%`}><h3 id={`${id}-heading`}>Histoires &amp;<br>Objets Inventés</h3><small>IMAGINER · CRÉER · PARTAGER</small><span class="visual-label stage-audience-label"><strong>Ouvert à tous</strong> · {variante.court} des Petons et d’ailleurs</span></div>
+  <div class="stage-visual"><img src={stage.image} alt="" width={width} height={height} loading="lazy" decoding="async" style={`object-position:center ${stage.cadrage}%`}><h3 id={`${id}-heading`}><TitreLignes texte={programme.titre} /></h3><small>{programme.accroche}</small><span class="visual-label stage-audience-label" set:html={enLigne(programme.etiquette)}></span></div>
   <div class="card-content">
     <div class="stage-meta">
-      <div class="stage-date" id={`${id}-date`}><span class="stage-season">Vacances<br>{vacances[stage.vacances]}</span><time datetime={dateIso(stage.debut)} aria-label={majuscule(plage.longue)}><strong>{plage.jours}</strong><b>{plage.mois}<br>{plage.annee}</b></time></div>
+      <div class="stage-date" id={`${id}-date`}><span class="stage-season">Vacances<br>{LIBELLES_VACANCES[stage.vacances]}</span><time datetime={dateIso(stage.debut)} aria-label={majuscule(plage.longue)}><strong>{plage.jours}</strong><b>{plage.mois}<br>{plage.annee}</b></time></div>
       <div class="stage-meta-details">
-      <div class="stage-tags"><span class="stage-tag">{programme.discipline}</span><span class="stage-tag stage-age">{variante.ages}</span></div>
+      <div class="stage-tags"><span class="stage-tag">{programme.discipline}</span><span class="stage-tag stage-age">{programme.ages}</span></div>
       {stage.note && <p class="stage-session-note">{stage.note}</p>}
       </div>
     </div>
-    <p class="stage-description">Le corps qui bouge, la voix qui ose, la main qui façonne : <strong>cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</strong></p>
+    <p class="stage-description" set:html={enLigne(programme.description)}></p>
     <dl class="stage-essentials">
       <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>Horaires</dt><dd><strong>{programme.horaires}</strong><small>Accueil dès {programme.accueil}</small></dd></div>
-      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg>Groupe</dt><dd><strong>{stage.effectif}</strong><small>{variante.court} au plus</small></dd></div>
+      <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg>Groupe</dt><dd><strong>{stage.effectif}</strong><small>{programme.participantsCarte ?? programme.participants} au plus</small></dd></div>
       <div><dt><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</dt><dd><strong>{stage.prix} €</strong><small>Fratries : {stage.prixFratrie} € / enfant</small></dd></div>
     </dl>
     <div class="stage-card-actions">
@@ -1216,80 +1591,118 @@ const dialogue = `${id}-dialog`;
 </article>
 ```
 
-- [ ] **Étape 5 : écrire la fenêtre de stage**
+- [ ] **Étape 5 : écrire une section de programme**
 
-Créer `src/components/actualites/StageDialog.astro`. Il reprend le HTML des lignes 384 à 433 de la page d'origine, et seules les parties variables deviennent des expressions. En cas de doute sur un caractère (`’`, `«`, `…`, `–`), recopier depuis `tests/fixtures/actualites-avant.html` :
+Créer `src/components/actualites/ProgrammeSection.astro`. Chaque type de bloc reproduit la mise en page d'origine : intervenants, liste des forces, étapes, illustration, invitation à la restitution, texte.
 
 ```astro
 ---
-// Fenêtre « Programme & infos » d’une session de stage. Le texte du programme est dans src/data/stage-programme.ts.
-import type { Stage } from '../../content/schemas';
-import { programme, publics } from '../../data/stage-programme';
+// Une section de la fenêtre « Programme & infos » : titre avec icône, puis ses blocs.
+import type { SectionProgramme } from '../../content/schemas';
+import { dimensionsImage } from '../../lib/dimensions-image';
+import { enBlocs, enLigne } from '../../lib/markdown';
+import Icone from './Icone.astro';
+
+interface Props {
+  id: string;
+  section: SectionProgramme;
+  /** « vendredi 26 février à 16h30. », si le programme a une restitution. */
+  restitution?: string;
+}
+
+const { id, section, restitution } = Astro.props;
+const CLASSES = { simple: undefined, separee: 'stage-programme', 'mise-en-avant': 'stage-finale' } as const;
+const classeIllustration = section.presentation === 'mise-en-avant' ? 'stage-finale-art' : 'stage-programme-art';
+
+const blocs = await Promise.all(section.blocs.map(async (bloc) => {
+  switch (bloc.type) {
+    case 'intervenants':
+      return { ...bloc, personnes: await Promise.all(bloc.personnes.map(async (personne) => ({ ...personne, ...(await dimensionsImage(personne.photo)) }))) };
+    case 'illustration':
+      return { ...bloc, ...(await dimensionsImage(bloc.image)) };
+    default:
+      return bloc;
+  }
+}));
+---
+<section class={CLASSES[section.presentation]} aria-labelledby={id}><h3 class="stage-section-heading" id={id}><Icone nom={section.icone} class="stage-section-icon" /><span>{section.titre}</span></h3>
+{blocs.map((bloc) => {
+  switch (bloc.type) {
+    case 'texte':
+      return <Fragment set:html={enBlocs(bloc.contenu)} />;
+    case 'intervenants':
+      return <div class="stage-facilitators">{bloc.personnes.map((personne) => <div class="stage-facilitator"><figure class="stage-portrait"><img src={personne.photo} alt={personne.alt} width={personne.width} height={personne.height} loading="lazy" decoding="async"></figure><h4>{personne.nom}</h4><p set:html={enLigne(personne.presentation)}></p></div>)}</div>;
+    case 'forces':
+      return <ul class="stage-forces">{bloc.elements.map((element) => <li><Icone nom={element.icone} class="stage-force-icon" /><strong class="stage-force-title">{element.titre}</strong><Fragment set:html={enLigne(element.texte)} /></li>)}</ul>;
+    case 'etapes':
+      return bloc.elements.map((element) => <div class="stage-step"><Icone nom={element.icone} class="stage-section-icon" /><div><h4>{element.titre}</h4><p set:html={enLigne(element.texte)}></p></div></div>);
+    case 'illustration':
+      return <figure class={classeIllustration}><img src={bloc.image} alt={bloc.alt} width={bloc.width} height={bloc.height} loading="lazy" decoding="async"></figure>;
+    case 'restitution':
+      return restitution && <div class="stage-restitution-invite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><div><h4>{bloc.titre}</h4><p>Restitution le <strong>{restitution}</strong>{bloc.precision && <small>{bloc.precision}</small>}</p></div></div>;
+  }
+})}
+</section>
+```
+
+- [ ] **Étape 6 : écrire la fenêtre de stage**
+
+Créer `src/components/actualites/StageDialog.astro`. L'en-tête et la partie « En pratique » reprennent les lignes 384 à 390 et 418 à 433 de la page d'origine. Les sections viennent du programme.
+
+```astro
+---
+// Fenêtre « Programme & infos » d’une session de stage : contenu du programme + dates, prix et places de la session.
+import type { Programme, Stage } from '../../content/schemas';
+import { contact } from '../../data/site';
 import { deMois, jourMois, jourSemaine, plageStage } from '../../lib/dates';
+import { dimensionsImage } from '../../lib/dimensions-image';
+import { enLigne } from '../../lib/markdown';
+import Icone from './Icone.astro';
+import ProgrammeSection from './ProgrammeSection.astro';
 
 interface Props {
   id: string;
   stage: Stage;
+  programme: Programme;
 }
 
-const { id, stage } = Astro.props;
-const v = publics[stage.public];
+const { id, stage, programme } = Astro.props;
 const plage = plageStage(stage.debut, stage.fin);
-const restitution = `${jourSemaine(stage.fin)} ${jourMois(stage.fin)} à ${programme.restitution}.`;
+const [premiereLigne = '', ...autresLignes] = programme.titre.split('\n').map((ligne) => ligne.trim()).filter(Boolean);
+const restitution = programme.restitution ? `${jourSemaine(stage.fin)} ${jourMois(stage.fin)} à ${programme.restitution}.` : undefined;
+const objets = programme.sac
+  ? await Promise.all(programme.sac.objets.map(async (objet) => ({ ...objet, ...(await dimensionsImage(objet.image)) })))
+  : [];
 ---
 <dialog id={`${id}-dialog`} class="event-dialog stage-dialog" aria-labelledby={`${id}-title`}><div class="dialog-inner">
-<button class="dialog-close" type="button" data-close autofocus aria-label={`Fermer le programme du stage${v.qualificatif} ${deMois(stage.debut)}`}><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg></button>
-<div class="stage-tags"><span class="stage-tag">{programme.discipline}</span><span class="stage-tag stage-age">{v.ages}</span></div>
-<p class="stage-audience"><strong>Ouvert à tous les {v.pluriel} de {v.agesDeA},</strong> des Petons ou d’ailleurs.</p>
-<h2 id={`${id}-title`}>Histoires &amp; <span class="stage-dialog-title-mark">Objets Inventés</span></h2>
-<p class="dialog-date"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><strong>{plage.courte} · {programme.horaires}</strong> <span>· Du lundi au vendredi · Nantes</span></p>
-<p class="stage-intro"><strong>Il était une fois un souffle, un geste, une couleur, un mot… et un objet qui n’existait pas encore.</strong> Pendant cinq jours, les {v.pluriel} partent à la rencontre de ce qui vit en eux. Le corps qui bouge et qui ressent, la voix qui ose, la main qui trace et qui façonne : <strong class="soft-mark">tout devient matière à inventer</strong>. Chacun, avec sa sensibilité, fait naître un personnage, rêve une histoire, fabrique l’objet qui la porte, et découvre qu’il a sa place dans un récit plus grand que lui.</p>
-<section aria-labelledby={`${id}-intervenants`}><h3 class="stage-section-heading" id={`${id}-intervenants`}><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Qui accompagne les {v.pluriel} ?</span></h3>
-<div class="stage-facilitators"><div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/philippe-leroy-stage.jpg" alt="Philippe Leroy, intervenant du stage Histoires &amp; Objets Inventés" width="368" height="550" loading="lazy" decoding="async"></figure><h4>Philippe Leroy</h4><p><strong>Comédien et clown.</strong> Intervenant en prise de parole adulte, <strong>éducateur Montessori 6–12 ans (AMI)</strong>. Il crée actuellement des visites sensibles au Musée Fabre de Montpellier et au MRAC de Sérignan et anime des ateliers théâtre et philo.</p></div>
-<div class="stage-facilitator"><figure class="stage-portrait"><img src="assets/img/manuella-cortes-thonon-stage.jpg" alt="Manuella Cortès-Thonon, intervenante du stage Histoires &amp; Objets Inventés" width="1080" height="1440" loading="lazy" decoding="async"></figure><h4>Manuella Cortès-Thonon</h4><p>Artiste peintre et chorégraphique, danseuse, <strong>plasticienne</strong> et <strong>praticienne Qi Gong</strong>. Elle accompagne dans différents cadres, sociaux et éducatifs, des enfants et jeunes en arts plastiques et pratiques corporelles.</p></div></div>
-</section>
-
-<section class="stage-programme" aria-labelledby={`${id}-forces`}>
-<h3 class="stage-section-heading" id={`${id}-forces`}><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/></svg><span>Trois forces à éveiller</span></h3>
-<p>{v.forcesIntro}</p>
-<ul class="stage-forces">
-<li><svg class="stage-force-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6C8 3 5 3 2 4v15c4-1 7-1 10 2 3-3 6-3 10-2V4c-4-1-7-1-10 2Zm0 0v15"/></svg><strong class="stage-force-title">Un esprit pour penser et imaginer</strong>{v.espritDebut} : il cherche les causes, les liens entre les choses, veut <strong class="soft-mark">penser par lui-même</strong>. Son imagination, immense, l’emmène bien au-delà de ce qu’il voit et touche. Il a besoin de grands récits, de questions ouvertes et d’espace pour inventer : si nous semons des graines, son imagination les fait germer.</li>
-<li><svg class="stage-force-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 16-1 5 5-1L21 7l-4-4L4 16Zm11-11 4 4M4 16l4 4"/></svg><strong class="stage-force-title">Une main pour construire et fabriquer</strong>C’est par la main que l’intelligence prend corps. En transformant la matière, l’{v.singulier} <strong class="orange-mark">donne forme à ses idées</strong>, éprouve ses hypothèses, se trompe et recommence. Il aime les vrais défis, les grands chantiers, l’effort qui a du sens. Le corps tout entier s’y engage : le mouvement prépare le geste, le geste guide le trait, et le trait devient objet.</li>
-<li><svg class="stage-force-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg><strong class="stage-force-title">Un cœur pour aimer et partager</strong>{v.coeurDebut} L’{v.singulier} recherche ses pairs, a besoin d’appartenir, de coopérer, de s’accorder sur des règles communes ; il s’interroge sur le juste et l’injuste avec une exigence nouvelle. Dans le jeu et la création collective, il apprend à écouter, <strong class="soft-mark">à accueillir la différence</strong>, à prendre sa part et à faire place à l’autre.</li>
-</ul>
-<figure class="stage-programme-art"><img src={v.forces.src} alt={v.forces.alt} width={v.forces.width} height={v.forces.height} loading="lazy" decoding="async"></figure>
-</section>
-<section aria-labelledby={`${id}-corps`}><h3 class="stage-section-heading" id={`${id}-corps`}><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 16-1 5 5-1L21 7l-4-4L4 16Zm11-11 4 4M4 16l4 4"/></svg><span>Le corps, la voix, la main</span></h3>
-<div class="stage-step"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h12a3 3 0 1 0-3-3M2 12h17a3 3 0 1 1-3 3M4 16h6a3 3 0 1 1-3 3"/></svg><div><h4>On commence par se poser.</h4><p>Respirer, écouter, sentir : quelques gestes simples inspirés du Qi Gong ouvrent la journée et rassemblent le groupe. Les sens s’éveillent et deviennent autant de portes vers l’imaginaire. Puis le mouvement s’invite, avec ses rythmes, ses silences et ses élans, et le corps devient un premier langage.</p></div></div>
-<div class="stage-step"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 11a8 8 0 0 1-8 8H5l-3 3V11a9 9 0 0 1 19 0Z"/><path d="M7 9h9m-9 4h6"/></svg><div><h4>Peu à peu, le jeu prend sa place.</h4><p>Improvisation, jeux de regard, un soupçon de clown : chacun apprivoise sa voix, ose la parole devant les autres et laisse apparaître un personnage qui lui ressemble… ou pas du tout.</p></div></div>
-<div class="stage-step"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m4 16-1 5 5-1L21 7l-4-4L4 16Zm11-11 4 4M4 16l4 4"/></svg><div><h4>Et la main prend le relais.</h4><p>Le trait suit le geste, la couleur suit l’émotion. Avec des matériaux glanés, assemblés, transformés, naît l’objet qui portera l’histoire : un accessoire, un talisman, un trésor, une clé.</p></div></div>
-<div class="stage-step"><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21V11m0 3C4 14 3 10 3 6c6 0 9 3 9 8Zm0-3c0-6 3-9 9-9 0 6-3 9-9 9ZM6 21h12"/></svg><div><h4>Un cadre qui libère.</h4><p>Un espace préparé avec soin, des matériaux choisis, quelques règles partagées : dans ce cadre, l’{v.singulier} est libre de chercher, d’essayer, de se tromper et de recommencer, à son rythme. Les adultes observent, proposent, accompagnent, et laissent à chacun le temps de trouver son propre chemin.</p></div></div>
-<figure class="stage-programme-art"><img src={v.corps.src} alt={v.corps.alt} width={v.corps.width} height={v.corps.height} loading="lazy" decoding="async"></figure>
-</section>
-<section class="stage-finale" aria-labelledby={`${id}-histoire`}><h3 class="stage-section-heading" id={`${id}-histoire`}><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 2 2.7 7.3L22 12l-7.3 2.7L12 22l-2.7-7.3L2 12l7.3-2.7L12 2Z"/></svg><span>Une histoire où chacun trouve sa place</span></h3>
-<div class="stage-restitution-invite"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><div><h4>Un moment à partager en famille</h4><p>Restitution le <strong>{restitution}</strong><small>Les familles sont invitées à nous rejoindre.</small></p></div></div>
-<figure class="stage-finale-art"><img src={v.restitution.src} alt={v.restitution.alt} width={v.restitution.width} height={v.restitution.height} loading="lazy" decoding="async"></figure>
-<p>Suite de récits singuliers ou grande histoire tissée de toutes les singularités : la forme naît du groupe, au fil de la semaine. Ce qui compte, c’est que <strong class="orange-mark">chaque {v.singulier}, chaque personnage et chaque objet y trouve sa place</strong>. Comme dans le grand récit du vivant, où chaque être a son rôle et contribue à l’ensemble, chacun apporte ici sa part, unique et nécessaire.</p>
-</section>
+<button class="dialog-close" type="button" data-close autofocus aria-label={`Fermer le programme du stage ${deMois(stage.debut)}`}><Icone nom="fermer" /></button>
+<div class="stage-tags"><span class="stage-tag">{programme.discipline}</span><span class="stage-tag stage-age">{programme.ages}</span></div>
+<p class="stage-audience" set:html={enLigne(programme.public)}></p>
+<h2 id={`${id}-title`}>{premiereLigne}{autresLignes.length > 0 && <Fragment> <span class="stage-dialog-title-mark">{autresLignes.join(' ')}</span></Fragment>}</h2>
+<p class="dialog-date"><Icone nom="calendrier" class="stage-section-icon" /><strong>{plage.courte} · {programme.horaires}</strong> <span>· {programme.jours} · {programme.lieu}</span></p>
+<p class="stage-intro" set:html={enLigne(programme.intro)}></p>
+{programme.sections.map((section, index) => <ProgrammeSection id={`${id}-section-${index + 1}`} section={section} restitution={restitution} />)}
 <section class="stage-practical" aria-labelledby={`${id}-pratique`}>
-<h3 class="stage-section-heading" id={`${id}-pratique`}><svg class="stage-section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M7 3v5m10-5v5M3 11h18m-13 4h2m4 0h2"/></svg><span>En pratique</span></h3>
+<h3 class="stage-section-heading" id={`${id}-pratique`}><Icone nom="calendrier" class="stage-section-icon" /><span>En pratique</span></h3>
 <div class="stage-key-facts">
-<div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>La journée</span><strong class="stage-fact-value">{programme.horaires}</strong><small>Accueil dès <strong>{programme.accueil}</strong><br>Du lundi au vendredi</small></div>
-<div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg>Le groupe</span><strong class="stage-fact-value">{stage.effectif} {v.pluriel}</strong><small>Au plus, de <strong>{v.agesDeA}</strong><br>Avec <strong>deux intervenants</strong></small></div>
+<div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>La journée</span><strong class="stage-fact-value">{programme.horaires}</strong><small>Accueil dès <strong>{programme.accueil}</strong><br>{programme.jours}</small></div>
+<div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg>Le groupe</span><strong class="stage-fact-value">{stage.effectif} {programme.participants}</strong><small>Au plus, de <strong>{programme.agesDeA}</strong><br>Avec <strong>{programme.encadrement}</strong></small></div>
 <div class="stage-fact"><span class="stage-fact-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h15v15H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2m10 6h8v6h-8z"/><circle cx="17" cy="13" r=".6"/></svg>Le stage</span><strong class="stage-fact-value">{stage.prix} €</strong><small><strong>{stage.prixFratrie} € par enfant</strong><br>pour les fratries</small></div>
 </div>
 <div class="stage-arrival">
-<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Rendez-vous aux Petons</span></h4><p>École Montessori « Les Petons dans l’Herbe »<br>6 rue de la Petite Sensive · 44300 Nantes</p></div>
-<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Un moment à partager en famille</span></h4><p>Restitution le <strong>{restitution}</strong></p></div>
+<div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg><span>Rendez-vous aux Petons</span></h4><p>École Montessori « Les Petons dans l’Herbe »<br>{contact.address.join(' · ')}</p></div>
+{restitution && <div><h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-3a6 6 0 0 1 12 0v3m1-17a3 3 0 0 1 0 6m3 4a6 6 0 0 1 3 5v2"/></svg><span>Un moment à partager en famille</span></h4><p>Restitution le <strong>{restitution}</strong></p></div>}
 </div>
-<div class="stage-bag"><div class="stage-bag-heading"><h4>Dans le sac…</h4><span>car la création, ça creuse !</span></div>
-<ul><li><img src="assets/img/stage-sac-repas.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>gourde</strong>, un repas pour le midi et un goûter.</span></li><li><img src="assets/img/stage-sac-tenue.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>tenue souple</strong> pour bouger et jouer.</span></li><li><img src="assets/img/stage-sac-blouse.png" alt="" width="1254" height="1254" loading="lazy" decoding="async"><span>Une <strong>grande chemise</strong> en guise de blouse pour les arts plastiques.</span></li></ul></div>
-<div class="stage-booking"><div><h4>Pour s’inscrire</h4><p>Un <strong>acompte de 100 €</strong> valide l’inscription, par Wero ou virement bancaire. Contactez l’école pour connaître les modalités.</p></div><a class="button" href="contact-petons.html?sujet=vacances#ecrire">S’informer et s’inscrire <span aria-hidden="true">→</span></a></div>
+{programme.sac && (
+<div class="stage-bag"><div class="stage-bag-heading"><h4>{programme.sac.titre}</h4>{programme.sac.sousTitre && <span>{programme.sac.sousTitre}</span>}</div>
+<ul>{objets.map((objet) => <li><img src={objet.image} alt="" width={objet.width} height={objet.height} loading="lazy" decoding="async"><span set:html={enLigne(objet.texte)}></span></li>)}</ul></div>
+)}
+<div class="stage-booking"><div><h4>Pour s’inscrire</h4><p set:html={enLigne(programme.inscription)}></p></div><a class="button" href="contact-petons.html?sujet=vacances#ecrire">S’informer et s’inscrire <span aria-hidden="true">→</span></a></div>
 </section>
 </div></dialog>
 ```
 
-- [ ] **Étape 6 : brancher la page sur la collection des stages**
+- [ ] **Étape 7 : brancher la page sur les collections**
 
 Remplacer les régions par des marqueurs. Les commandes ont été testées sur une copie de la page d'origine :
 
@@ -1307,7 +1720,7 @@ Avec l'outil Edit, remplacer la ligne `__STAGES__` par :
 ```astro
 {stages.length > 0 && (
 <div class="holiday-stages"><p class="stage-section-label">Stages de vacances · {anneesStages(stages.map(({ data }) => data.debut))}</p><div class="stage-grid">
-{stages.map(({ id, data }) => <StageCard id={id} stage={data} />)}
+{stages.map(({ id, data, programme }) => <StageCard id={id} stage={data} programme={programme} />)}
 </div></div>
 )}
 ```
@@ -1315,7 +1728,7 @@ Avec l'outil Edit, remplacer la ligne `__STAGES__` par :
 Puis remplacer la ligne `__DIALOGUES_STAGES__` par :
 
 ```astro
-{stages.map(({ id, data }) => <StageDialog id={id} stage={data} />)}
+{stages.map(({ id, data, programme }) => <StageDialog id={id} stage={data} programme={programme} />)}
 ```
 
 Puis remplacer l'en-tête du fichier (lignes 1 à 5) :
@@ -1338,15 +1751,15 @@ import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
 import StageCard from '../components/actualites/StageCard.astro';
 import StageDialog from '../components/actualites/StageDialog.astro';
-import { stagesAffiches } from '../lib/actualites';
+import { avecProgramme, stagesAffiches } from '../lib/actualites';
 import { anneesStages } from '../lib/dates';
 
 // Contenus modifiables dans Page CMS : voir docs/page-cms.md.
-const stages = stagesAffiches(await getCollection('stages'));
+const stages = avecProgramme(stagesAffiches(await getCollection('stages')), await getCollection('programmes'));
 ---
 ```
 
-- [ ] **Étape 7 : renommer les couleurs de carte dans le CSS**
+- [ ] **Étape 8 : renommer les couleurs de carte dans le CSS**
 
 Les couleurs de carte prennent des noms de couleur au lieu de noms de mois. Le cadrage des images passe dans l'attribut `style` posé par `StageCard` :
 
@@ -1357,30 +1770,31 @@ grep -n 'stage-card--' src/pages/actualites-petons.astro
 
 Résultat attendu : exactement 3 lignes, `.stage-card--menthe{…}`, `.stage-card--bleu{…}` et `.stage-card--orange{…}`.
 
-- [ ] **Étape 8 : supprimer les images de stage d'origine**
+- [ ] **Étape 9 : supprimer les images d'origine des stages**
 
 ```bash
-grep -rn 'assets/img/stage-theatre-fevrier.png\|assets/img/stage-theatre-avril-scene.png\|assets/img/stage-theatre-juillet.png\|assets/img/stage-ados-apercu-scene.png' src public
+IMAGES="stage-theatre-fevrier.png stage-theatre-avril-scene.png stage-theatre-juillet.png stage-ados-apercu-scene.png philippe-leroy-stage.jpg manuella-cortes-thonon-stage.jpg stage-trois-forces-fil-imagination.png stage-corps-voix-main-v2.png stage-histoires-restitution-v2.png stage-ados-trois-forces-v3.png stage-ados-corps-voix-main-v3.png stage-ados-restitution-v3.png stage-sac-repas.png stage-sac-tenue.png stage-sac-blouse.png"
+for f in $IMAGES; do grep -rln "assets/img/$f" src public; done
 ```
 
-Résultat attendu : aucune ligne (seules les copies de `assets/img/actualites/` restent référencées). Puis :
+Résultat attendu : aucune ligne. Seules les copies de `assets/img/actualites/` restent référencées. Puis :
 
 ```bash
-git rm public/assets/img/stage-theatre-fevrier.png public/assets/img/stage-theatre-avril-scene.png public/assets/img/stage-theatre-juillet.png public/assets/img/stage-ados-apercu-scene.png
+for f in $IMAGES; do git rm -q "public/assets/img/$f"; done
 ```
 
-- [ ] **Étape 9 : vérifier**
+- [ ] **Étape 10 : vérifier**
 
 Lancer : `bun run check`
-Résultat attendu : build sans `[ERROR]`, `0 fail` (les 9 tests du bloc `stages` passent).
+Résultat attendu : build sans `[ERROR]`, `0 fail` (les 9 tests du bloc `stages` passent, surlignages compris).
 
-Contrôle visuel : lancer les préviews `actualites-avant` et `actualites-apres`, puis ouvrir `actualites-petons.html#agenda` des deux côtés, en largeur bureau puis mobile (`resize_window` preset `mobile`). Les 4 cartes doivent être identiques : couleurs, cadrage des images, note « Une session dédiée aux adolescents. ». Ouvrir la fenêtre « Programme & infos » de février et celle des ados : contenu et images identiques. Ouvrir `actualites-petons.html#stage-fevrier-2027` : la fenêtre de février doit s'ouvrir seule.
+Contrôle visuel : lancer les préviews `actualites-avant` et `actualites-apres`, puis ouvrir `actualites-petons.html#agenda` des deux côtés, en largeur bureau puis mobile (`resize_window` preset `mobile`). Les 4 cartes doivent être identiques : couleurs, cadrage des images, note « Une session dédiée aux adolescents. ». Ouvrir la fenêtre « Programme & infos » de février et celle des ados : contenu, images, surlignages vert et orange, fond orangé de « Une histoire où chacun trouve sa place », tout doit être identique. Ouvrir `actualites-petons.html#stage-fevrier-2027` : la fenêtre de février doit s'ouvrir seule.
 
-- [ ] **Étape 10 : committer**
+- [ ] **Étape 11 : committer**
 
 ```bash
-git add -A src/data/stage-programme.ts src/components/actualites src/pages/actualites-petons.astro public/assets/img tests/migration-actualites.test.ts
-git commit -m "Affiche les stages de vacances depuis la collection de contenu"
+git add -A src/components/actualites src/pages/actualites-petons.astro public/assets/img tests/migration-actualites.test.ts
+git commit -m "Affiche les stages de vacances depuis les sessions et les programmes"
 ```
 
 ---
@@ -1388,18 +1802,15 @@ git commit -m "Affiche les stages de vacances depuis la collection de contenu"
 ### Tâche 5 : rendez-vous affichés depuis la collection
 
 **Fichiers :**
-- Modifier : `package.json`, `bun.lock` (ajout de `marked`)
 - Créer : `src/components/illustrations/Carnaval.astro`, `src/components/illustrations/index.ts`
-- Créer : `src/components/actualites/Icone.astro`, `TitreLignes.astro`, `Visuel.astro`, `Blocs.astro`, `LiensAction.astro`, `RendezVousCard.astro`, `RendezVousDialog.astro`
+- Créer : `src/components/actualites/Visuel.astro`, `Blocs.astro`, `LiensAction.astro`, `RendezVousCard.astro`, `RendezVousDialog.astro`
 - Modifier : `src/pages/actualites-petons.astro` (en-tête, grille de l'agenda, fenêtres des rendez-vous et `inscriptions-dialog`, CSS des visuels)
 - Modifier : `tests/migration-actualites.test.ts`
 
 **Interfaces :**
-- Consomme : `RendezVous`, `Visuel`, `Bloc`, `Lien`, `dimensionsImage`, `jourMois`, `jourSemaine`, `majuscule`, `horaire`, `rendezVousAffiches`.
+- Consomme : `RendezVous`, `Visuel`, `Bloc`, `Lien`, `dimensionsImage`, `enBlocs`, `<Icone>` et `<TitreLignes>` (tâche 4), `jourMois`, `jourSemaine`, `majuscule`, `horaire`, `rendezVousAffiches`.
 - Produit :
   - `illustrations: { carnaval: AstroComponent }`, dont chaque composant reçoit `{ label: string; class?: string }`.
-  - `<Icone nom="fleche" | "fermer" | "livre" | "bulle" | "famille" class?={string} />`
-  - `<TitreLignes texte={string} />` (les retours à la ligne deviennent `<br>`)
   - `<Visuel visuel={Visuel} chargement?={'eager' | 'lazy'} />` (`div.article-visual.article-visual--{fond}`)
   - `<Blocs blocs={ReadonlyArray<Bloc>} />` (`div.article-body`, rien si la liste est vide)
   - `<LiensAction liens={ReadonlyArray<Lien>} />` (`div.dialog-actions`, rien si la liste est vide)
@@ -1434,13 +1845,7 @@ describe('rendez-vous', () => {
 Lancer : `bun run check`
 Résultat attendu : ÉCHEC sur « triés par date », sur les quatre comparaisons de cartes et de fenêtres (identifiants introuvables) et sur « la fenêtre orpheline… ». « les autres blocs… » passe.
 
-- [ ] **Étape 2 : ajouter marked**
-
-```bash
-bun add marked
-```
-
-- [ ] **Étape 3 : extraire l'illustration du carnaval en composant**
+- [ ] **Étape 2 : extraire l'illustration du carnaval en composant**
 
 La commande recopie l'illustration de la carte à l'identique. Elle a été testée et produit un fichier d'environ 2,2 Ko :
 
@@ -1462,44 +1867,7 @@ import Carnaval from './Carnaval.astro';
 export const illustrations = { carnaval: Carnaval } as const;
 ```
 
-- [ ] **Étape 4 : écrire les petites briques**
-
-Créer `src/components/actualites/Icone.astro` :
-
-```astro
----
-// Icônes au trait des cartes et des fenêtres (24×24, couleur du texte).
-const traces = {
-  fleche: '<path d="M5 12h14m-7-7 7 7-7 7"/>',
-  fermer: '<path d="m6 6 12 12M18 6 6 18"/>',
-  livre: '<path d="M12 7C9 4 5 4 2 5v15c4-1 7-1 10 2 3-3 6-3 10-2V5c-4-1-7-1-10 2Zm0 0v15"/>',
-  bulle: '<path d="M21 11a8 8 0 0 1-8 8H5l-3 3V11a9 9 0 0 1 19 0Z"/><path d="M7 10h9M7 14h6"/>',
-  famille: '<circle cx="9" cy="7" r="3"/><path d="M2 21v-3a7 7 0 0 1 14 0v3m1-17a3 3 0 0 1 0 6m2 4a6 6 0 0 1 3 5v2"/>',
-} as const;
-
-interface Props {
-  nom: keyof typeof traces;
-  class?: string;
-}
-
-const { nom, class: classe = 'icon' } = Astro.props;
----
-<svg class={classe} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={traces[nom]}></svg>
-```
-
-Créer `src/components/actualites/TitreLignes.astro` :
-
-```astro
----
-// Titre saisi sur plusieurs lignes dans Page CMS : chaque retour à la ligne devient <br>.
-interface Props {
-  texte: string;
-}
-
-const lignes = Astro.props.texte.split('\n').map((ligne) => ligne.trim()).filter(Boolean);
----
-{lignes.map((ligne, index) => <Fragment>{index > 0 && <br />}{ligne}</Fragment>)}
-```
+- [ ] **Étape 3 : écrire les petites briques**
 
 Créer `src/components/actualites/Visuel.astro` :
 
@@ -1530,9 +1898,9 @@ Créer `src/components/actualites/Blocs.astro` :
 ```astro
 ---
 // Contenu d’une fenêtre : textes (Markdown), intertitres (avec logo facultatif) et photos légendées.
-import { marked } from 'marked';
 import type { Bloc } from '../../content/schemas';
 import { dimensionsImage } from '../../lib/dimensions-image';
+import { enBlocs } from '../../lib/markdown';
 
 interface Props {
   blocs: ReadonlyArray<Bloc>;
@@ -1542,7 +1910,7 @@ const { blocs } = Astro.props;
 const elements = await Promise.all(blocs.map(async (bloc) => {
   switch (bloc.type) {
     case 'texte':
-      return { type: 'texte' as const, html: marked.parse(bloc.contenu, { async: false }) };
+      return { type: 'texte' as const, html: enBlocs(bloc.contenu) };
     case 'intertitre':
       return {
         type: 'intertitre' as const,
@@ -1587,7 +1955,7 @@ const classe = (lien: Lien) => (lien.style === 'bouton' ? 'button' : 'text-link'
 )}
 ```
 
-- [ ] **Étape 5 : écrire la carte et la fenêtre d'un rendez-vous**
+- [ ] **Étape 4 : écrire la carte et la fenêtre d'un rendez-vous**
 
 Créer `src/components/actualites/RendezVousCard.astro` :
 
@@ -1621,6 +1989,7 @@ Créer `src/components/actualites/RendezVousDialog.astro` :
 // Fenêtre d’un rendez-vous. Elle prend le style « article » quand elle contient des blocs.
 import type { RendezVous } from '../../content/schemas';
 import { horaire, jourMois, jourSemaine, majuscule } from '../../lib/dates';
+import { enLigne } from '../../lib/markdown';
 import { illustrations } from '../illustrations';
 import Blocs from './Blocs.astro';
 import Icone from './Icone.astro';
@@ -1641,7 +2010,7 @@ const Illustration = rendezVous.visuel.illustration ? illustrations[rendezVous.v
 {Illustration && <Illustration class="dialog-art" label={rendezVous.visuel.alt} />}
 {rendezVous.intro && <p class="dialog-intro">{rendezVous.intro}</p>}
 {rendezVous.pointsForts.length > 0 && (
-<div class="visit-highlights">{rendezVous.pointsForts.map((point) => <div><Icone nom={point.icone} /><div><h3>{point.titre}</h3><p>{point.texte}</p></div></div>)}</div>
+<div class="visit-highlights">{rendezVous.pointsForts.map((point) => <div><Icone nom={point.icone} /><div><h3>{point.titre}</h3><p set:html={enLigne(point.texte)}></p></div></div>)}</div>
 )}
 <Blocs blocs={rendezVous.blocs} />
 {rendezVous.encadre && <div class="visit-practical"><strong>{rendezVous.encadre.titre}</strong>{rendezVous.encadre.texte && <span>{rendezVous.encadre.texte}</span>}</div>}
@@ -1649,7 +2018,7 @@ const Illustration = rendezVous.visuel.illustration ? illustrations[rendezVous.v
 </div></dialog>
 ```
 
-- [ ] **Étape 6 : brancher la page sur la collection des rendez-vous**
+- [ ] **Étape 5 : brancher la page sur la collection des rendez-vous**
 
 ```bash
 F=src/pages/actualites-petons.astro
@@ -1670,14 +2039,14 @@ import RendezVousCard from '../components/actualites/RendezVousCard.astro';
 import RendezVousDialog from '../components/actualites/RendezVousDialog.astro';
 ```
 
-- remplacer `import { stagesAffiches } from '../lib/actualites';` par `import { rendezVousAffiches, stagesAffiches } from '../lib/actualites';` ;
+- remplacer `import { avecProgramme, stagesAffiches } from '../lib/actualites';` par `import { avecProgramme, rendezVousAffiches, stagesAffiches } from '../lib/actualites';` ;
 - ajouter après `const stages = …;` :
 
 ```astro
 const rendezVous = rendezVousAffiches(await getCollection('rendezVous'));
 ```
 
-- [ ] **Étape 7 : renommer les classes de fond des visuels dans le CSS**
+- [ ] **Étape 6 : renommer les classes de fond des visuels dans le CSS**
 
 ```bash
 perl -pi -e 's/\.welcome-visual,\.carnival-visual\{/.article-visual--vert,.article-visual--sable{/g; s/\.welcome-visual\{/.article-visual--vert{/g; s/\.carnival-visual\{/.article-visual--sable{/g' src/pages/actualites-petons.astro
@@ -1686,17 +2055,17 @@ grep -c 'welcome-visual\|carnival-visual' src/pages/actualites-petons.astro
 
 Résultat attendu : `0`.
 
-- [ ] **Étape 8 : vérifier**
+- [ ] **Étape 7 : vérifier**
 
 Lancer : `bun run check`
 Résultat attendu : build sans `[ERROR]`, `0 fail`.
 
 Contrôle visuel avant/après (bureau et mobile) : le Carnaval apparaît désormais en premier (changement assumé n°1). Les têtes et les étoiles de l'illustration s'animent dans la carte et dans la fenêtre. La carte des Portes ouvertes garde son fond vert pâle. Les fenêtres affichent les trois points forts avec leurs icônes, l'encadré pratique et les deux liens.
 
-- [ ] **Étape 9 : committer**
+- [ ] **Étape 8 : committer**
 
 ```bash
-git add package.json bun.lock src/components src/pages/actualites-petons.astro tests/migration-actualites.test.ts
+git add src/components src/pages/actualites-petons.astro tests/migration-actualites.test.ts
 git commit -m "Affiche les rendez-vous de l’agenda depuis la collection de contenu"
 ```
 
@@ -1843,7 +2212,7 @@ import ArticleCard from '../components/actualites/ArticleCard.astro';
 import ArticleDialog from '../components/actualites/ArticleDialog.astro';
 ```
 
-- remplacer `import { rendezVousAffiches, stagesAffiches } from '../lib/actualites';` par `import { articlesAffiches, rendezVousAffiches, stagesAffiches } from '../lib/actualites';` ;
+- remplacer `import { avecProgramme, rendezVousAffiches, stagesAffiches } from '../lib/actualites';` par `import { articlesAffiches, avecProgramme, rendezVousAffiches, stagesAffiches } from '../lib/actualites';` ;
 - ajouter après `const rendezVous = …;` :
 
 ```astro
@@ -1902,7 +2271,7 @@ Créer `tests/pages-cms.test.ts` :
 // .pages.yml doit décrire exactement les champs des schémas : Page CMS efface à
 // l’enregistrement les champs qu’il ne connaît pas, et le build refuse ceux qui manquent.
 import { describe, expect, test } from 'bun:test';
-import { articleSchema, rendezVousSchema, stageSchema } from '../src/content/schemas';
+import { articleSchema, programmeSchema, rendezVousSchema, stageSchema } from '../src/content/schemas';
 
 interface ChampCms {
   name: string;
@@ -1974,13 +2343,14 @@ const comparerChamps = (chemin: string, champs: ReadonlyArray<ChampCms>, schema:
 };
 
 const collections = {
+  programmes: { schema: programmeSchema, chemin: 'src/content/programmes', format: 'yaml-frontmatter' },
   stages: { schema: stageSchema, chemin: 'src/content/stages', format: 'yaml' },
   'rendez-vous': { schema: rendezVousSchema, chemin: 'src/content/rendez-vous', format: 'yaml-frontmatter' },
   articles: { schema: articleSchema, chemin: 'src/content/articles', format: 'yaml-frontmatter' },
 } as const;
 
 describe('.pages.yml', () => {
-  test('déclare exactement les trois collections', () => {
+  test('déclare exactement les quatre collections', () => {
     expect(config.content.map((entree) => entree.name).sort()).toEqual(Object.keys(collections).sort());
   });
 
@@ -2148,36 +2518,314 @@ components:
             label: Légende
             type: string
 
+  icone:
+    type: select
+    label: Icône
+    required: true
+    options:
+      values:
+        - value: livre
+          label: Livre ouvert
+        - value: bulle
+          label: Bulle de dialogue
+        - value: famille
+          label: Personnes
+        - value: pousse
+          label: Pousse
+        - value: crayon
+          label: Crayon
+        - value: coeur
+          label: Cœur
+        - value: vent
+          label: Souffle
+        - value: etoile
+          label: Étoile
+        - value: calendrier
+          label: Calendrier
+
+  elementIllustre:
+    type: object
+    label: Élément
+    fields:
+      - name: icone
+        component: icone
+      - name: titre
+        label: Titre
+        type: string
+        required: true
+      - name: texte
+        label: Texte
+        type: text
+        required: true
+        description: "**gras**, ==surligné vert==, ++surligné orange++"
+
+  blocsProgramme:
+    type: block
+    label: Contenu de la section
+    list: true
+    required: true
+    blockKey: type
+    blocks:
+      - name: texte
+        label: Texte
+        fields:
+          - name: contenu
+            label: Texte
+            type: text
+            required: true
+            description: "Paragraphes séparés par une ligne vide. **gras**, ==surligné vert==, ++surligné orange++"
+      - name: intervenants
+        label: Intervenants
+        fields:
+          - name: personnes
+            label: Personnes
+            type: object
+            list: true
+            required: true
+            fields:
+              - name: photo
+                label: Photo
+                type: image
+                required: true
+              - name: alt
+                label: Description de la photo
+                type: string
+                required: true
+              - name: nom
+                label: Nom
+                type: string
+                required: true
+              - name: presentation
+                label: Présentation
+                type: text
+                required: true
+                description: "**gras** pour mettre en valeur"
+      - name: forces
+        label: Liste illustrée (fond coloré)
+        fields:
+          - name: elements
+            label: Éléments
+            component: elementIllustre
+            list: true
+            required: true
+      - name: etapes
+        label: Étapes
+        fields:
+          - name: elements
+            label: Étapes
+            component: elementIllustre
+            list: true
+            required: true
+      - name: illustration
+        label: Illustration
+        fields:
+          - name: image
+            label: Image
+            type: image
+            required: true
+          - name: alt
+            label: Description de l’image
+            type: string
+            required: true
+      - name: restitution
+        label: Invitation à la restitution
+        fields:
+          - name: titre
+            label: Titre
+            type: string
+            required: true
+            description: "La date et l’heure s’ajoutent seules : « Restitution le vendredi 26 février à 16h30. »"
+          - name: precision
+            label: Précision
+            type: string
+
 content:
-  - name: stages
-    label: Stages de vacances
-    description: Les sessions du stage « Histoires & Objets Inventés ». Le programme lui-même se modifie dans le code.
+  - name: programmes
+    label: Programmes de stage
+    description: "La carte et la fenêtre « Programme & infos » d’un stage. Une fiche par public (enfants, ados…) ; chaque session choisit sa fiche."
     type: collection
-    path: src/content/stages
-    format: yaml
+    path: src/content/programmes
+    format: yaml-frontmatter
     filename:
-      template: "stage-{fields.public}-{fields.debut}.yml"
+      template: "{fields.nom}.md"
       field: create
     operations:
       rename: false
     view:
-      fields: [debut, public, vacances, brouillon]
+      fields: [nom]
+      primary: nom
+      sort: [nom]
+    fields:
+      - name: nom
+        label: Nom de la fiche
+        type: string
+        required: true
+        description: Visible seulement dans Page CMS, pour choisir la fiche d’une session.
+      - name: titre
+        label: Titre
+        type: text
+        required: true
+        description: Sur deux lignes ; la deuxième ligne est surlignée dans la fenêtre.
+      - name: accroche
+        label: Accroche sous le titre
+        type: string
+        required: true
+      - name: discipline
+        label: Discipline
+        type: string
+        required: true
+        description: "Exemple : Stage théâtre & arts plastiques"
+      - name: ages
+        label: Âges (étiquette)
+        type: string
+        required: true
+        description: "Exemple : 6–11 ans"
+      - name: agesDeA
+        label: Âges en toutes lettres
+        type: string
+        required: true
+        description: "Exemple : 6 à 11 ans"
+      - name: etiquette
+        label: Étiquette sur l’image de la carte
+        type: text
+        required: true
+        description: "Exemple : **Ouvert à tous** · enfants des Petons et d’ailleurs"
+      - name: description
+        label: Description sur la carte
+        type: text
+        required: true
+      - name: public
+        label: Public (en haut de la fenêtre)
+        type: text
+        required: true
+      - name: participants
+        label: Participants
+        type: string
+        required: true
+        description: "Exemple : enfants (affiché « 14 enfants »)"
+      - name: participantsCarte
+        label: Participants sur la carte (facultatif)
+        type: string
+        description: "Forme courte, par exemple « ados ». Vide = même mot."
+      - name: encadrement
+        label: Encadrement
+        type: string
+        required: true
+        description: "Exemple : deux intervenants"
+      - name: intro
+        label: Introduction de la fenêtre
+        type: text
+        required: true
+        description: "La première phrase en **gras** s’affiche en grand."
+      - name: horaires
+        label: Horaires
+        type: string
+        required: true
+        description: "Exemple : 10h–17h"
+      - name: accueil
+        label: Accueil dès
+        type: string
+        required: true
+        description: "Exemple : 9h"
+      - name: jours
+        label: Jours
+        type: string
+        required: true
+        description: "Exemple : Du lundi au vendredi"
+      - name: lieu
+        label: Ville
+        type: string
+        required: true
+      - name: restitution
+        label: Heure de la restitution (dernier jour)
+        type: string
+        pattern:
+          regex: "^\\d{1,2}h\\d{2}$"
+          message: "Format attendu : 16h30"
+      - name: sections
+        label: Sections de la fenêtre
+        type: object
+        list: true
+        required: true
+        fields:
+          - name: titre
+            label: Titre de la section
+            type: string
+            required: true
+          - name: icone
+            component: icone
+          - name: presentation
+            label: Présentation
+            type: select
+            default: simple
+            options:
+              values:
+                - value: simple
+                  label: Simple
+                - value: separee
+                  label: Séparée par un trait
+                - value: mise-en-avant
+                  label: Mise en avant (fond orangé)
+          - name: blocs
+            component: blocsProgramme
+      - name: sac
+        label: Dans le sac (facultatif)
+        type: object
+        fields:
+          - name: titre
+            label: Titre
+            type: string
+            required: true
+          - name: sousTitre
+            label: Sous-titre
+            type: string
+          - name: objets
+            label: Objets
+            type: object
+            list: true
+            required: true
+            fields:
+              - name: image
+                label: Dessin
+                type: image
+                required: true
+              - name: texte
+                label: Texte
+                type: text
+                required: true
+      - name: inscription
+        label: Pour s’inscrire
+        type: text
+        required: true
+
+  - name: stages
+    label: Stages de vacances
+    description: Chaque session choisit son programme et fixe ses dates, son prix et ses places.
+    type: collection
+    path: src/content/stages
+    format: yaml
+    filename:
+      template: "stage-{fields.debut}.yml"
+      field: create
+    operations:
+      rename: false
+    view:
+      fields: [debut, programme, vacances, brouillon]
       primary: debut
       sort: [debut]
       default:
         sort: debut
         order: asc
     fields:
-      - name: public
-        label: Public
-        type: select
+      - name: programme
+        label: Programme
+        type: reference
         required: true
         options:
-          values:
-            - value: enfants
-              label: Enfants de 6 à 11 ans
-            - value: ados
-              label: Adolescents de 12 à 16 ans
+          collection: programmes
+          value: "{name}"
+          label: "{fields.nom}"
+          search: nom
       - name: debut
         label: Premier jour
         type: date
@@ -2323,29 +2971,8 @@ content:
         type: text
       - name: pointsForts
         label: Points forts
-        type: object
+        component: elementIllustre
         list: true
-        fields:
-          - name: icone
-            label: Icône
-            type: select
-            required: true
-            options:
-              values:
-                - value: livre
-                  label: Livre ouvert
-                - value: bulle
-                  label: Bulle de dialogue
-                - value: famille
-                  label: Personnes
-          - name: titre
-            label: Titre
-            type: string
-            required: true
-          - name: texte
-            label: Texte
-            type: text
-            required: true
       - name: blocs
         component: blocs
       - name: encadre
@@ -2464,7 +3091,7 @@ Créer `docs/page-cms.md` :
 ```markdown
 # Modifier les actualités avec Page CMS
 
-Page CMS est un éditeur en ligne pour modifier les **stages de vacances**, les **prochains rendez-vous** et les **articles de « La vie de l’école »** de la page Actualités, sans toucher au code.
+Page CMS est un éditeur en ligne pour modifier les **programmes et sessions de stages de vacances**, les **prochains rendez-vous** et les **articles de « La vie de l’école »** de la page Actualités, sans toucher au code.
 
 Adresse : **https://app.pagescms.org**
 
@@ -2479,11 +3106,19 @@ Pour préparer une entrée sans la montrer, cocher **Brouillon** : elle reste en
 
 **Si la modification n’apparaît pas après 5 minutes**, la mise en ligne a échoué : le site garde alors sa version précédente. Prévenir Philippe, en indiquant ce qui a été modifié.
 
-## Stages de vacances
+## Programmes de stage
 
-Chaque entrée est une **session** du stage « Histoires & Objets Inventés » : public, dates, vacances, image, couleur, prix et nombre de places. Le programme affiché dans la fenêtre « Programme & infos » est le même pour toutes les sessions. Pour un stage avec un autre programme, il faut une intervention dans le code.
+Un **programme** contient tout ce qui ne change pas d’une session à l’autre : le titre, la description de la carte et la fenêtre « Programme & infos ». Il y a **une fiche par public** : « Histoires & Objets Inventés — enfants » et « … — adolescents » sont deux fiches distinctes. Un texte commun aux deux se corrige dans les deux fiches.
 
-- Le **dernier jour** est celui de la restitution aux familles, à 16h30.
+- Pour créer un nouveau programme, le plus simple est de **dupliquer** une fiche existante, puis de l’adapter.
+- La fenêtre se compose de **sections** (titre et icône), elles-mêmes composées de **blocs** : *Texte*, *Intervenants*, *Liste illustrée* (comme « Trois forces à éveiller »), *Étapes*, *Illustration* et *Invitation à la restitution*. La partie « En pratique » se remplit seule à partir des horaires, du sac et du texte d’inscription.
+- Mise en forme dans les textes : `**gras**`, `==surligné vert==` et `++surligné orange++`.
+
+## Sessions de stage
+
+Chaque **session** choisit son programme, puis fixe ses dates, ses vacances, l’image et la couleur de sa carte, son prix et son nombre de places.
+
+- Le **dernier jour** est celui de la restitution aux familles, à l’heure indiquée dans le programme.
 - Le **cadrage** déplace l’image vers le haut (0) ou vers le bas (100).
 
 ## Prochains rendez-vous et articles
@@ -2508,7 +3143,7 @@ Chaque entrée est une **session** du stage « Histoires & Objets Inventés » :
 ## Pour l’administrateur
 
 1. Sur https://app.pagescms.org, se connecter avec le compte GitHub **pit-anjou**, puis installer la **GitHub App Pages CMS** sur le seul dépôt **petons-website**.
-2. Ouvrir le dépôt, branche **main**. Les trois rubriques doivent apparaître.
+2. Ouvrir le dépôt, branche **main**. Les quatre rubriques doivent apparaître.
 3. Inviter les éditeurs par e-mail : **Settings → Collaborators**. Ils n’ont pas besoin de compte GitHub. Ils peuvent modifier le contenu et les images, mais pas la configuration.
 4. Dans Vercel, garder actives les **notifications d’échec de déploiement** : c’est le seul signal quand une modification ne passe pas.
 5. Chaque champ est décrit deux fois, dans `src/content/schemas.ts` et dans `.pages.yml`. `bun test` vérifie que les deux correspondent.
@@ -2519,8 +3154,8 @@ Chaque entrée est une **session** du stage « Histoires & Objets Inventés » :
 Dans le tableau « Où modifier quoi » d'`AGENTS.md`, ajouter après la ligne « Le texte, les images ou la mise en page d'une page » :
 
 ```markdown
-| Les stages, rendez-vous et articles de la page Actualités | Page CMS (voir `docs/page-cms.md`) ou les fichiers de `src/content/stages/`, `src/content/rendez-vous/`, `src/content/articles/` |
-| Le texte du programme du stage « Histoires & Objets Inventés » | `src/data/stage-programme.ts` |
+| Les programmes et sessions de stage, rendez-vous et articles de la page Actualités | Page CMS (voir `docs/page-cms.md`) ou les fichiers de `src/content/programmes/`, `src/content/stages/`, `src/content/rendez-vous/`, `src/content/articles/` |
+| La mise en page des fenêtres de stage (types de blocs, « En pratique ») | `src/components/actualites/StageDialog.astro`, `ProgrammeSection.astro` |
 ```
 
 Puis ajouter cette section avant « ## Ajouter une nouvelle page » :
@@ -2544,7 +3179,7 @@ git rm tests/migration-actualites.test.ts tests/fixtures/actualites-avant.html
 - [ ] **Étape 4 : vérification finale**
 
 Lancer : `bun run check`
-Résultat attendu : build sans `[ERROR]`. Tests : `0 fail` dans `tests/outils`, `tests/dates.test.ts`, `tests/actualites.test.ts`, `tests/dimensions-image.test.ts`, `tests/contenus.test.ts`, `tests/page-actualites.test.ts` et `tests/pages-cms.test.ts`.
+Résultat attendu : build sans `[ERROR]`. Tests : `0 fail` dans `tests/outils`, `tests/dates.test.ts`, `tests/markdown.test.ts`, `tests/actualites.test.ts`, `tests/dimensions-image.test.ts`, `tests/contenus.test.ts`, `tests/page-actualites.test.ts` et `tests/pages-cms.test.ts`.
 
 Contrôle visuel complet avec les préviews `actualites-avant` et `actualites-apres`, en bureau puis en mobile :
 - toute la page Actualités défile de façon identique, hormis les changements assumés 1 à 6 de la section « Décisions » ;
@@ -2569,21 +3204,25 @@ git add docs/page-cms.md AGENTS.md
 git commit -m "Documente l’édition des actualités avec Page CMS"
 ```
 
-**Demander à Philippe avant de pousser.** Ensuite, ouvrir la pull request vers `main` avec : un résumé, la liste des changements visibles assumés, les captures en mobile, la date du cross à confirmer (`2026-06-01`) et les étapes manuelles de la tâche 9.
+**Demander à Philippe avant de pousser.** Ensuite, pousser la branche et ouvrir la pull request vers `main` (sans la fusionner) avec : un résumé, la liste des changements visibles acceptés, les captures en mobile et les étapes de la tâche 9. **La fusion attend la recette de la tâche 9.**
 
 ---
 
-### Tâche 9 (manuelle, après fusion, par l'administrateur du dépôt)
+### Tâche 9 (manuelle, par l'administrateur du dépôt) : recette sur la branche, puis fusion
 
-- [ ] Suivre la section « Pour l'administrateur » de `docs/page-cms.md` : installer la GitHub App sur `petons-website` uniquement, ouvrir la branche `main`, vérifier que les trois rubriques apparaissent.
-- [ ] **Test de bout en bout sans effet visible :** dans « Prochains rendez-vous », créer une entrée de test avec **Brouillon** coché, puis l'enregistrer. Vérifier sur GitHub le commit « Actualités : ajoute src/content/rendez-vous/… (Page CMS) ». Vérifier dans Vercel que le déploiement réussit et que la page en ligne n'a pas changé. Supprimer ensuite l'entrée depuis Page CMS.
-- [ ] **Test d'une vraie modification :** ouvrir un stage, puis l'enregistrer sans rien changer. Vérifier sur GitHub que le diff du commit ne contient que des changements de forme (ordre des clés, guillemets) et aucun champ disparu.
-- [ ] Inviter les éditeurs par e-mail et leur transmettre `docs/page-cms.md`.
+Page CMS enregistre toujours dans GitHub, sur la branche choisie dans son interface, jamais sur l'ordinateur. La recette se fait donc **sur la branche de la pull request**, avant la fusion : le site en ligne n'est pas touché, et Vercel fournit une adresse de préview de la branche.
+
+- [ ] Suivre les étapes 1 et 2 de « Pour l'administrateur » de `docs/page-cms.md`, mais ouvrir la **branche de la pull request** au lieu de `main`. Les quatre rubriques doivent apparaître.
+- [ ] **Enregistrement sans modification :** ouvrir chaque type de fiche (un programme, une session, un rendez-vous, un article), puis l'enregistrer sans rien changer. Sur GitHub, le diff de chaque commit ne doit contenir que des changements de forme (ordre des clés, guillemets). Aucun champ ne doit disparaître, et les `==…==` et `++…++` doivent rester intacts.
+- [ ] **Création :** dupliquer le programme enfants, renommer la copie, puis créer une session de test qui la cite, avec **Brouillon** coché. Vérifier que le déploiement de préview Vercel réussit et que la session n'apparaît pas. Décocher **Brouillon** : la carte et la fenêtre apparaissent sur l'adresse de préview.
+- [ ] **En local :** `git pull`, puis `bun run dev` et ouvrir http://localhost:4321/actualites-petons.html. Le rendu doit être le même que sur l'adresse de préview.
+- [ ] Supprimer la session et le programme de test depuis Page CMS, puis vérifier avec `git pull` et `bun run check` que la branche est propre.
+- [ ] Fusionner la pull request. Dans Page CMS, revenir sur la branche `main`, puis inviter les éditeurs par e-mail et leur transmettre `docs/page-cms.md`.
 
 ## Hors périmètre (suites possibles)
 
 - Alimenter le bloc « Vie de l'école » de la page d'accueil avec le prochain stage et le dernier article (aujourd'hui en dur dans `index.astro`).
 - Rendre éditables les places disponibles, les tarifs et les coordonnées.
-- Alléger les 4 images de stage (PNG d'environ 2 Mo chacune, affichées à 28 % d'opacité) en les passant en WebP.
+- Alléger les images de stage (PNG de 1 à 2 Mo chacune ; celles des cartes sont affichées à 28 % d'opacité) en les passant en WebP.
 - Masquer automatiquement les rendez-vous passés (cela demanderait une reconstruction planifiée du site).
 - Lancer `bun test` dans une GitHub Action à chaque commit, y compris ceux de Page CMS.
