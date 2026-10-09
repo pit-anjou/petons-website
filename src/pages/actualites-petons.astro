@@ -1,4 +1,5 @@
 ---
+import Referencement from '../components/Referencement.astro';
 import { getCollection } from 'astro:content';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -34,7 +35,7 @@ const IDENTIFIANTS_PAGE = [
 ];
 verifierIdentifiants([...stages, ...rendezVous, ...articles].map(({ id }) => id), IDENTIFIANTS_PAGE);
 ---
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Agenda &amp; actualités | Les Petons dans l’Herbe · Nantes</title><meta name="description" content="Les annonces, événements à venir et retours en images des Petons dans l’Herbe à Nantes."><style is:inline>@font-face {
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><Referencement title={"Agenda & actualités | Les Petons dans l’Herbe · Nantes"} description={"Les annonces, événements à venir et retours en images des Petons dans l’Herbe à Nantes."} /><style is:inline>@font-face {
   font-family: 'Nunito';
   font-style: normal;
   font-weight: 400;
