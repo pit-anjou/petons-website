@@ -55,7 +55,19 @@ describe('valider', () => {
 describe('estSpam', () => {
   const maintenant = 1_000_000;
   test('laisse passer un humain', () => expect(estSpam('', maintenant - DELAI_MINIMAL_MS, maintenant)).toBe(false));
+  test('piège absent ou nul, délai valide : humain', () => {
+    expect(estSpam(undefined, maintenant - DELAI_MINIMAL_MS, maintenant)).toBe(false);
+    expect(estSpam(null, maintenant - DELAI_MINIMAL_MS, maintenant)).toBe(false);
+  });
   test('piège rempli', () => expect(estSpam('http://spam', maintenant - 60_000, maintenant)).toBe(true));
+  test.each([
+    ['nombre', 1],
+    ['booléen', true],
+    ['tableau', ['x']],
+    ['objet', {}],
+  ])('piège non textuel (%s) : spam', (_type, piege) => {
+    expect(estSpam(piege, maintenant - 60_000, maintenant)).toBe(true);
+  });
   test('envoi trop rapide', () => expect(estSpam('', maintenant - DELAI_MINIMAL_MS + 1, maintenant)).toBe(true));
   test('heure d’ouverture absente', () => expect(estSpam('', undefined, maintenant)).toBe(true));
   test('heure d’ouverture invalide', () => expect(estSpam('', 'hier', maintenant)).toBe(true));

@@ -78,9 +78,12 @@ export const valider = (formulaire: unknown, champs: unknown): Demande | null =>
   return resultat.success ? ({ formulaire, champs: resultat.data } as Demande) : null;
 };
 
-/** Vrai si le champ piège est rempli, ou si l'heure d'ouverture est absente, invalide ou trop récente. */
+/**
+ * Vrai si le champ piège contient quoi que ce soit (sauf absent, nul ou vide), ou si l'heure d'ouverture
+ * est absente, non numérique, invalide ou trop récente.
+ */
 export const estSpam = (piege: unknown, ouvertLe: unknown, maintenant: number): boolean => {
-  if (typeof piege === 'string' && piege !== '') return true;
+  if (piege !== undefined && piege !== null && piege !== '') return true;
   if (typeof ouvertLe !== 'number' || !Number.isFinite(ouvertLe)) return true;
   return maintenant - ouvertLe < DELAI_MINIMAL_MS;
 };
