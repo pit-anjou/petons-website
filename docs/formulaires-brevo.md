@@ -14,7 +14,7 @@ Ce guide dit **quoi configurer dans Brevo**, **où reporter les numéros** et **
 
 - La **double confirmation** : le visiteur reçoit un e-mail avec un lien. Il n’est abonné à la lettre qu’après avoir cliqué. Il arrive alors sur la page `lettre-confirmee.html`.
 - La case « Je souhaite recevoir la lettre d’information des Petons » n’est **jamais cochée d’avance**.
-- **Règle : la notification à l’école est indispensable, le reste se fait au mieux.** Si la notification ne part pas, le visiteur voit un message d’échec. Si c’est l’enregistrement du contact, l’accusé ou la double confirmation qui échoue, le visiteur voit quand même « merci » (pour qu’il ne renvoie pas son message, ce qui doublerait la notification), et l’incident est noté dans les journaux (voir plus bas).
+- **Règle : la notification à l’école est indispensable, le reste se fait au mieux.** Si la notification ne part pas, le visiteur voit un message d’échec. Pour le formulaire de lettre d’information, la double confirmation est la seule étape et elle est indispensable : si elle échoue, le visiteur voit le message d’échec. Pour contact et inscription, si c’est l’enregistrement du contact, l’accusé ou la double confirmation qui échoue, le visiteur voit quand même « merci » (pour qu’il ne renvoie pas son message, ce qui doublerait la notification), et l’incident est noté dans les journaux (voir plus bas).
 - **Repli sur la messagerie** : quand l’envoi échoue, la page affiche « L’envoi n’a pas abouti » avec les boutons « Ouvrir ma messagerie » et « Copier le message ». Aucune demande n’est perdue. Sans JavaScript, le formulaire ouvre directement la messagerie, comme avant.
 - Les **accusés de réception** ont toujours `contact@lespetons.fr` comme adresse de réponse (le site l’impose, quel que soit l’expéditeur choisi dans le modèle). Le visiteur peut donc répondre à l’accusé, par exemple pour joindre son CV.
 - Les **notifications** ont comme adresse de réponse celle du visiteur : « Répondre » dans la boîte de l’école écrit directement à la personne.
@@ -54,9 +54,9 @@ Dans **Contacts → Paramètres → Attributs**, créer cinq attributs de type *
 
 **Attention : un attribut inconnu de Brevo fait échouer l’enregistrement du contact.** L’école est quand même prévenue, mais le visiteur n’est pas ajouté à la liste. Un champ laissé vide n’est pas envoyé : il n’efface pas une valeur déjà connue.
 
-### 4. Créer les cinq modèles
+### 4. Créer les modèles
 
-Créer cinq **modèles d’e-mail transactionnel** et noter le **numéro** de chacun. Dans le texte, chaque information du visiteur s’écrit avec des doubles accolades, par exemple `{{ params.nom }}`.
+Créer **quatre modèles d’e-mail transactionnel** (les deux notifications et les deux accusés de réception) **et un modèle de double confirmation** (double opt-in ; type de modèle à confirmer dans Brevo), et noter le **numéro** de chacun. Dans le texte, chaque information du visiteur s’écrit avec des doubles accolades, par exemple `{{ params.nom }}`.
 
 | Modèle | Destinataire | Informations disponibles |
 | --- | --- | --- |
@@ -111,10 +111,10 @@ Un `0` signifie « pas encore configuré » : tant qu’il en reste un, le site 
 
 ### 6. Créer la clé API et la ranger dans Vercel
 
-1. Dans Brevo, créer une **clé API dédiée**, nommée « site lespetons.fr ». La copier tout de suite : Brevo ne la montre qu’une fois.
+1. Dans Brevo, créer une **clé API dédiée**, nommée « site lespetons.fr ». La copier tout de suite, par précaution.
 2. Dans Vercel, ouvrir le projet, **Settings → Environment Variables**, et ajouter **`BREVO_API_KEY`** avec cette valeur, pour **Production** et **Preview**.
 3. **Redéployer** le site (une variable ajoutée n’est prise en compte qu’au déploiement suivant).
-4. Vérifier dans Brevo (**Sécurité → IP autorisées**) que le **blocage des adresses IP inconnues est désactivé**. Vercel n’utilise pas d’adresse IP fixe : si le blocage est actif, Brevo refuse les envois du site. L’existence de cette option dans le compte de l’école reste à confirmer.
+4. Vérifier dans Brevo (**Sécurité → IP autorisées**) que le **blocage des adresses IP inconnues est désactivé**. Les adresses IP de Vercel ne sont pas prévisibles (à confirmer) : si le blocage est actif, Brevo risque de refuser les envois du site. L’existence de cette option dans le compte de l’école reste à confirmer.
 
 Ne jamais écrire la clé dans le code, dans un message ou dans un fichier envoyé au dépôt.
 
@@ -136,8 +136,8 @@ Un formulaire envoyé en moins de 3 secondes après l’ouverture de la page est
 | Situation | Ce que voit le visiteur | Ce qu’il faut savoir |
 | --- | --- | --- |
 | **La configuration est incomplète** (clé absente, un numéro à `0`) | « L’envoi n’a pas abouti » + repli messagerie | La route répond 503. C’est l’état normal avant les étapes 5 et 6. |
-| **Brevo est en panne ou refuse la notification** (clé invalide, IP refusée, modèle supprimé…) | « L’envoi n’a pas abouti » + repli messagerie | La route répond 502. Rien n’a été envoyé à l’école. |
-| **Brevo échoue après la notification** (contact, accusé ou double confirmation) | « Merci », comme si tout allait bien | L’école a reçu la notification. L’incident est dans les journaux : le contact ou l’accusé est à refaire à la main. |
+| **Brevo est en panne ou refuse l’étape indispensable** (clé invalide, IP refusée, modèle supprimé…) : la notification pour contact et inscription, la double confirmation pour la lettre | « L’envoi n’a pas abouti » + repli messagerie | La route répond 502. Pour contact et inscription, rien n’a été envoyé à l’école ; pour la lettre, aucun mail de confirmation n’est parti. |
+| **Brevo échoue après la notification** (contact, accusé ou double confirmation), pour contact et inscription uniquement | « Merci », comme si tout allait bien | L’école a reçu la notification. L’incident est dans les journaux : le contact ou l’accusé est à refaire à la main. |
 | **Un robot remplit le formulaire** (champ caché rempli, ou envoi trop rapide) | « Merci » | Rien n’est envoyé. Le robot ne sait pas qu’il a été repéré. Une ligne `antispam` est notée dans les journaux. |
 | **Le message dépasse la taille permise** ou un champ est invalide | « L’envoi n’a pas abouti » + repli messagerie | Les limites sont les mêmes que celles des champs de la page. |
 
