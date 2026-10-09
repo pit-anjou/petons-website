@@ -5,6 +5,7 @@ import { chargerHtml, DOSSIER_PAGES } from './outils/html';
 
 const formulaires = [
   { page: 'contact-petons.html', selecteur: '#contact-form', limites: LIMITES.contact, caseLettre: true },
+  { page: 'inscriptions-petons.html', selecteur: '#admission-form', limites: LIMITES.inscription, caseLettre: true },
 ] as const;
 
 for (const { page, selecteur, limites, caseLettre } of formulaires) {

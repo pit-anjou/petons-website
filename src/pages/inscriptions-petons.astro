@@ -2,6 +2,7 @@
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
+import FormSubmitScript from '../components/FormSubmitScript.astro';
 ---
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Inscriptions | Les Petons dans l’Herbe · École Montessori Nantes</title><meta name="description" content="Rejoindre Les Petons dans l’Herbe à Nantes : découvrez le parcours d’inscription, visitez l’école et échangez avec l’équipe sur votre projet pour votre enfant de 3 à 12 ans."><style is:inline>@font-face {
   font-family: 'Nunito';
@@ -139,7 +140,8 @@ body .button:not(.secondary){color:#203f4d;}
     <div class="request-grid">
       <div class="form-panel">
         <p class="form-intro">Parlez-nous de votre projet et de ce qui vous amène vers Montessori.</p>
-        <form id="admission-form" action="mailto:contact@lespetons.fr" method="post" enctype="text/plain">
+        <form id="admission-form" data-brevo action="mailto:contact@lespetons.fr" method="post" enctype="text/plain">
+          <div class="form-trap" aria-hidden="true"><label for="admission-piege">Ne pas remplir ce champ</label><input id="admission-piege" name="piege" type="text" tabindex="-1" autocomplete="off"></div>
           <div class="form-fields">
             <div class="field"><label for="parent-name">Nom du parent <span aria-hidden="true">*</span></label><input id="parent-name" name="parentName" type="text" autocomplete="name" placeholder="Prénom et nom" maxlength="150" required></div>
             <div class="field"><label for="parent-email">Adresse e-mail <span aria-hidden="true">*</span></label><input id="parent-email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr" maxlength="254" required></div>
@@ -151,9 +153,11 @@ body .button:not(.secondary){color:#203f4d;}
             <label class="age-option"><input type="radio" name="childAge" value="6–12 ans — Les Papillons"><span><strong>6–12 ans</strong><span>Les Papillons</span></span></label>
           </div><p class="field-hint">Vous hésitez ? Nous pourrons en parler ensemble.</p></fieldset>
           <div class="field message-field"><label for="message">Votre message</label><textarea id="message" name="message" rows="5" maxlength="2500" placeholder="L’âge de votre enfant, son parcours, vos attentes, vos questions…"></textarea></div>
+          <label class="newsletter-optin"><input type="checkbox" name="newsletter" value="oui"><span>Je souhaite recevoir la lettre d’information des Petons</span></label>
           <p class="required-note"><span aria-hidden="true">*</span> Champs obligatoires</p>
-          <div class="form-action"><button class="button" type="submit">Préparer ma demande <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button><p>Votre messagerie s’ouvrira avec<br class="desktop-break"> votre demande prête à envoyer.</p></div>
-          <div id="draft-result" class="draft-result" hidden><p role="status" id="draft-status">Envoyez votre demande depuis votre messagerie. Si elle ne s’ouvre pas, vous pouvez copier le message ci-dessous.</p><div class="draft-actions"><a class="text-link" id="draft-email" href="mailto:contact@lespetons.fr">Ouvrir ma messagerie <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 9 6a2 2 0 0 0 2 0l9-6"/></svg></a><button id="copy-request" type="button" class="copy-button">Copier le message <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></svg></button></div><details><summary>Voir le message préparé</summary><textarea id="draft-content" readonly aria-label="Message préparé pour l’école" rows="10"></textarea></details></div>
+          <div class="form-action"><button class="button" type="submit">Envoyer ma demande <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></button><p>Vous recevrez un accusé<br class="desktop-break"> de réception par e-mail.</p></div>
+          <div id="draft-result" class="draft-result" hidden><p role="status" id="draft-status"></p><div class="draft-actions"><a class="text-link" id="draft-email" href="mailto:contact@lespetons.fr">Ouvrir ma messagerie <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 9 6a2 2 0 0 0 2 0l9-6"/></svg></a><button id="copy-request" type="button" class="copy-button">Copier le message <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V3H3v13h5"/></svg></button></div><details><summary>Voir le message préparé</summary><textarea id="draft-content" readonly aria-label="Message préparé pour l’école" rows="10"></textarea></details></div>
+          <p class="form-privacy">Les Petons dans l’Herbe utilisent ces informations pour répondre à votre demande et, si vous l’avez demandé, vous envoyer la lettre d’information. Elles sont hébergées par Brevo, notre prestataire d’envoi d’e-mails, et conservées 3 ans après notre dernier échange. Pour y accéder, les corriger ou les supprimer : contact@lespetons.fr.</p>
         </form>
       </div>
       <aside class="request-aside" aria-label="Contacts et informations utiles">
@@ -169,10 +173,10 @@ body .button:not(.secondary){color:#203f4d;}
     <div class="visit-copy"><span class="eyebrow">Pousser la porte de l’école</span><div class="section-title"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1Z"/></svg><h2 id="visit-title">Venez nous rencontrer</h2><span class="tiny-star" aria-hidden="true">✧</span></div><p>Découvrir les ambiances, rencontrer l’équipe et voir le matériel de près : <span class="soft-mark"><strong>rien ne remplace une visite.</strong></span></p><p>Nos portes ouvertes ont lieu plusieurs fois par an. C’est l’occasion de découvrir l’école en famille et de poser vos questions.</p><div class="actions"><a class="button" href="actualites-petons.html" data-local-href="actualites-petons.html">Voir les portes ouvertes<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></a><a class="text-link" href="#demande">Demander une visite<svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></a></div><p class="visit-address">6 rue de la Petite Sensive · 44300 Nantes</p></div>
   </div></section>
 </main>
-<Footer /><script is:inline>(()=>{
+<Footer /><FormSubmitScript /><script is:inline>(()=>{
  const form=document.querySelector('#admission-form'),result=document.querySelector('#draft-result'),preview=document.querySelector('#draft-content'),emailLink=document.querySelector('#draft-email'),copyButton=document.querySelector('#copy-request'),status=document.querySelector('#draft-status');
  let preparedMessage='';
- form.addEventListener('submit',event=>{
+ form.addEventListener('submit',async event=>{
   event.preventDefault();
   if(!form.reportValidity())return;
   const values=new FormData(form),value=name=>String(values.get(name)||'').trim();
@@ -180,9 +184,10 @@ body .button:not(.secondary){color:#203f4d;}
   preparedMessage=['Bonjour,','','Je souhaite échanger avec vous au sujet d’une inscription aux Petons dans l’Herbe.','',`Nom du parent : ${value('parentName')}`,`Adresse e-mail : ${value('email')}`,`Téléphone : ${value('phone')||'Non renseigné'}`,`Rentrée souhaitée : ${value('schoolStart')||'À préciser ensemble'}`,`Ambiance envisagée : ${value('childAge')||'À préciser ensemble'}`,'',value('message'),'','Bien cordialement,',value('parentName')].join('\n');
   const subject='Demande d’inscription — Les Petons dans l’Herbe';
   const url='mailto:contact@lespetons.fr?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(preparedMessage);
+  const envoye=await envoyerFormulaire(form,'inscription',{parentName:value('parentName'),email:value('email'),phone:value('phone'),schoolStart:value('schoolStart'),childAge:value('childAge'),message:value('message'),newsletter:form.elements.newsletter.checked});
+  if(envoye){afficherEnvoiReussi(form,'Merci, votre demande est bien partie. Vous allez recevoir un accusé de réception par e-mail, et nous revenons vers vous rapidement.');return;}
   emailLink.href=url;preview.value=preparedMessage;result.hidden=false;
-  status.textContent='Envoyez votre demande depuis votre messagerie. Si elle ne s’ouvre pas, vous pouvez copier le message ci-dessous.';
-  window.location.href=url;
+  status.textContent='L’envoi n’a pas abouti. Vous pouvez nous écrire directement depuis votre messagerie, ou copier le message ci-dessous.';
  });
  document.querySelector('#parent-name').addEventListener('input',event=>event.target.setCustomValidity(''));
  form.addEventListener('input',()=>{if(!result.hidden)result.hidden=true;});
