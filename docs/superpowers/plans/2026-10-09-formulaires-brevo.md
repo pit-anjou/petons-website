@@ -703,7 +703,7 @@ describe('contact', () => {
     }]);
     expect(appels.slice(1)).toEqual([
       ['enregistrerContact', { email: 'c@b.fr', attributs: { NOM_COMPLET: 'Camille <b>M</b>', TELEPHONE: '', STRUCTURE: 'Asso' }, listes: [11] }],
-      ['envoyerModele', { modele: 22, a: { email: 'c@b.fr', nom: 'Camille <b>M</b>' }, params: { nom: 'Camille &lt;b&gt;M&lt;/b&gt;', sujet: 'Organiser une visite', message: 'Bonjour' } }],
+      ['envoyerModele', { modele: 22, a: { email: 'c@b.fr', nom: 'Camille <b>M</b>' }, repondreA: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' }, params: { nom: 'Camille &lt;b&gt;M&lt;/b&gt;', sujet: 'Organiser une visite', message: 'Bonjour' } }],
     ]);
   });
 
@@ -740,7 +740,7 @@ describe('inscription', () => {
     });
     expect(appels.slice(1)).toEqual([
       ['enregistrerContact', { email: 'c@b.fr', attributs: { NOM_COMPLET: 'Camille', TELEPHONE: '06', RENTREE_SOUHAITEE: 'sept. 2027', TRANCHE_AGE: '3–6 ans — Les Chenilles' }, listes: [12] }],
-      ['envoyerModele', { modele: 24, a: { email: 'c@b.fr', nom: 'Camille' }, params: { nom: 'Camille', rentree: 'sept. 2027', age: '3–6 ans — Les Chenilles', message: '' } }],
+      ['envoyerModele', { modele: 24, a: { email: 'c@b.fr', nom: 'Camille' }, repondreA: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' }, params: { nom: 'Camille', rentree: 'sept. 2027', age: '3–6 ans — Les Chenilles', message: '' } }],
       ['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://lespetons.fr/lettre-confirmee.html' }],
     ]);
   });
@@ -854,7 +854,8 @@ export const traiter = async (demande: Demande, { client, config, origine, journ
 
   const auMieux: [etape: string, action: () => Promise<void>][] = [
     ['contact', () => client.enregistrerContact({ email: envoi.visiteur.email, attributs: envoi.attributs, listes: [envoi.liste] })],
-    ['accuse', () => client.envoyerModele({ modele: envoi.accuse.modele, a: envoi.visiteur, params: neutraliser(envoi.accuse.params) })],
+    // Répondre à l'accusé écrit toujours à l'école (ex. pour envoyer un CV), quel que soit l'expéditeur du modèle.
+    ['accuse', () => client.envoyerModele({ modele: envoi.accuse.modele, a: envoi.visiteur, repondreA: config.ecole, params: neutraliser(envoi.accuse.params) })],
     ...(envoi.lettre ? [['confirmation', () => confirmation(envoi.visiteur.email)] as [string, () => Promise<void>]] : []),
   ];
   const resultats = await Promise.allSettled(auMieux.map(([, action]) => action()));
@@ -1276,7 +1277,7 @@ Dans `src/pages/contact-petons.astro` :
           <p class="form-privacy">Les Petons dans l’Herbe utilisent ces informations pour répondre à votre demande et, si vous l’avez demandé, vous envoyer la lettre d’information. Elles sont hébergées par Brevo, notre prestataire d’envoi d’e-mails, et conservées 3 ans après notre dernier échange. Pour y accéder, les corriger ou les supprimer : contact@lespetons.fr.</p>
 ```
 
-7. Les conseils `candidature` et `stage` de l'objet `prompts` parlent de joindre un CV « à l’e-mail ». Le visiteur n'a plus de messagerie ouverte : remplacer leur fin `Vous pourrez joindre votre CV à l’e-mail.` par `Vous pourrez nous envoyer votre CV en répondant à l’accusé de réception.`
+7. Les conseils `candidature` et `stage` de l'objet `prompts` parlent de joindre un CV « à l’e-mail ». Le visiteur n'a plus de messagerie ouverte : remplacer leur fin `Vous pourrez joindre votre CV à l’e-mail.` par `Vous pourrez nous envoyer votre CV en répondant à l’accusé de réception, ou à contact@lespetons.fr.`
 8. Remplacer `<Footer /><script is:inline>(()=>{` par `<Footer /><FormSubmitScript /><script is:inline>(()=>{`.
 9. Dans le script de la page, remplacer `form.addEventListener('submit',event=>{` par `form.addEventListener('submit',async event=>{`, puis remplacer les trois lignes qui suivent la construction de `url` (`emailLink.href=url;…`, `status.textContent=…`, `window.location.href=url;`) par :
 
@@ -1513,7 +1514,7 @@ Créer `docs/formulaires-brevo.md` avec les sections suivantes, en français, po
    1. authentifier `lespetons.fr` (Brevo → Expéditeurs, domaines et IP dédiées → Domaines) et valider l'expéditeur `contact@lespetons.fr` ;
    2. créer les trois listes et noter leur numéro (colonne ID) ;
    3. créer les attributs texte `NOM_COMPLET`, `TELEPHONE`, `STRUCTURE`, `RENTREE_SOUHAITEE`, `TRANCHE_AGE` (Contacts → Paramètres → Attributs) : un attribut inconnu fait échouer l'enregistrement du contact ;
-   4. créer les cinq modèles ; pour chacun, la liste de ses `params` (tableau « Paramètres des modèles » de la spec) avec un exemple `{{ params.nom }}` ; conseiller `white-space: pre-line` sur le bloc du message pour garder les retours à la ligne ; le modèle de double confirmation doit contenir un bouton dont le lien est `{{ params.DOIurl }}` ;
+   4. créer les cinq modèles ; pour chacun, la liste de ses `params` (tableau « Paramètres des modèles » de la spec) avec un exemple `{{ params.nom }}` ; conseiller `white-space: pre-line` sur le bloc du message pour garder les retours à la ligne ; le modèle de double confirmation doit contenir un bouton dont le lien est `{{ params.DOIurl }}` ; les accusés de réception invitent les candidats à répondre à l’e-mail pour joindre leur CV (le site impose `contact@lespetons.fr` comme adresse de réponse) ;
    5. reporter les numéros dans `src/data/brevo.ts` (montrer un exemple rempli) ;
    6. créer une clé API dédiée (« site lespetons.fr »), la ranger dans Vercel → Settings → Environment Variables sous `BREVO_API_KEY` (Production et Preview), redéployer ; vérifier dans Brevo (Sécurité → IP autorisées) que le blocage des adresses IP inconnues est désactivé, sinon Vercel est refusé.
 3. **Tester en local** : copier `.env.example` en `.env`, y mettre une clé, `bun run dev`, envoyer chaque formulaire avec une adresse de test.
@@ -1558,6 +1559,7 @@ La personne crée dans Brevo les listes, attributs et modèles (`docs/formulaire
 `bun run dev`, puis, avec une adresse de test fournie par la personne :
 
 - contact sans case lettre → notification (avec `replyTo` du visiteur) et accusé reçus ; contact présent dans la liste « Contact site » avec ses attributs ;
+- contact « Postuler dans l’équipe » → répondre à l’accusé avec un PDF en pièce jointe : la réponse et la pièce jointe arrivent bien dans la boîte `contact@lespetons.fr` ;
 - contact avec case lettre → en plus, e-mail de double confirmation ; après le clic, arrivée sur `lettre-confirmee.html` et contact dans « Lettre d’information » ;
 - inscription → modèles d'inscription et liste « Demandes d’inscription » ;
 - lettre seule → e-mail de double confirmation ;

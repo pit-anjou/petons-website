@@ -103,7 +103,7 @@ Les limites reprennent les `maxlength` actuels des pages. Un test vérifie qu'el
 1. **Notification à l'école, indispensable.** Le modèle de notification du formulaire est envoyé à l'adresse de l'école, avec en `replyTo` le visiteur. Si cet envoi échoue, la route répond 502 `{ ok: false }` et le visiteur voit le repli.
 2. **Ensuite, au mieux et en parallèle.** Un échec de ces étapes est consigné (type d'étape et statut HTTP, sans données personnelles), mais la réponse reste 200 `{ ok: true }`. On évite ainsi un renvoi qui doublerait la notification.
    - Création ou mise à jour du contact (`updateEnabled: true`) dans la liste du formulaire, avec ses attributs.
-   - Envoi de l'accusé de réception, modèle propre au formulaire, au visiteur.
+   - Envoi de l'accusé de réception, modèle propre au formulaire, au visiteur, avec en `replyTo` l'adresse de l'école. Répondre à l'accusé permet ainsi d'envoyer une pièce jointe (un CV, par exemple) à l'école, quel que soit l'expéditeur choisi dans le modèle.
    - Si `newsletter` est vrai, double confirmation vers la liste « Lettre d'information ».
 
 **Lettre :** une seule étape, la double confirmation vers la liste « Lettre d'information ». Si elle échoue, la route répond 502 et le visiteur voit le repli.
