@@ -15,6 +15,7 @@
     "marked": "^18.1.0"
   },
   "devDependencies": {
-    "node-html-parser": "^9.0.4"
+    "node-html-parser": "^9.0.4",
+    "path-to-regexp": "6.3.0"
   }
 }

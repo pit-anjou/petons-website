@@ -1,0 +1,54 @@
+---
+// Titre, description, canonical, aperçu de partage (Open Graph, X/Twitter) et JSON-LD de la page.
+// Les adresses absolues viennent toutes de `site` dans astro.config.mjs.
+import { currentFile } from '../data/site';
+
+interface Props {
+  /** Titre de l’onglet, repris par les aperçus de partage. */
+  readonly title: string;
+  /** Description pour les moteurs de recherche, reprise par les aperçus de partage. */
+  readonly description: string;
+  /** Image d’aperçu (1200 × 630, JPEG ou PNG) ; par défaut, l’image commune du site. */
+  readonly image?: { readonly src: string; readonly alt: string };
+  /** Description schema.org « WebPage » de la page (facultative). */
+  readonly page?: { readonly name: string; readonly description: string };
+}
+
+const nomDuSite = 'Les Petons dans l’Herbe';
+const imageParDefaut = {
+  src: 'assets/img/partage/les-petons-dans-lherbe.jpg',
+  alt: 'Une enfant aux cheveux bouclés pose le plus petit cube de la tour rose Montessori, dans une classe lumineuse.',
+};
+
+const { title, description, image = imageParDefaut, page } = Astro.props;
+const site = Astro.site;
+if (!site) throw new Error('Déclarer `site` dans astro.config.mjs.');
+
+const fichier = currentFile(Astro.url.pathname);
+const canonical = new URL(fichier === 'index.html' ? '/' : fichier, site).href;
+const imageAbsolue = new URL(image.src, site).href;
+const jsonLd = page && {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: page.name,
+  description: page.description,
+  inLanguage: 'fr-FR',
+  url: canonical,
+  isPartOf: { '@type': 'WebSite', name: nomDuSite, url: new URL('/', site).href },
+};
+---
+<title>{title}</title>
+<meta name="description" content={description}>
+<link rel="canonical" href={canonical}>
+<meta property="og:type" content="website">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content={nomDuSite}>
+<meta property="og:title" content={title}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonical}>
+<meta property="og:image" content={imageAbsolue}>
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content={image.alt}>
+<meta name="twitter:card" content="summary_large_image">
+{jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

@@ -1,9 +1,10 @@
 ---
+import Referencement from '../components/Referencement.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
 ---
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><title>Inscription confirmée | Les Petons dans l’Herbe · Nantes</title><meta name="description" content="Votre inscription à la lettre d’information des Petons dans l’Herbe est confirmée."><meta name="robots" content="noindex"><style is:inline>@font-face {
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><Referencement title={"Inscription confirmée | Les Petons dans l’Herbe · Nantes"} description={"Votre inscription à la lettre d’information des Petons dans l’Herbe est confirmée."} /><meta name="robots" content="noindex"><style is:inline>@font-face {
   font-family: 'Nunito';
   font-style: normal;
   font-weight: 400;
@@ -107,6 +108,7 @@ body .button:not(.secondary){color:#203f4d;}
   <span class="eyebrow">La lettre des Petons</span>
   <h1>Votre inscription est confirmée</h1>
   <p>Merci ! Vous recevrez désormais, une fois par mois, les temps forts de l’école et nos conseils Montessori.</p>
+  <h2>En attendant la prochaine lettre</h2>
   <p><a class="button" href="actualites-petons.html">Voir les actualités de l’école</a></p>
 </section>
 </main>

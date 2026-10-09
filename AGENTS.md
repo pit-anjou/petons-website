@@ -15,6 +15,9 @@ Le site est construit avec [Astro](https://astro.build). Le résultat publié re
 | Le script du menu mobile et des sous-menus | `src/components/SiteNavScript.astro` |
 | Les formulaires (contact, inscription, lettre) et leur envoi à Brevo | Textes : la page concernée ; numéros Brevo : `src/data/brevo.ts` ; logique serveur : `src/lib/formulaires/` ; guide : `docs/formulaires-brevo.md` |
 | Ajouter ou remplacer une image, une vidéo, une police | `public/assets/…` (référencée dans les pages par `assets/…`, sans `public/`) |
+| Le titre et la description d'une page (onglet, moteurs de recherche, aperçu de partage) | `<Referencement title="…" description="…" />` dans le `<head>` de la page |
+| Le domaine du site (canonical, Open Graph, sitemap.xml, robots.txt, JSON-LD) et l'image de partage par défaut | `site` dans `astro.config.mjs` (une seule fois) ; balises et image dans `src/components/Referencement.astro` |
+| Les redirections des adresses de l'ancien site WordPress | `vercel.json` (`redirects`) et `tests/redirections.test.ts` ; plan dans `docs/plan-de-redirection.md` |
 
 Ne jamais modifier `dist/` : ce dossier est regénéré à chaque build.
 
@@ -28,6 +31,7 @@ Un fichier `.astro` ressemble à du HTML, mais quelques caractères y ont un sen
 4. **Ne pas écrire `aria-current="page"` ni `is-current-parent` à la main** dans le header ou le footer : ils sont calculés automatiquement à partir de l'adresse de la page.
 5. **Garder les liens internes sous la forme `nom-de-page.html`** (ex. `href="contact-petons.html"`) : les adresses publiées se terminent par `.html` et doivent rester stables pour le référencement.
 6. **Garder le bloc d'en-tête en haut de chaque page** (entre les deux lignes `---`) : il importe les composants. Le supprimer casse le build.
+7. **Un lien qui ouvre un nouvel onglet (`target="_blank"`) doit le dire** : ajouter `<span class="sr-only"> (nouvel onglet)</span>` avant `</a>`, et définir `.sr-only` dans la page si elle ne l'a pas. `bun test` signale tout oubli.
 
 ## Actualités et Page CMS
 
@@ -40,7 +44,7 @@ Un fichier `.astro` ressemble à du HTML, mais quelques caractères y ont un sen
 ## Ajouter une nouvelle page
 
 1. Copier une page existante proche dans `src/pages/`, par exemple `tarifs-petons.astro` vers `ma-page.astro`. Elle sera publiée à l'adresse `ma-page.html`.
-2. Remplacer le titre, la description et le contenu de `<main>`.
+2. Remplacer le titre et la description dans `<Referencement … />`, puis le contenu de `<main>`.
 3. Si elle doit apparaître dans le menu ou le footer, l'ajouter dans `src/data/site.ts` (`mainNav` ou `footerNav`).
 
 ## Vérifier avant de proposer une modification
