@@ -1,9 +1,9 @@
 // Invariants de la page Actualités construite (à lancer après « bun run build »).
 import { expect, test } from 'bun:test';
 import { Glob } from 'bun';
-import { chargerHtml } from './outils/html';
+import { chargerHtml, DOSSIER_PAGES } from './outils/html';
 
-const page = await chargerHtml('dist/actualites-petons.html');
+const page = await chargerHtml(`${DOSSIER_PAGES}/actualites-petons.html`);
 
 test('chaque bouton data-open ouvre une fenêtre qui existe', () => {
   const fenetres = new Set(page.querySelectorAll('dialog').map((fenetre) => fenetre.id));
@@ -25,8 +25,8 @@ test('les identifiants sont uniques', () => {
 
 test('les ancres visées depuis les autres pages existent', async () => {
   const manquantes: string[] = [];
-  for (const fichier of new Glob('*.html').scanSync('dist')) {
-    const autre = await chargerHtml(`dist/${fichier}`);
+  for (const fichier of new Glob('*.html').scanSync(DOSSIER_PAGES)) {
+    const autre = await chargerHtml(`${DOSSIER_PAGES}/${fichier}`);
     for (const lien of autre.querySelectorAll('a[href^="actualites-petons.html#"]')) {
       const ancre = lien.getAttribute('href')!.split('#')[1]!;
       if (!page.querySelector(`[id="${ancre}"]`)) manquantes.push(`${fichier} → #${ancre}`);

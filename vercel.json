@@ -2,6 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
   "installCommand": "bun install",
-  "buildCommand": "bun run build",
-  "outputDirectory": "dist"
+  "buildCommand": "bun run build"
 }

@@ -10,6 +10,7 @@
     "check": "astro build && bun test"
   },
   "dependencies": {
+    "@astrojs/vercel": "^11.0.13",
     "astro": "^7.3.6",
     "marked": "^18.1.0"
   },
