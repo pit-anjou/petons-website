@@ -11,7 +11,6 @@ interface Dependances {
   readonly cleApi: string | undefined;
   readonly config: ConfigBrevo;
   readonly fetch: Fetch;
-  readonly maintenant: () => number;
   readonly journal: Journal;
 }
 
@@ -44,7 +43,7 @@ const lireJson = (texte: string): Record<string, unknown> | null => {
   }
 };
 
-export const traiterRequete = async (requete: Request, { cleApi, config, fetch, maintenant, journal }: Dependances): Promise<Response> => {
+export const traiterRequete = async (requete: Request, { cleApi, config, fetch, journal }: Dependances): Promise<Response> => {
   if (requete.method !== 'POST') return repondre(405);
 
   const origine = origineDuSite(requete);
@@ -58,7 +57,7 @@ export const traiterRequete = async (requete: Request, { cleApi, config, fetch, 
   const corps = lireJson(texte);
   if (!corps) return repondre(400);
 
-  if (estSpam(corps.piege, corps.ouvertLe, maintenant())) {
+  if (estSpam(corps.piege, corps.dureeMs)) {
     journal({ formulaire: String(corps.formulaire ?? '?').slice(0, 20), etape: 'antispam', statut: null });
     return repondre(200);
   }

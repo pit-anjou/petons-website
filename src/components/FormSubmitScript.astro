@@ -11,12 +11,17 @@
 .form-success:focus{outline:2px solid currentColor;outline-offset:3px}
 </style>
 <script is:inline>(()=>{
- const ouvertLe=Date.now();
+ const debut=performance.now(),DELAI_MINIMAL=3000;
  window.envoyerFormulaire=async(form,formulaire,champs)=>{
   const bouton=form.querySelector('button[type="submit"]'),contenu=bouton.innerHTML;
   bouton.disabled=true;bouton.textContent='Envoi en cours…';
   try{
-   const reponse=await fetch('/api/formulaire',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({formulaire,champs,piege:form.elements.piege?.value||'',ouvertLe})});
+   let dureeMs=Math.round(performance.now()-debut);
+   if(dureeMs<DELAI_MINIMAL){
+    await new Promise(r=>setTimeout(r,DELAI_MINIMAL-dureeMs+50));
+    dureeMs=Math.round(performance.now()-debut);
+   }
+   const reponse=await fetch('/api/formulaire',{method:'POST',headers:{'content-type':'application/json'},signal:AbortSignal.timeout?.(25000),body:JSON.stringify({formulaire,champs,piege:form.elements.piege?.value||'',dureeMs})});
    return reponse.ok&&(await reponse.json()).ok===true;
   }catch{return false;}
   finally{bouton.disabled=false;bouton.innerHTML=contenu;}

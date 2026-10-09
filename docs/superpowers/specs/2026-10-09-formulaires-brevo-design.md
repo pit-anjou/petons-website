@@ -61,7 +61,7 @@ Brouillon mailto: existant
 
 ### Requête
 
-Corps JSON : `{ "formulaire": "contact" | "inscription" | "lettre", "champs": { … }, "piege": "", "ouvertLe": <horodatage ms> }`.
+Corps JSON : `{ "formulaire": "contact" | "inscription" | "lettre", "champs": { … }, "piege": "", "dureeMs": <millisecondes> }`. `dureeMs` est la durée écoulée entre le chargement de la page et l'envoi, **mesurée dans le navigateur** (`performance.now()`), jamais comparée à l'horloge du serveur : celle du visiteur peut être décalée.
 
 ### Contrôles, dans l'ordre
 
@@ -69,7 +69,7 @@ Corps JSON : `{ "formulaire": "contact" | "inscription" | "lettre", "champs": { 
 2. **Origine** : l'hôte de l'en-tête `Origin` doit être celui de la requête. Cela couvre la production, les prévisualisations Vercel et `localhost` sans liste à tenir à jour. Sinon, 403.
 3. **Taille** : un corps de plus de 16 Ko est refusé (413).
 4. **Configuration** : si `BREVO_API_KEY` ou un numéro de `src/data/brevo.ts` manque, la route répond 503. Le formulaire bascule alors sur le repli `mailto:`.
-5. **Anti-spam** : si `piege` n'est pas vide, si `ouvertLe` est absent ou invalide, ou si moins de 3 secondes séparent `ouvertLe` de la réception, la route répond **200 `{ ok: true }` sans rien envoyer**. Le robot ne sait pas qu'il a été repéré. L'événement est consigné sans les données.
+5. **Anti-spam** : si `piege` n'est pas vide, si `dureeMs` n'est pas un nombre fini, ou s'il est inférieur à 3 000 ms, la route répond **200 `{ ok: true }` sans rien envoyer**. Le robot ne sait pas qu'il a été repéré. L'événement est consigné sans les données.
 6. **Validation** : en cas d'échec, réponse 400 `{ ok: false }`, sans détail.
 
 ### Validation par formulaire
@@ -152,7 +152,7 @@ Le détail de l'erreur ne quitte jamais le serveur. Les journaux Vercel reçoive
 - **Sans JavaScript** : `action="mailto:…"` reste en place, donc le comportement actuel est conservé.
 - **Ajouts HTML :**
   - champ piège `piege`, caché visuellement, avec `tabindex="-1"`, `autocomplete="off"` et `aria-hidden="true"` sur son conteneur ;
-  - `ouvertLe`, renseigné par le script au chargement ;
+  - `dureeMs`, calculé par le script à l'envoi (`performance.now()` depuis le chargement). Si moins de 3 secondes se sont écoulées (remplissage automatique, par exemple), le script attend le temps restant avant d'envoyer : un vrai visiteur n'est jamais pris pour un robot ;
   - sur contact et inscription, la case non cochée « Je souhaite recevoir la lettre d'information des Petons » (`name="newsletter"`) ;
   - nouveaux libellés : « Envoyer mon message » ou « Envoyer ma demande », et « Vous recevrez un accusé de réception par e-mail. » à la place de « Votre messagerie s'ouvrira… ».
 - **Mention RGPD sous chaque formulaire.** Contact et inscription : « Les Petons dans l'Herbe utilisent ces informations pour répondre à votre demande et, si vous l'avez demandé, vous envoyer la lettre d'information. Elles sont hébergées par Brevo, notre prestataire d'envoi d'e-mails, et conservées 3 ans après notre dernier échange. Pour y accéder, les corriger ou les supprimer : contact@lespetons.fr. » Lettre : « Votre adresse sert uniquement à vous envoyer la lettre d'information des Petons. Elle est hébergée par Brevo et vous pouvez vous désinscrire à tout moment, via le lien présent dans chaque lettre ou en écrivant à contact@lespetons.fr. » La durée de 3 ans a été validée par l'école le 2026-10-09.
@@ -175,7 +175,7 @@ Tant que les étapes 5 et 6 ne sont pas faites, la route répond 503 et les form
 **`bun test`, sans réseau :**
 
 - validation : champs obligatoires, longueurs, liste fermée des sujets, format e-mail, booléen `newsletter`, cohérence des limites avec les `maxlength` des pages ;
-- anti-spam : piège rempli, envoi trop rapide, `ouvertLe` absent ou invalide ;
+- anti-spam : piège rempli, envoi trop rapide, `dureeMs` absent, non numérique ou trop petit (au niveau de la fonction pure et de la route) ;
 - client Brevo avec `fetch` simulé : URL, en-têtes, corps, délai dépassé ;
 - traitement : échec de la notification → erreur ; échec du contact, de l'accusé ou de la double confirmation → succès consigné ; case lettre cochée ou non ;
 - route : 405, 403, 413, 503 si la configuration manque, 200 silencieux pour le spam, 400, 502 ;

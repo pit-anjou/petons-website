@@ -53,25 +53,31 @@ describe('valider', () => {
 });
 
 describe('estSpam', () => {
-  const maintenant = 1_000_000;
-  test('laisse passer un humain', () => expect(estSpam('', maintenant - DELAI_MINIMAL_MS, maintenant)).toBe(false));
-  test('piège absent ou nul, délai valide : humain', () => {
-    expect(estSpam(undefined, maintenant - DELAI_MINIMAL_MS, maintenant)).toBe(false);
-    expect(estSpam(null, maintenant - DELAI_MINIMAL_MS, maintenant)).toBe(false);
+  test('laisse passer un humain', () => expect(estSpam('', DELAI_MINIMAL_MS)).toBe(false));
+  test('piège absent ou nul, durée valide : humain', () => {
+    expect(estSpam(undefined, DELAI_MINIMAL_MS)).toBe(false);
+    expect(estSpam(null, DELAI_MINIMAL_MS)).toBe(false);
   });
-  test('piège rempli', () => expect(estSpam('http://spam', maintenant - 60_000, maintenant)).toBe(true));
+  test('piège rempli', () => expect(estSpam('http://spam', 60_000)).toBe(true));
   test.each([
     ['nombre', 1],
     ['booléen', true],
     ['tableau', ['x']],
     ['objet', {}],
   ])('piège non textuel (%s) : spam', (_type, piege) => {
-    expect(estSpam(piege, maintenant - 60_000, maintenant)).toBe(true);
+    expect(estSpam(piege, 60_000)).toBe(true);
   });
-  test('envoi trop rapide', () => expect(estSpam('', maintenant - DELAI_MINIMAL_MS + 1, maintenant)).toBe(true));
-  test('heure d’ouverture absente', () => expect(estSpam('', undefined, maintenant)).toBe(true));
-  test('heure d’ouverture invalide', () => expect(estSpam('', 'hier', maintenant)).toBe(true));
-  test('heure d’ouverture dans le futur', () => expect(estSpam('', maintenant + 10_000, maintenant)).toBe(true));
+  test('envoi trop rapide', () => expect(estSpam('', DELAI_MINIMAL_MS - 1)).toBe(true));
+  test('durée absente', () => expect(estSpam('', undefined)).toBe(true));
+  test.each([
+    ['texte', 'hier'],
+    ['texte numérique', '5000'],
+    ['NaN', Number.NaN],
+    ['infini', Number.POSITIVE_INFINITY],
+    ['négatif', -1],
+  ])('durée non valide (%s)', (_type, duree) => {
+    expect(estSpam('', duree)).toBe(true);
+  });
 });
 
 describe('configuration Brevo', () => {

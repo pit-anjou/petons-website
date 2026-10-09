@@ -9,7 +9,6 @@ const config: ConfigBrevo = {
   modeles: { notificationContact: 4, accuseContact: 5, notificationInscription: 6, accuseInscription: 7, confirmationLettre: 8 },
   pageConfirmationLettre: 'lettre-confirmee.html',
 };
-const MAINTENANT = 1_000_000;
 
 const preparer = (statutBrevo = 201) => {
   const appels: string[] = [];
@@ -18,11 +17,11 @@ const preparer = (statutBrevo = 201) => {
     appels.push(url);
     return new Response(null, { status: statutBrevo });
   };
-  const deps = { cleApi: 'cle', config, fetch, maintenant: () => MAINTENANT, journal: (e: unknown) => evenements.push(e) };
+  const deps = { cleApi: 'cle', config, fetch, journal: (e: unknown) => evenements.push(e) };
   return { appels, evenements, deps };
 };
 
-const lettre = { formulaire: 'lettre', champs: { email: 'a@b.fr' }, piege: '', ouvertLe: MAINTENANT - 10_000 };
+const lettre = { formulaire: 'lettre', champs: { email: 'a@b.fr' }, piege: '', dureeMs: 10_000 };
 const requete = (corps: unknown = lettre, { methode = 'POST', origine = 'https://lespetons.fr' as string | null } = {}) =>
   new Request('https://lespetons.fr/api/formulaire', {
     method: methode,
@@ -76,6 +75,26 @@ describe('traiterRequete', () => {
     const { appels, evenements, deps } = preparer();
     const reponse = await traiterRequete(requete({ ...lettre, piege: 'http://spam' }), deps);
     expect(await lire(reponse)).toEqual({ statut: 200, corps: { ok: true }, cache: 'no-store' });
+    expect(appels).toEqual([]);
+    expect(evenements).toEqual([{ formulaire: 'lettre', etape: 'antispam', statut: null }]);
+  });
+
+  test('laisse passer une durée valide', async () => {
+    const { appels, evenements, deps } = preparer();
+    expect((await traiterRequete(requete({ ...lettre, dureeMs: 3000 }), deps)).status).toBe(200);
+    expect(appels).toEqual(['https://api.brevo.com/v3/contacts/doubleOptinConfirmation']);
+    expect(evenements).toEqual([]);
+  });
+
+  test.each([
+    ['trop petite', { dureeMs: 2999 }],
+    ['absente', { dureeMs: undefined }],
+    ['non numérique', { dureeMs: '10000' }],
+    ['nulle', { dureeMs: null }],
+    ['ancien champ ouvertLe seul', { dureeMs: undefined, ouvertLe: 0 }],
+  ])('traite en silence comme un robot : durée %s', async (_cas, ajout) => {
+    const { appels, evenements, deps } = preparer();
+    expect(await lire(await traiterRequete(requete({ ...lettre, ...ajout }), deps))).toEqual({ statut: 200, corps: { ok: true }, cache: 'no-store' });
     expect(appels).toEqual([]);
     expect(evenements).toEqual([{ formulaire: 'lettre', etape: 'antispam', statut: null }]);
   });

@@ -12,7 +12,6 @@ export const ALL: APIRoute = ({ request }) =>
     cleApi: BREVO_API_KEY,
     config: brevo,
     fetch: (url, init) => fetch(url, init),
-    maintenant: Date.now,
     // Journaux Vercel : jamais le contenu des champs.
     journal: (evenement) => console.warn('[formulaire]', JSON.stringify(evenement)),
   });

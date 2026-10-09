@@ -28,7 +28,7 @@ export const LIMITES = {
   lettre: { email: 254 },
 } as const;
 
-/** Délai minimal entre l'ouverture de la page et l'envoi, en millisecondes. */
+/** Durée minimale entre le chargement de la page et l'envoi, mesurée dans le navigateur, en millisecondes. */
 export const DELAI_MINIMAL_MS = 3000;
 
 const nettoyer = (valeur: unknown): unknown =>
@@ -79,11 +79,12 @@ export const valider = (formulaire: unknown, champs: unknown): Demande | null =>
 };
 
 /**
- * Vrai si le champ piège contient quoi que ce soit (sauf absent, nul ou vide), ou si l'heure d'ouverture
- * est absente, non numérique, invalide ou trop récente.
+ * Vrai si le champ piège contient quoi que ce soit (sauf absent, nul ou vide), ou si la durée
+ * (mesurée par le navigateur depuis le chargement de la page) est absente, non numérique ou trop courte.
+ * L'horloge du serveur n'intervient pas : celle du visiteur peut être décalée.
  */
-export const estSpam = (piege: unknown, ouvertLe: unknown, maintenant: number): boolean => {
+export const estSpam = (piege: unknown, dureeMs: unknown): boolean => {
   if (piege !== undefined && piege !== null && piege !== '') return true;
-  if (typeof ouvertLe !== 'number' || !Number.isFinite(ouvertLe)) return true;
-  return maintenant - ouvertLe < DELAI_MINIMAL_MS;
+  if (typeof dureeMs !== 'number' || !Number.isFinite(dureeMs)) return true;
+  return dureeMs < DELAI_MINIMAL_MS;
 };
