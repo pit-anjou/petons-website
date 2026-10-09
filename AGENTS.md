@@ -13,6 +13,7 @@ Le site est construit avec [Astro](https://astro.build). Le résultat publié re
 | Le menu, les liens du footer, l'adresse, le téléphone, l'email, Instagram, l'encart « Dons & mécénat » | `src/data/site.ts` (une seule fois pour tout le site) |
 | La structure HTML du header ou du footer | `src/components/Header.astro`, `src/components/Footer.astro` |
 | Le script du menu mobile et des sous-menus | `src/components/SiteNavScript.astro` |
+| Les formulaires (contact, inscription, lettre) et leur envoi à Brevo | Textes : la page concernée ; numéros Brevo : `src/data/brevo.ts` ; logique serveur : `src/lib/formulaires/` ; guide : `docs/formulaires-brevo.md` |
 | Ajouter ou remplacer une image, une vidéo, une police | `public/assets/…` (référencée dans les pages par `assets/…`, sans `public/`) |
 
 Ne jamais modifier `dist/` : ce dossier est regénéré à chaque build.
