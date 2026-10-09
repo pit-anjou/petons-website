@@ -15,7 +15,7 @@ Ce guide dit **quoi configurer dans Brevo**, **où reporter les numéros** et **
 - La **double confirmation** : le visiteur reçoit un e-mail avec un lien. Il n’est abonné à la lettre qu’après avoir cliqué. Il arrive alors sur la page `lettre-confirmee.html`.
 - La case « Je souhaite recevoir la lettre d’information des Petons » n’est **jamais cochée d’avance**.
 - **Règle : la notification à l’école est indispensable, le reste se fait au mieux.** Si la notification ne part pas, le visiteur voit un message d’échec. Pour le formulaire de lettre d’information, la double confirmation est la seule étape et elle est indispensable : si elle échoue, le visiteur voit le message d’échec. Pour contact et inscription, si c’est l’enregistrement du contact, l’accusé ou la double confirmation qui échoue, le visiteur voit quand même « merci » (pour qu’il ne renvoie pas son message, ce qui doublerait la notification), et l’incident est noté dans les journaux (voir plus bas).
-- **Repli sur la messagerie** : quand l’envoi échoue, la page affiche « L’envoi n’a pas abouti » avec les boutons « Ouvrir ma messagerie » et « Copier le message ». Aucune demande n’est perdue. Sans JavaScript, le formulaire ouvre directement la messagerie, comme avant.
+- **Repli sur la messagerie** : quand l’envoi échoue, la page affiche « L’envoi n’a pas abouti » avec les boutons « Ouvrir ma messagerie » et « Copier le message ». Le visiteur garde ainsi un moyen d’écrire à l’école. Attention : en cas de délai dépassé, Brevo a pu envoyer la notification quand même (le visiteur peut alors renvoyer son message par la messagerie, et l’école le recevra deux fois). Sans JavaScript, le formulaire ouvre directement la messagerie, comme avant.
 - Les **accusés de réception** ont toujours `contact@lespetons.fr` comme adresse de réponse (le site l’impose, quel que soit l’expéditeur choisi dans le modèle). Le visiteur peut donc répondre à l’accusé, par exemple pour joindre son CV.
 - Les **notifications** ont comme adresse de réponse celle du visiteur : « Répondre » dans la boîte de l’école écrit directement à la personne.
 
@@ -61,14 +61,15 @@ Créer **quatre modèles d’e-mail transactionnel** (les deux notifications et 
 | Modèle | Destinataire | Informations disponibles |
 | --- | --- | --- |
 | Notification contact | l’école | `nom`, `email`, `telephone`, `structure`, `sujet`, `message`, `lettre` |
-| Accusé de réception contact | le visiteur | `nom`, `sujet`, `message` |
+| Accusé de réception contact | le visiteur | `sujet` |
 | Notification inscription | l’école | `nom`, `email`, `telephone`, `rentree`, `age`, `message`, `lettre` |
-| Accusé de réception inscription | le visiteur | `nom`, `rentree`, `age`, `message` |
+| Accusé de réception inscription | le visiteur | `age` |
 | Double confirmation | le visiteur | aucune (voir ci-dessous) |
 
+- **Les accusés de réception n’ont pas d’autre information** que `sujet` (contact) ou `age` (inscription), et ces deux valeurs viennent de listes fermées. C’est voulu : l’adresse du destinataire est saisie par le visiteur, donc l’accusé peut partir vers n’importe quelle adresse. S’il reprenait ce que le visiteur a écrit (nom, message…), le formulaire pourrait servir à envoyer un texte choisi à un tiers, depuis l’adresse de l’école. Le modèle d’accusé doit donc rester un texte fixe (« Nous avons bien reçu votre demande… ») ; ne pas y mettre le nom ni le message. Les notifications à l’école, elles, gardent toutes les informations.
 - `sujet` est le libellé lisible choisi par le visiteur (« Postuler dans l’équipe », « Organiser une visite »…).
 - `lettre` vaut `oui` ou `non` : la case « lettre d’information » était-elle cochée ?
-- `rentree` et `age` sont les réponses du formulaire d’inscription. Ils sont vides si le visiteur n’a rien indiqué.
+- `rentree` et `age` sont les réponses du formulaire d’inscription (`rentree` n’existe que dans la notification). Ils sont vides si le visiteur n’a rien indiqué.
 - Exemple de début de notification de contact :
 
   ```
@@ -129,16 +130,16 @@ Ne jamais écrire la clé dans le code, dans un message ou dans un fichier envoy
    - le contact apparaît dans la bonne liste de Brevo, avec ses attributs ;
    - la lettre : le mail de confirmation arrive, et le clic mène à la page « lettre confirmée ».
 
-Un formulaire envoyé en moins de 3 secondes après l’ouverture de la page est pris pour un robot : attendre quelques secondes avant de cliquer sur « Envoyer ».
+Le temps est mesuré par le navigateur depuis l’ouverture de la page (pas par l’horloge du serveur ni de l’ordinateur). Si l’on clique sur « Envoyer » moins de 3 secondes après l’ouverture, le site attend le temps restant avant d’envoyer : le bouton affiche « Envoi en cours… » un instant de plus, sans autre conséquence.
 
 ## Que se passe-t-il si…
 
 | Situation | Ce que voit le visiteur | Ce qu’il faut savoir |
 | --- | --- | --- |
 | **La configuration est incomplète** (clé absente, un numéro à `0`) | « L’envoi n’a pas abouti » + repli messagerie | La route répond 503. C’est l’état normal avant les étapes 5 et 6. |
-| **Brevo est en panne ou refuse l’étape indispensable** (clé invalide, IP refusée, modèle supprimé…) : la notification pour contact et inscription, la double confirmation pour la lettre | « L’envoi n’a pas abouti » + repli messagerie | La route répond 502. Pour contact et inscription, rien n’a été envoyé à l’école ; pour la lettre, aucun mail de confirmation n’est parti. |
+| **Brevo est en panne ou refuse l’étape indispensable** (clé invalide, IP refusée, modèle supprimé…) : la notification pour contact et inscription, la double confirmation pour la lettre | « L’envoi n’a pas abouti » + repli messagerie | La route répond 502. Le plus souvent, la notification n’est pas partie (contact et inscription) ou le mail de confirmation n’est pas parti (lettre). Mais si Brevo a seulement répondu trop lentement (délai de 8 secondes), l’envoi a pu aboutir quand même : vérifier dans l’historique des envois de Brevo avant de refaire quoi que ce soit. |
 | **Brevo échoue après la notification** (contact, accusé ou double confirmation), pour contact et inscription uniquement | « Merci », comme si tout allait bien | L’école a reçu la notification. L’incident est dans les journaux : le contact ou l’accusé est à refaire à la main. |
-| **Un robot remplit le formulaire** (champ caché rempli, ou envoi trop rapide) | « Merci » | Rien n’est envoyé. Le robot ne sait pas qu’il a été repéré. Une ligne `antispam` est notée dans les journaux. |
+| **Un robot remplit le formulaire** (champ caché rempli, ou envoi trop rapide) | « Merci » | Rien n’est envoyé (« envoi trop rapide » : durée de moins de 3 secondes, mesurée dans le navigateur, absente ou invalide). Le robot ne sait pas qu’il a été repéré. Une ligne `antispam` est notée dans les journaux. |
 | **Le message dépasse la taille permise** ou un champ est invalide | « L’envoi n’a pas abouti » + repli messagerie | Les limites sont les mêmes que celles des champs de la page. |
 
 ### Lire les journaux dans Vercel
@@ -153,7 +154,7 @@ Dans Vercel, ouvrir le projet, **Logs**, et chercher **`[formulaire]`**. Chaque 
 - `etape` : ce qui a échoué : `notification`, `contact`, `accuse`, `confirmation`, ou `antispam`.
 - `statut` : le code de réponse de Brevo (`null` s’il n’y en a pas : Brevo n’a pas répondu à temps, ou c’est un robot).
 
-Les journaux ne contiennent **jamais** de nom, d’adresse ni de message : seulement ces trois informations. Pour retrouver une demande perdue, consulter l’historique des envois dans Brevo ou demander à la personne de renvoyer son message.
+Les journaux ne contiennent **jamais** de nom, d’adresse ni de message : seulement ces trois informations. Pour retrouver une demande qui n’a pas abouti, consulter l’historique des envois dans Brevo ou demander à la personne de renvoyer son message.
 
 Codes à connaître (indicatifs, ceux de Brevo) : `401` ou `403` clé API invalide ou adresse IP refusée ; `400` informations refusées (souvent un attribut non créé à l’étape 3) ; `404` numéro de liste ou de modèle inexistant ; `null` pas de réponse de Brevo (délai de 8 secondes dépassé).
 
@@ -161,7 +162,7 @@ Codes à connaître (indicatifs, ceux de Brevo) : `401` ou `403` clé API invali
 
 Le site publié par Vercel contient une petite partie serveur : la route `/api/formulaire`. Les pages, elles, restent du HTML statique, construit dans `dist/client`.
 
-L’image **Docker/nginx** (`Dockerfile.vercel`) ne copie que ces pages statiques : elle n’a **pas de partie serveur**. Les formulaires y fonctionnent donc en **mode messagerie** (le visiteur voit « L’envoi n’a pas abouti » et utilise « Ouvrir ma messagerie »). C’est voulu : rien n’est perdu, mais rien n’est envoyé à Brevo.
+L’image **Docker/nginx** (`Dockerfile.vercel`) ne copie que ces pages statiques : elle n’a **pas de partie serveur**. Les formulaires y fonctionnent donc en **mode messagerie** (le visiteur voit « L’envoi n’a pas abouti » et utilise « Ouvrir ma messagerie »). C’est voulu : le visiteur peut toujours écrire par sa messagerie, mais rien n’est envoyé à Brevo.
 
 ## Points à surveiller
 
@@ -176,6 +177,17 @@ Lors du premier test réel, envoyer un message contenant par exemple `Tom & Jerr
 - si elle affiche `Tom & Jerry <3 "bonjour"` : tout va bien, ne rien changer ;
 - si elle affiche `Tom &amp; Jerry &lt;3 &quot;bonjour&quot;` : Brevo neutralise déjà, et le site doit envoyer le texte brut. La correction est à faire dans `src/lib/formulaires/traitement.ts` (la fonction `neutraliser`) : prévenir Philippe.
 
+### Premier test réel (prévisualisation Vercel)
+
+À faire une fois, sur le déploiement de prévisualisation (la clé `BREVO_API_KEY` doit être définie pour l’environnement Preview) :
+
+- [ ] Les adresses en `*.html` (par exemple `contact-petons.html`), `/` et `/api/formulaire` répondent (cette dernière avec un `GET` : 405, c’est normal).
+- [ ] Le contrôle d’origine accepte les vrais envois. **Si chaque envoi aboutit au repli messagerie et que les journaux montrent un 403**, l’adresse du site vue par la fonction n’est pas celle du navigateur (par exemple derrière un domaine personnalisé ou un proxy) : prévenir Philippe, la comparaison est dans `src/lib/formulaires/requete.ts` (`origineDuSite`).
+- [ ] Double confirmation pour une **adresse déjà abonnée** à la lettre : noter ce que Brevo répond (erreur, ou nouveau mail de confirmation) et vérifier que le visiteur voit un message cohérent.
+- [ ] Brevo accepte les **paramètres vides** (téléphone, structure, rentrée, âge laissés vides) sans refuser l’envoi.
+- [ ] **Caractères spéciaux dans les objets d’e-mail** : si l’objet d’un modèle utilise `{{ params.* }}` (par exemple `{{ params.sujet }}`), vérifier que `’`, `&`, `<` s’affichent correctement et ne sont pas neutralisés deux fois dans l’objet.
+- [ ] **Durée de la fonction** (Fluid compute / `maxDuration` dans Vercel) : une fonction qui s’arrête avant la fin (504) alors que la notification est déjà partie ferait croire à un échec ; chaque appel Brevo est limité à 8 secondes, la durée maximale de la fonction doit être supérieure au total des appels en série (jusqu’à environ 24 secondes : notification, contact, confirmation).
+
 ### Prérequis avant la mise en ligne
 
 - [ ] Domaine **lespetons.fr** authentifié dans Brevo (étape 1).
@@ -189,4 +201,4 @@ Les mentions sous les formulaires annoncent une conservation des informations **
 
 ### Hors périmètre
 
-Une page complète de politique de confidentialité et mentions légales, un CAPTCHA et une limitation du nombre d’envois par adresse IP ne sont pas en place. À envisager si le spam passe la protection invisible actuelle (champ caché et délai minimal de 3 secondes).
+Une page complète de politique de confidentialité et mentions légales, un CAPTCHA et une limitation du nombre d’envois par adresse IP ne sont pas en place. À envisager si le spam passe la protection invisible actuelle (champ caché et durée minimale de 3 secondes, mesurée dans le navigateur).

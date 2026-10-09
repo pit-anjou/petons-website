@@ -1579,6 +1579,13 @@ Pousser la branche, ouvrir le déploiement de prévisualisation Vercel (la clé 
 - `index.html`, `contact-petons.html`, `actualites-petons.html` et une ancre (`actualites-petons.html#stage-fevrier-2027`) répondent comme en production ;
 - les trois formulaires vont jusqu'au bout ; `/api/formulaire` refuse une origine étrangère (`curl -H 'origin: https://pirate.example'` → 403) ;
 - les journaux Vercel n'affichent que des lignes `[formulaire] {"formulaire":…,"etape":…,"statut":…}`.
+- `index.html`, `contact-petons.html`, `/` et `/api/formulaire` (`GET` → 405) répondent ; toutes les adresses en `*.html` restent stables ;
+- le contrôle d'origine accepte les vrais envois : si chaque envoi obtient le repli messagerie avec un 403 dans les journaux, l'hôte vu par la fonction diffère de l'hôte public ;
+- double confirmation d'une adresse déjà abonnée à la lettre : noter la réponse de Brevo et le message vu par le visiteur ;
+- Brevo accepte les `params` vides (téléphone, structure, rentrée, âge) ;
+- si l'objet d'un modèle utilise `{{ params.* }}`, vérifier l'affichage des caractères spéciaux (`’`, `&`, `<`) dans l'objet, sans double neutralisation ;
+- durée de la fonction (Fluid compute / `maxDuration`) : une lenteur de Brevo ne doit pas provoquer un 504 après l'envoi de la notification ;
+- les accusés de réception ne contiennent que `sujet` (contact) ou `age` (inscription) : aucun texte saisi par le visiteur.
 
 - [ ] **Step 5 : Fin de branche**
 
