@@ -1,0 +1,28 @@
+---
+// Balise canonical de la page, et JSON-LD si la page en décrit un.
+// Les adresses absolues viennent toutes de `site` dans astro.config.mjs.
+import { currentFile } from '../data/site';
+
+interface Props {
+  /** Description schema.org « WebPage » de la page (facultative). */
+  readonly page?: { readonly name: string; readonly description: string };
+}
+
+const { page } = Astro.props;
+const site = Astro.site;
+if (!site) throw new Error('Déclarer `site` dans astro.config.mjs.');
+
+const fichier = currentFile(Astro.url.pathname);
+const canonical = new URL(fichier === 'index.html' ? '/' : fichier, site).href;
+const jsonLd = page && {
+  '@context': 'https://schema.org',
+  '@type': 'WebPage',
+  name: page.name,
+  description: page.description,
+  inLanguage: 'fr-FR',
+  url: canonical,
+  isPartOf: { '@type': 'WebSite', name: 'Les Petons dans l’Herbe', url: new URL('/', site).href },
+};
+---
+<link rel="canonical" href={canonical}>
+{jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}

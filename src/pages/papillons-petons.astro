@@ -1,4 +1,5 @@
 ---
+import Referencement from '../components/Referencement.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
@@ -316,7 +317,7 @@ body .button:not(.secondary){color:#203f4d;}
 @media(prefers-reduced-motion:reduce){.cm-submenu-toggle svg{transition:none;}}
 @media print{.cm-site-header,.cm-site-footer{display:none;}}
 
-</style><script is:inline type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "Les Papillons · 6–12 ans — Les Petons dans l’Herbe, Nantes", "description": "Le quotidien de l’ambiance Montessori 6–12 ans avec Pauline : apprentissages, grands récits, projets, sorties, journée type et préparation au collège.", "inLanguage": "fr-FR", "isPartOf": {"@type": "WebSite", "name": "Les Petons dans l’Herbe", "url": "https://ecolemontessorinantes.vercel.app"}}</script><style is:inline id="ambiance-shared-page-index">
+</style><Referencement page={{ name: "Les Papillons · 6–12 ans — Les Petons dans l’Herbe, Nantes", description: "Le quotidien de l’ambiance Montessori 6–12 ans avec Pauline : apprentissages, grands récits, projets, sorties, journée type et préparation au collège." }} /><style is:inline id="ambiance-shared-page-index">
 .jumpnav{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-top:18px;padding-bottom:18px;flex-wrap:wrap;row-gap:8px;margin-bottom:46px}
 .jumpnav>span{font:700 22px/1.3 var(--title)}
 .jumpnav a{font-weight:800;font-size:13px;text-decoration:none;display:flex;gap:8px;align-items:center;min-height:30px}

@@ -1,4 +1,5 @@
 ---
+import Referencement from '../components/Referencement.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
@@ -157,7 +158,7 @@ body .button:not(.secondary){color:#203f4d;}
 @media(prefers-reduced-motion:reduce){.cm-submenu-toggle svg{transition:none;}}
 @media print{.cm-site-header,.cm-site-footer{display:none;}}
 
-</style><script is:inline type="application/ld+json">{"@context": "https://schema.org", "@type": "WebPage", "name": "La pédagogie Montessori — Les Petons dans l’Herbe", "description": "L’éducation à la paix, le rôle du matériel et de l’adulte, l’autonomie et l’évolution de l’esprit absorbant à l’esprit comprenant.", "inLanguage": "fr-FR", "url": "https://ecolemontessorinantes.vercel.app/pedagogie", "isPartOf": {"@type": "WebSite", "name": "Les Petons dans l’Herbe", "url": "https://ecolemontessorinantes.vercel.app"}}</script>
+</style><Referencement page={{ name: "La pédagogie Montessori — Les Petons dans l’Herbe", description: "L’éducation à la paix, le rôle du matériel et de l’adulte, l’autonomie et l’évolution de l’esprit absorbant à l’esprit comprenant." }} />
 <style is:inline id="pedagogie-shared-page-index">
 .jumpnav{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-top:18px;padding-bottom:18px;flex-wrap:wrap;row-gap:8px;margin-bottom:39px}
 .jumpnav>span{font:700 22px/1.3 var(--title)}

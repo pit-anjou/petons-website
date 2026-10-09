@@ -14,6 +14,8 @@ Le site est construit avec [Astro](https://astro.build). Le résultat publié re
 | La structure HTML du header ou du footer | `src/components/Header.astro`, `src/components/Footer.astro` |
 | Le script du menu mobile et des sous-menus | `src/components/SiteNavScript.astro` |
 | Ajouter ou remplacer une image, une vidéo, une police | `public/assets/…` (référencée dans les pages par `assets/…`, sans `public/`) |
+| Le domaine du site (canonical, sitemap.xml, robots.txt, JSON-LD) | `site` dans `astro.config.mjs` (une seule fois) ; balises dans `src/components/Referencement.astro`, à placer dans le `<head>` de toute nouvelle page |
+| Les redirections des adresses de l'ancien site WordPress | `vercel.json` (`redirects`) et `tests/redirections.test.ts` ; plan dans `docs/plan-de-redirection.md` |
 
 Ne jamais modifier `dist/` : ce dossier est regénéré à chaque build.
 
