@@ -47,7 +47,8 @@ Brouillon mailto: existant
 | --- | --- |
 | `astro.config.mjs` | Ajoute l'adaptateur `@astrojs/vercel`. `output` reste statique et `build.format: 'file'` est conservé. |
 | `vercel.json` | Retire `outputDirectory: "dist"`, puisque l'adaptateur produit `.vercel/output`. |
-| `src/pages/api/formulaire.ts` | Route `POST`, `export const prerender = false`. Mince : elle lit la requête, appelle la validation puis le service, et renvoie la réponse. |
+| `src/pages/api/formulaire.ts` | Route, `export const prerender = false`. Coquille : elle lit la clé via `astro:env` et délègue à `traiterRequete()`. |
+| `src/lib/formulaires/requete.ts` | `traiterRequete()` : contrôles dans l'ordre ci-dessous et réponse HTTP, testable sans Astro ni réseau. |
 | `src/lib/formulaires/validation.ts` | Fonctions pures : valide et normalise les données de chaque formulaire, vérifie l'anti-spam. Aucun accès réseau. |
 | `src/lib/brevo.ts` | Client Brevo : création ou mise à jour d'un contact, envoi d'un e-mail transactionnel par modèle, double confirmation. Le `fetch` est injectable pour les tests. |
 | `src/lib/formulaires/traitement.ts` | Enchaîne les appels Brevo pour un formulaire validé et applique la règle « notification indispensable, le reste au mieux ». |
