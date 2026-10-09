@@ -48,7 +48,7 @@ describe('contact', () => {
     }]);
     expect(appels.slice(1)).toEqual([
       ['enregistrerContact', { email: 'c@b.fr', attributs: { NOM_COMPLET: 'Camille <b>M</b>', TELEPHONE: '', STRUCTURE: 'Asso' }, listes: [11] }],
-      ['envoyerModele', { modele: 22, a: { email: 'c@b.fr', nom: 'Camille <b>M</b>' }, repondreA: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' }, params: { nom: 'Camille &lt;b&gt;M&lt;/b&gt;', sujet: 'Organiser une visite', message: 'Bonjour' } }],
+      ['envoyerModele', { modele: 22, a: { email: 'c@b.fr', nom: 'Camille <b>M</b>' }, repondreA: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' }, params: { sujet: 'Organiser une visite' } }],
     ]);
   });
 
@@ -85,9 +85,42 @@ describe('inscription', () => {
     });
     expect(appels.slice(1)).toEqual([
       ['enregistrerContact', { email: 'c@b.fr', attributs: { NOM_COMPLET: 'Camille', TELEPHONE: '06', RENTREE_SOUHAITEE: 'sept. 2027', TRANCHE_AGE: '3–6 ans — Les Chenilles' }, listes: [12] }],
-      ['envoyerModele', { modele: 24, a: { email: 'c@b.fr', nom: 'Camille' }, repondreA: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' }, params: { nom: 'Camille', rentree: 'sept. 2027', age: '3–6 ans — Les Chenilles', message: '' } }],
+      ['envoyerModele', { modele: 24, a: { email: 'c@b.fr', nom: 'Camille' }, repondreA: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' }, params: { age: '3–6 ans — Les Chenilles' } }],
       ['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://lespetons.fr/lettre-confirmee.html' }],
     ]);
+  });
+});
+
+describe('double confirmation après le contact', () => {
+  const avecLettre: Demande = { formulaire: 'contact', champs: { ...(contact as Extract<Demande, { formulaire: 'contact' }>).champs, newsletter: true } };
+
+  test('attend la fin de l’enregistrement du contact avant de demander la confirmation', async () => {
+    const appels: string[] = [];
+    let terminerContact!: () => void;
+    const client: ClientBrevo = {
+      enregistrerContact: () => new Promise<void>((resolu) => { appels.push('contact:début'); terminerContact = () => { appels.push('contact:fin'); resolu(); }; }),
+      envoyerModele: async (envoi) => { appels.push(envoi.modele === 22 ? 'accuse' : 'notification'); },
+      demanderConfirmation: async () => { appels.push('confirmation'); },
+    };
+    const fin = traiter(avecLettre, { client, config, origine: 'https://lespetons.fr', journal: () => {} });
+    await new Promise((r) => setTimeout(r, 10));
+    expect(appels).toEqual(['notification', 'contact:début', 'accuse']);
+    terminerContact();
+    expect(await fin).toBe('envoye');
+    expect(appels).toEqual(['notification', 'contact:début', 'accuse', 'contact:fin', 'confirmation']);
+  });
+
+  test('un échec du contact n’empêche pas la confirmation (au mieux)', async () => {
+    const { appels, evenements, deps } = faux({ contact: 400 });
+    expect(await traiter(avecLettre, deps)).toBe('envoye');
+    expect(appels.map(([methode]) => methode)).toContain('demanderConfirmation');
+    expect(evenements).toEqual([{ formulaire: 'contact', etape: 'contact', statut: 400 }]);
+  });
+
+  test('un échec de la confirmation est consigné, l’envoi reste réussi', async () => {
+    const { evenements, deps } = faux({ confirmation: 503 });
+    expect(await traiter(avecLettre, deps)).toBe('envoye');
+    expect(evenements).toEqual([{ formulaire: 'contact', etape: 'confirmation', statut: 503 }]);
   });
 });
 

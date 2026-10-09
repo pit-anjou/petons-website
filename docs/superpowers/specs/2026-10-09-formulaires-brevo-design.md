@@ -101,7 +101,7 @@ Les limites reprennent les `maxlength` actuels des pages. Un test vérifie qu'el
 **Contact et inscription :**
 
 1. **Notification à l'école, indispensable.** Le modèle de notification du formulaire est envoyé à l'adresse de l'école, avec en `replyTo` le visiteur. Si cet envoi échoue, la route répond 502 `{ ok: false }` et le visiteur voit le repli.
-2. **Ensuite, au mieux et en parallèle.** Un échec de ces étapes est consigné (type d'étape et statut HTTP, sans données personnelles), mais la réponse reste 200 `{ ok: true }`. On évite ainsi un renvoi qui doublerait la notification.
+2. **Ensuite, au mieux.** L'enregistrement du contact et l'accusé de réception partent en parallèle ; la double confirmation de la lettre attend que l'enregistrement du contact soit terminé (réussi ou non), pour que l'abonné existe déjà dans Brevo. Un échec de ces étapes est consigné (type d'étape et statut HTTP, sans données personnelles), mais la réponse reste 200 `{ ok: true }`. On évite ainsi un renvoi qui doublerait la notification.
    - Création ou mise à jour du contact (`updateEnabled: true`) dans la liste du formulaire, avec ses attributs.
    - Envoi de l'accusé de réception, modèle propre au formulaire, au visiteur, avec en `replyTo` l'adresse de l'école. Répondre à l'accusé permet ainsi d'envoyer une pièce jointe (un CV, par exemple) à l'école, quel que soit l'expéditeur choisi dans le modèle.
    - Si `newsletter` est vrai, double confirmation vers la liste « Lettre d'information ».
@@ -127,10 +127,12 @@ L'en-tête `api-key` contient `BREVO_API_KEY`. Chaque appel est limité à 8 sec
 | Modèle | `params` |
 | --- | --- |
 | Notification contact | `nom`, `email`, `telephone`, `structure`, `sujet` (libellé lisible), `message`, `lettre` (oui/non) |
-| Accusé de réception contact | `nom`, `sujet`, `message` |
+| Accusé de réception contact | `sujet` (libellé de la liste fermée) |
 | Notification inscription | `nom`, `email`, `telephone`, `rentree`, `age`, `message`, `lettre` |
-| Accusé de réception inscription | `nom`, `rentree`, `age`, `message` |
+| Accusé de réception inscription | `age` (valeur de la liste fermée, ou vide) |
 | Double confirmation | aucun ; le lien `{{ params.DOIurl }}` est fourni par Brevo |
+
+**Les accusés de réception ne contiennent aucun texte libre du visiteur** (ni nom, ni message, ni rentrée). L'adresse du destinataire est saisie par le visiteur : un accusé qui reprendrait ses mots permettrait d'envoyer un texte choisi à n'importe qui, depuis l'expéditeur de l'école (relais ouvert). Seules des valeurs issues de listes fermées sont reprises. Les notifications à l'école ne changent pas.
 
 **Point à vérifier pendant l'implémentation :** savoir si Brevo neutralise le HTML contenu dans `params`. Si oui, on envoie le texte brut, sinon on l'échappe côté serveur. Le résultat sera consigné dans `docs/formulaires-brevo.md`, et un test fixera le comportement retenu.
 
