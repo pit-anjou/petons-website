@@ -1,6 +1,8 @@
 // @ts-check
 import { defineConfig, envField } from 'astro/config';
 import vercel from '@astrojs/vercel';
+import { redirections } from './src/data/redirections';
+import { redirectionsVercel } from './src/integrations/redirections-vercel';
 
 export default defineConfig({
   // Domaine public du site : sert aux balises canonical, au sitemap, à robots.txt et au JSON-LD.
@@ -20,6 +22,8 @@ export default defineConfig({
         'astro:config:setup': ({ updateConfig }) => updateConfig({ build: { format: 'file' } }),
       },
     },
+    // Redirections de l’ancien site WordPress : src/data/redirections.ts (plan : docs/plan-de-redirection.md).
+    redirectionsVercel(redirections),
   ],
   env: {
     schema: {

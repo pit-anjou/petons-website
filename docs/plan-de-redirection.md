@@ -13,7 +13,7 @@ Sources : `sitemap_index.xml` (Yoast), l'API `wp-json/wp/v2` (pages, articles, c
 
 ## 2. Table de correspondance
 
-Ces règles sont dans `vercel.json`. Toutes sont permanentes (308) et marchent avec ou sans barre finale. Le test `tests/redirections.test.ts` vérifie chaque ligne.
+Ces règles sont dans `src/data/redirections.ts`, avec la syntaxe des redirections Vercel. Au build, `src/integrations/redirections-vercel.ts` les écrit dans le routage produit par l’adaptateur Vercel (`.vercel/output/config.json`) : l’adaptateur ne reprend pas les redirections de `vercel.json`. Toutes sont permanentes (308) et marchent avec ou sans barre finale. Le test `tests/redirections.test.ts` vérifie chaque ligne, et leur présence dans le routage construit.
 
 | Ancienne adresse | Nouvelle page | Pourquoi |
 | --- | --- | --- |
@@ -95,10 +95,10 @@ done
 
 Chaque ligne doit afficher `308 → …/nouvelle-page.html`. Après la bascule, refaire la même vérification avec `BASE=https://ecolemontessorinantes.com`, puis `http://` et `https://www.`.
 
-Les règles se testent aussi sans déploiement avec `bun test tests/redirections.test.ts`. Le test reproduit la comparaison d'adresses de Vercel (`path-to-regexp` 6, mêmes options) et vérifie que chaque page et chaque ancre de destination existe.
+Les règles se testent aussi sans déploiement avec `bun test tests/redirections.test.ts`. Le test reproduit la comparaison d'adresses de Vercel (`path-to-regexp` 6, mêmes options), vérifie que chaque page et chaque ancre de destination existe, et, après `bun run build`, que le routage construit redirige chaque ancienne adresse.
 
 ## 6. Ajouter une redirection plus tard
 
-1. Ajouter la règle dans `vercel.json`, en écrivant `{/}?` à la fin de la source pour accepter les deux formes, avec et sans barre finale.
+1. Ajouter la règle dans `src/data/redirections.ts`, en écrivant `{/}?` à la fin de la source pour accepter les deux formes, avec et sans barre finale.
 2. Ajouter l'ancienne adresse et sa cible dans `ANCIENNES_ADRESSES`, dans `tests/redirections.test.ts`.
 3. Lancer `bun run check`.
