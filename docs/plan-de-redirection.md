@@ -42,11 +42,11 @@ Volontairement **sans** redirection (elles renverront une erreur 404) :
 
 Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. Si la destination n'a pas d'ancre, le navigateur garde celle d'origine ; aucun `id` de la nouvelle page ne correspondant, la page s'ouvre en haut.
 
-## 3. Choisir le domaine du nouveau site (décision à prendre)
+## 3. Le domaine du nouveau site
 
-Le nouveau site est déployé sur Vercel (`ecolemontessorinantes.vercel.app`). Deux scénarios :
+**Décision du 9 octobre 2026 : pour l'instant, on garde `ecolemontessorinantes.com` (scénario A).** Le nouveau site est déployé sur Vercel (`ecolemontessorinantes.vercel.app`). Pour mémoire, les deux scénarios étudiés :
 
-**A. Garder `ecolemontessorinantes.com` (recommandé).** On fait pointer le domaine vers Vercel, les règles ci-dessus suffisent. C'est le scénario le plus sûr pour le référencement, car Google ne voit qu'un changement d'adresses, pas un déménagement.
+**A. Garder `ecolemontessorinantes.com` (retenu).** On fait pointer le domaine vers Vercel, les règles ci-dessus suffisent. C'est le scénario le plus sûr pour le référencement, car Google ne voit qu'un changement d'adresses, pas un déménagement.
 
 **B. Passer à un nouveau domaine.** Il faut alors en plus rediriger l'ancien domaine vers le nouveau, page par page, en une seule redirection plutôt que deux à la suite, et déclarer le changement d'adresse dans la Search Console. C'est plus de travail et plus risqué pour le référencement.
 
@@ -57,12 +57,13 @@ Le nouveau site est déployé sur Vercel (`ecolemontessorinantes.vercel.app`). D
 ### Avant la bascule
 
 1. **Search Console** : vérifier que la propriété `ecolemontessorinantes.com` existe, ou la créer, et exporter les pages et liens entrants qui comptent (« Pages », « Liens »). Si une adresse absente du tableau du §2 apparaît, ajouter une règle et une ligne au test.
-2. **Confirmer le domaine dans `astro.config.mjs`** (`site`). Il vaut provisoirement `https://ecolemontessorinantes.com`. Les éléments suivants en découlent automatiquement, déjà en place et vérifiés par `tests/referencement.test.ts` :
+2. **Le domaine est déclaré dans `astro.config.mjs`** (`site: 'https://ecolemontessorinantes.com'`). Les éléments suivants en découlent automatiquement, déjà en place et vérifiés par `tests/referencement.test.ts` :
    - une balise `<link rel="canonical">` par page (`src/components/Referencement.astro`), pour que `/` et `/index.html` ne comptent pas comme deux pages ;
+   - les balises Open Graph et la carte X/Twitter de chaque page (`og:url`, `og:image`…) ;
    - le JSON-LD des pages Chenilles, Papillons et Pédagogie, qui pointait jusqu'ici vers `ecolemontessorinantes.vercel.app` ;
    - `/sitemap.xml` (`src/pages/sitemap.xml.ts`), qui liste toute page ajoutée dans `src/pages/` ;
    - `/robots.txt` (`src/pages/robots.txt.ts`), qui annonce le sitemap.
-3. Tant que le domaine n'est pas confirmé, les canonical du déploiement `vercel.app` désignent `ecolemontessorinantes.com`. Ce n'est pas gênant, puisque cette adresse de prévisualisation n'a pas vocation à être référencée ; il faut seulement fixer la bonne valeur **avant** de soumettre le sitemap.
+3. Avant la bascule, les canonical et les aperçus de partage du déploiement `vercel.app` désignent déjà `ecolemontessorinantes.com`, qui sert encore l'ancien WordPress. Ce n'est pas gênant, puisque l'adresse de prévisualisation n'a pas vocation à être référencée. Conséquence à connaître : un lien `vercel.app` partagé avant la bascule s'affiche sans image, car `og:image` pointe vers une image que l'ancien site ne sert pas. Si l'on revient un jour sur le choix du domaine, il suffit de changer `site` avant de soumettre le sitemap.
 4. **Baisser le TTL** des enregistrements DNS `A` et `www` chez OVH (par exemple à 300 s) **48 h avant** la bascule.
 5. Ajouter `ecolemontessorinantes.com` et `www.ecolemontessorinantes.com` dans Vercel (Project → Settings → Domains), avec `www` redirigé vers le domaine nu, comme aujourd'hui.
 
