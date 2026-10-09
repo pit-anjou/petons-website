@@ -2,10 +2,10 @@
 // Lancer « bun run check » ou « bun run build » avant.
 import { expect, test } from 'bun:test';
 import type { HTMLElement } from 'node-html-parser';
-import { chargerHtml } from './outils/html';
+import { chargerHtml, DOSSIER_PAGES } from './outils/html';
 
 const pages = await Promise.all(
-  [...new Bun.Glob('*.html').scanSync('dist')].sort().map(async (fichier) => ({ fichier, html: await chargerHtml(`dist/${fichier}`) })),
+  [...new Bun.Glob('*.html').scanSync(DOSSIER_PAGES)].sort().map(async (fichier) => ({ fichier, html: await chargerHtml(`${DOSSIER_PAGES}/${fichier}`) })),
 );
 
 /** Nom accessible simplifié : aria-labelledby, aria-label, puis texte et alt des images. */
@@ -108,7 +108,7 @@ test('le texte réservé aux lecteurs d’écran est masqué à l’écran sur c
       html
         .querySelectorAll('link[rel="stylesheet"]')
         .map((lien) => (lien.getAttribute('href') ?? '').split('?')[0]!)
-        .map(async (href) => ((await Bun.file(`dist/${href}`).exists()) ? Bun.file(`dist/${href}`).text() : '')),
+        .map(async (href) => ((await Bun.file(`${DOSSIER_PAGES}/${href}`).exists()) ? Bun.file(`${DOSSIER_PAGES}/${href}`).text() : '')),
     );
     const css = html.querySelectorAll('style').map((style) => style.text).join('') + feuilles.join('');
     for (const classe of ['sr-only', 'visually-hidden']) {

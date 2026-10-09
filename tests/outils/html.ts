@@ -1,6 +1,9 @@
 // Outils de lecture du HTML produit par le build, pour les tests.
 import { parse, type HTMLElement } from 'node-html-parser';
 
+/** Dossier où « bun run build » écrit les pages .html (il change avec l'adaptateur Vercel). */
+export const DOSSIER_PAGES = 'dist/client';
+
 /** Charge un fichier HTML (build ou photo de référence). */
 export const chargerHtml = async (chemin: string): Promise<HTMLElement> => {
   const fichier = Bun.file(chemin);

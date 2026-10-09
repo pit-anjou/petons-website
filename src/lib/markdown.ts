@@ -19,7 +19,8 @@ const surlignage = (nom: string, marque: string, classe: string): TokenizerAndRe
   };
 };
 
-const echapper = (texte: string): string =>
+/** Neutralise le HTML d'un texte saisi (utilisé aussi pour les paramètres des e-mails Brevo). */
+export const echapper = (texte: string): string =>
   texte.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 const markdown = new Marked({
