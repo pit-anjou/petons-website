@@ -23,6 +23,55 @@ test('chaque page a une seule balise canonical, vers son adresse sur le domaine 
   }
 });
 
+test('chaque page a un titre, une description et un aperçu de partage complet qui les reprend', async () => {
+  for (const fichier of pagesPubliees) {
+    const html = await chargerHtml(`dist/${fichier}`);
+    const meta = (cle: string): string[] =>
+      html.querySelectorAll(`head meta[property="${cle}"], head meta[name="${cle}"]`).map((balise) => balise.getAttribute('content') ?? '');
+    const titres = html.querySelectorAll('head > title').map((titre) => titre.text);
+    expect({ fichier, titres: titres.length }).toEqual({ fichier, titres: 1 });
+    const [description] = meta('description');
+    expect({ fichier, description: (description ?? '').length > 50 }).toEqual({ fichier, description: true });
+    expect({
+      fichier,
+      type: meta('og:type'),
+      locale: meta('og:locale'),
+      titre: meta('og:title'),
+      description: meta('og:description'),
+      url: meta('og:url'),
+      carte: meta('twitter:card'),
+      largeur: meta('og:image:width'),
+      hauteur: meta('og:image:height'),
+    }).toEqual({
+      fichier,
+      type: ['website'],
+      locale: ['fr_FR'],
+      titre: [titres[0]!],
+      description: [description!],
+      url: [adresse(fichier)],
+      carte: ['summary_large_image'],
+      largeur: ['1200'],
+      hauteur: ['630'],
+    });
+    const [image] = meta('og:image');
+    expect(image!.startsWith(new URL('/', site).href)).toBe(true);
+    expect(await Bun.file(`dist/${new URL(image!).pathname}`).exists()).toBe(true);
+    expect((meta('og:image:alt')[0] ?? '').length).toBeGreaterThan(20);
+  }
+});
+
+test('l’image de partage par défaut mesure 1200 × 630', async () => {
+  const octets = new Uint8Array(await Bun.file('public/assets/img/partage/les-petons-dans-lherbe.jpg').arrayBuffer());
+  // Lit l’en-tête SOF d’un JPEG (marqueurs FFC0 à FFC2) : hauteur puis largeur sur deux octets.
+  let i = 2;
+  while (i < octets.length && !(octets[i] === 0xff && octets[i + 1]! >= 0xc0 && octets[i + 1]! <= 0xc2)) {
+    i += 2 + ((octets[i + 2]! << 8) | octets[i + 3]!);
+  }
+  const hauteur = (octets[i + 5]! << 8) | octets[i + 6]!;
+  const largeur = (octets[i + 7]! << 8) | octets[i + 8]!;
+  expect({ largeur, hauteur }).toEqual({ largeur: 1200, hauteur: 630 });
+});
+
 test('le JSON-LD se lit et désigne la page et le site sur le bon domaine', async () => {
   let blocs = 0;
   for (const fichier of pagesPubliees) {
