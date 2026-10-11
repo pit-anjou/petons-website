@@ -21,8 +21,8 @@ export interface ConfigBrevo {
 
 export const brevo: ConfigBrevo = {
   ecole: { email: contact.email, nom: 'Les Petons dans l’Herbe' },
-  listes: { contact: 0, inscription: 0, lettre: 0 },
-  modeles: { notificationContact: 0, accuseContact: 0, notificationInscription: 0, accuseInscription: 0, confirmationLettre: 0 },
+  listes: { contact: 4, inscription: 5, lettre: 6 },
+  modeles: { notificationContact: 1, accuseContact: 2, notificationInscription: 3, accuseInscription: 4, confirmationLettre: 5 },
   pageConfirmationLettre: 'lettre-confirmee.html',
 };
 
