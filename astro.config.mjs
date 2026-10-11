@@ -25,6 +25,20 @@ export default defineConfig({
     // Redirections de l’ancien site WordPress : src/data/redirections.ts (plan : docs/plan-de-redirection.md).
     redirectionsVercel(redirections),
   ],
+  vite: {
+    build: {
+      rolldownOptions: {
+        treeshake: {
+          // @astrojs/vercel 11.0.13 : la fonction serveur importe des constantes du fichier principal de
+          // l’adaptateur, ce qui y laisse `import "rolldown"` (outil de build, module natif absent sur Vercel)
+          // et `import "@vercel/routing-utils"`. La fonction plantait au chargement (« Cannot find native
+          // binding », erreur 500). Ces deux paquets n’ont aucun effet de bord : on retire ces imports.
+          // Vérifié par tests/fonction-vercel.test.ts.
+          moduleSideEffects: [{ test: /^(rolldown|@vercel\/routing-utils)$/, external: true, sideEffects: false }],
+        },
+      },
+    },
+  },
   env: {
     schema: {
       // Clé API Brevo : variables d'environnement Vercel, ou fichier .env en local. Voir docs/formulaires-brevo.md.
