@@ -6,4 +6,6 @@ COPY . .
 RUN bun run build
 
 FROM nginx:alpine
-COPY --from=build /app/dist /usr/share/nginx/html
+# nginx ne sert que les pages statiques : sans la route /api/formulaire, les formulaires
+# basculent sur leur brouillon de messagerie. Voir docs/formulaires-brevo.md.
+COPY --from=build /app/dist/client /usr/share/nginx/html

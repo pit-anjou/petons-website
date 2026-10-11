@@ -2,25 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "astro",
   "installCommand": "bun install",
-  "buildCommand": "bun run build",
-  "outputDirectory": "dist",
-  "redirects": [
-    { "source": "/ecole-montessori-nantes{/}?", "destination": "/", "permanent": true },
-    { "source": "/lecole{/}?", "destination": "/ecole-petons.html", "permanent": true },
-    { "source": "/qui-sommes-nous{/}?", "destination": "/equipe-petons.html", "permanent": true },
-    { "source": "/nous-rejoindre{/}?", "destination": "/equipe-petons.html#rejoindre", "permanent": true },
-    { "source": "/nos-valeurs{/}?", "destination": "/pedagogie-petons.html", "permanent": true },
-    { "source": "/la-vie-a-lecole{/}?", "destination": "/vie-pratique-petons.html", "permanent": true },
-    { "source": "/informations-pratiques{/}?", "destination": "/vie-pratique-petons.html", "permanent": true },
-    { "source": "/portfolio/:page*{/}?", "destination": "/vie-pratique-petons.html#familles", "permanent": true },
-    { "source": "/journees-portes-ouvertes{/}?", "destination": "/actualites-petons.html#portes-ouvertes", "permanent": true },
-    { "source": "/tarifs{/}?", "destination": "/tarifs-petons.html", "permanent": true },
-    { "source": "/inscription{/}?", "destination": "/inscriptions-petons.html", "permanent": true },
-    { "source": "/contact{/}?", "destination": "/contact-petons.html", "permanent": true },
-    { "source": "/boite-a-idees{/}?", "destination": "/contact-petons.html", "permanent": true },
-    { "source": "/la-creche{/}?", "destination": "/", "permanent": true },
-    { "source": "/feed{/}?", "destination": "/actualites-petons.html", "permanent": true },
-    { "source": "/category/:path*{/}?", "destination": "/", "permanent": true },
-    { "source": "/tag/:path*{/}?", "destination": "/", "permanent": true }
-  ]
+  "buildCommand": "bun run build"
 }

@@ -1,0 +1,36 @@
+---
+// Envoi des formulaires marqués data-brevo vers /api/formulaire (voir docs/formulaires-brevo.md).
+// À placer avant le script de la page, qui appelle envoyerFormulaire() puis afficherEnvoiReussi().
+---
+<style is:inline>
+.form-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+.newsletter-optin{display:flex;gap:10px;align-items:flex-start;margin:4px 0 0;font-size:14px;line-height:1.45;cursor:pointer}
+.newsletter-optin input{margin-top:3px;flex:none}
+.form-privacy{margin:14px 0 0;font-size:12px;line-height:1.55;opacity:.8}
+.form-success{margin:0;padding:18px 20px;border-radius:12px;background:rgba(108,140,72,.12);font-size:16px;line-height:1.5}
+.form-success:focus{outline:2px solid currentColor;outline-offset:3px}
+</style>
+<script is:inline>(()=>{
+ const debut=performance.now(),DELAI_MINIMAL=3000;
+ window.envoyerFormulaire=async(form,formulaire,champs)=>{
+  const bouton=form.querySelector('button[type="submit"]'),contenu=bouton.innerHTML;
+  bouton.disabled=true;bouton.textContent='Envoi en cours…';
+  try{
+   let dureeMs=Math.round(performance.now()-debut);
+   if(dureeMs<DELAI_MINIMAL){
+    await new Promise(r=>setTimeout(r,DELAI_MINIMAL-dureeMs+50));
+    dureeMs=Math.round(performance.now()-debut);
+   }
+   const reponse=await fetch('/api/formulaire',{method:'POST',headers:{'content-type':'application/json'},signal:AbortSignal.timeout?.(25000),body:JSON.stringify({formulaire,champs,piege:form.elements.piege?.value||'',dureeMs})});
+   return reponse.ok&&(await reponse.json()).ok===true;
+  }catch{return false;}
+  finally{bouton.disabled=false;bouton.innerHTML=contenu;}
+ };
+ window.afficherEnvoiReussi=(form,message)=>{
+  const annonce=document.createElement('p');
+  annonce.className='form-success';annonce.setAttribute('role','status');annonce.tabIndex=-1;
+  form.after(annonce);form.hidden=true;
+  annonce.textContent=message;annonce.focus();
+ };
+})();
+</script>

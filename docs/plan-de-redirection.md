@@ -13,7 +13,7 @@ Sources : `sitemap_index.xml` (Yoast), l'API `wp-json/wp/v2` (pages, articles, c
 
 ## 2. Table de correspondance
 
-Ces règles sont dans `vercel.json`. Toutes sont permanentes (308) et marchent avec ou sans barre finale. Le test `tests/redirections.test.ts` vérifie chaque ligne.
+Ces règles sont dans `src/data/redirections.ts`, avec la syntaxe des redirections Vercel. Au build, `src/integrations/redirections-vercel.ts` les écrit dans le routage produit par l’adaptateur Vercel (`.vercel/output/config.json`) : l’adaptateur ne reprend pas les redirections de `vercel.json`. Toutes sont permanentes (308) et marchent avec ou sans barre finale. Le test `tests/redirections.test.ts` vérifie chaque ligne, et leur présence dans le routage construit.
 
 | Ancienne adresse | Nouvelle page | Pourquoi |
 | --- | --- | --- |
@@ -50,7 +50,7 @@ Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. 
 
 **B. Passer à un nouveau domaine.** Il faut alors en plus rediriger l'ancien domaine vers le nouveau, page par page, en une seule redirection plutôt que deux à la suite, et déclarer le changement d'adresse dans la Search Console. C'est plus de travail et plus risqué pour le référencement.
 
-> ⚠️ Le site affiche l'adresse `contact@lespetons.fr` (`src/data/site.ts`). Or le 9 octobre 2026, **le domaine `lespetons.fr` n'est pas enregistré** (whois AFNIC : « NOT FOUND »). Les emails envoyés à cette adresse n'arrivent nulle part. Il faut soit enregistrer ce domaine et y configurer une messagerie, soit revenir à `contact@ecolemontessorinantes.com`.
+> Le site affichait l'adresse `contact@lespetons.fr`, or le 9 octobre 2026 **le domaine `lespetons.fr` n'était pas enregistré** (whois AFNIC : « NOT FOUND ») : les emails envoyés à cette adresse n'arrivaient nulle part. **Décision du 11 octobre 2026 : l'adresse de l'école est `contact@ecolemontessorinantes.com`** (`src/data/site.ts`), sur la messagerie Google Workspace du domaine. Les formulaires Brevo envoient eux aussi depuis ce domaine (voir `docs/formulaires-brevo.md`).
 
 ## 4. Étapes de la bascule (scénario A)
 
@@ -95,10 +95,10 @@ done
 
 Chaque ligne doit afficher `308 → …/nouvelle-page.html`. Après la bascule, refaire la même vérification avec `BASE=https://ecolemontessorinantes.com`, puis `http://` et `https://www.`.
 
-Les règles se testent aussi sans déploiement avec `bun test tests/redirections.test.ts`. Le test reproduit la comparaison d'adresses de Vercel (`path-to-regexp` 6, mêmes options) et vérifie que chaque page et chaque ancre de destination existe.
+Les règles se testent aussi sans déploiement avec `bun test tests/redirections.test.ts`. Le test reproduit la comparaison d'adresses de Vercel (`path-to-regexp` 6, mêmes options), vérifie que chaque page et chaque ancre de destination existe, et, après `bun run build`, que le routage construit redirige chaque ancienne adresse.
 
 ## 6. Ajouter une redirection plus tard
 
-1. Ajouter la règle dans `vercel.json`, en écrivant `{/}?` à la fin de la source pour accepter les deux formes, avec et sans barre finale.
+1. Ajouter la règle dans `src/data/redirections.ts`, en écrivant `{/}?` à la fin de la source pour accepter les deux formes, avec et sans barre finale.
 2. Ajouter l'ancienne adresse et sa cible dans `ANCIENNES_ADRESSES`, dans `tests/redirections.test.ts`.
 3. Lancer `bun run check`.
