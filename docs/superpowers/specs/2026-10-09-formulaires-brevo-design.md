@@ -157,13 +157,13 @@ Le détail de l'erreur ne quitte jamais le serveur. Les journaux Vercel reçoive
   - `dureeMs`, calculé par le script à l'envoi (`performance.now()` depuis le chargement). Si moins de 3 secondes se sont écoulées (remplissage automatique, par exemple), le script attend le temps restant avant d'envoyer : un vrai visiteur n'est jamais pris pour un robot ;
   - sur contact et inscription, la case non cochée « Je souhaite recevoir la lettre d'information des Petons » (`name="newsletter"`) ;
   - nouveaux libellés : « Envoyer mon message » ou « Envoyer ma demande », et « Vous recevrez un accusé de réception par e-mail. » à la place de « Votre messagerie s'ouvrira… ».
-- **Mention RGPD sous chaque formulaire.** Contact et inscription : « Les Petons dans l'Herbe utilisent ces informations pour répondre à votre demande et, si vous l'avez demandé, vous envoyer la lettre d'information. Elles sont hébergées par Brevo, notre prestataire d'envoi d'e-mails, et conservées 3 ans après notre dernier échange. Pour y accéder, les corriger ou les supprimer : contact@lespetons.fr. » Lettre : « Votre adresse sert uniquement à vous envoyer la lettre d'information des Petons. Elle est hébergée par Brevo et vous pouvez vous désinscrire à tout moment, via le lien présent dans chaque lettre ou en écrivant à contact@lespetons.fr. » La durée de 3 ans a été validée par l'école le 2026-10-09.
+- **Mention RGPD sous chaque formulaire.** Contact et inscription : « Les Petons dans l'Herbe utilisent ces informations pour répondre à votre demande et, si vous l'avez demandé, vous envoyer la lettre d'information. Elles sont hébergées par Brevo, notre prestataire d'envoi d'e-mails, et conservées 3 ans après notre dernier échange. Pour y accéder, les corriger ou les supprimer : contact@ecolemontessorinantes.com. » Lettre : « Votre adresse sert uniquement à vous envoyer la lettre d'information des Petons. Elle est hébergée par Brevo et vous pouvez vous désinscrire à tout moment, via le lien présent dans chaque lettre ou en écrivant à contact@ecolemontessorinantes.com. » La durée de 3 ans a été validée par l'école le 2026-10-09.
 
 ## Configuration Brevo (à faire par l'équipe)
 
 Le détail sera dans `docs/formulaires-brevo.md`.
 
-1. Authentifier le domaine `lespetons.fr` (DKIM, DMARC) et valider l'expéditeur.
+1. Authentifier le domaine `ecolemontessorinantes.com` (DKIM, DMARC) et valider l'expéditeur.
 2. Créer les listes « Contact site », « Demandes d'inscription » et « Lettre d'information ».
 3. Créer les attributs `NOM_COMPLET`, `TELEPHONE`, `STRUCTURE`, `RENTREE_SOUHAITEE` et `TRANCHE_AGE` (type texte).
 4. Créer les cinq modèles. Le modèle de double confirmation doit contenir `{{ params.DOIurl }}`.
@@ -205,5 +205,5 @@ Tant que les étapes 5 et 6 ne sont pas faites, la route répond 503 et les form
 
 ## Prérequis à confirmer avant la mise en ligne
 
-- Domaine `lespetons.fr` authentifié dans Brevo.
+- Domaine `ecolemontessorinantes.com` authentifié dans Brevo.
 - Restriction IP de la clé Brevo désactivée.

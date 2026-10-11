@@ -17,7 +17,7 @@ for (const { page, selecteur, limites, caseLettre } of formulaires) {
   describe(`${page} ${selecteur}`, () => {
     test('est marqué pour l’envoi à Brevo et garde le repli mailto sans JavaScript', () => {
       expect(form.hasAttribute('data-brevo')).toBe(true);
-      expect(form.getAttribute('action')).toBe('mailto:contact@lespetons.fr');
+      expect(form.getAttribute('action')).toBe('mailto:contact@ecolemontessorinantes.com');
     });
 
     test('contient un champ piège invisible et hors tabulation', () => {

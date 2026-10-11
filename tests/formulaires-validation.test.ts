@@ -88,5 +88,5 @@ describe('configuration Brevo', () => {
   };
   test('complète quand tous les numéros sont renseignés', () => expect(estConfiguree(complete)).toBe(true));
   test('incomplète tant qu’un numéro vaut 0', () => expect(estConfiguree({ ...complete, listes: { ...complete.listes, lettre: 0 } })).toBe(false));
-  test('l’école reçoit les notifications à l’adresse du site', () => expect(brevo.ecole.email).toBe('contact@lespetons.fr'));
+  test('l’école reçoit les notifications à l’adresse du site', () => expect(brevo.ecole.email).toBe('contact@ecolemontessorinantes.com'));
 });

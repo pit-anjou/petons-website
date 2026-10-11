@@ -50,7 +50,7 @@ Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. 
 
 **B. Passer à un nouveau domaine.** Il faut alors en plus rediriger l'ancien domaine vers le nouveau, page par page, en une seule redirection plutôt que deux à la suite, et déclarer le changement d'adresse dans la Search Console. C'est plus de travail et plus risqué pour le référencement.
 
-> ⚠️ Le site affiche l'adresse `contact@lespetons.fr` (`src/data/site.ts`). Or le 9 octobre 2026, **le domaine `lespetons.fr` n'est pas enregistré** (whois AFNIC : « NOT FOUND »). Les emails envoyés à cette adresse n'arrivent nulle part. Il faut soit enregistrer ce domaine et y configurer une messagerie, soit revenir à `contact@ecolemontessorinantes.com`.
+> Le site affichait l'adresse `contact@lespetons.fr`, or le 9 octobre 2026 **le domaine `lespetons.fr` n'était pas enregistré** (whois AFNIC : « NOT FOUND ») : les emails envoyés à cette adresse n'arrivaient nulle part. **Décision du 11 octobre 2026 : l'adresse de l'école est `contact@ecolemontessorinantes.com`** (`src/data/site.ts`), sur la messagerie Google Workspace du domaine. Les formulaires Brevo envoient eux aussi depuis ce domaine (voir `docs/formulaires-brevo.md`).
 
 ## 4. Étapes de la bascule (scénario A)
 

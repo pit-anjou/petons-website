@@ -5,7 +5,7 @@ import { traiter, type Journal } from '../src/lib/formulaires/traitement';
 import type { Demande } from '../src/lib/formulaires/validation';
 
 const config: ConfigBrevo = {
-  ecole: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' },
+  ecole: { email: 'contact@ecolemontessorinantes.com', nom: 'Les Petons dans l’Herbe' },
   listes: { contact: 11, inscription: 12, lettre: 13 },
   modeles: { notificationContact: 21, accuseContact: 22, notificationInscription: 23, accuseInscription: 24, confirmationLettre: 25 },
   pageConfirmationLettre: 'lettre-confirmee.html',
@@ -24,7 +24,7 @@ const faux = (echecs: Partial<Record<string, number | null>> = {}) => {
     envoyerModele: async (envoi) => agir('envoyerModele', envoi.modele === 21 || envoi.modele === 23 ? 'notification' : 'accuse')(envoi),
     demanderConfirmation: agir('demanderConfirmation', 'confirmation'),
   };
-  return { appels, evenements, deps: { client, config, origine: 'https://lespetons.fr', journal: (e: Parameters<Journal>[0]) => evenements.push(e) } };
+  return { appels, evenements, deps: { client, config, origine: 'https://ecolemontessorinantes.com', journal: (e: Parameters<Journal>[0]) => evenements.push(e) } };
 };
 
 const contact: Demande = {
@@ -42,13 +42,13 @@ describe('contact', () => {
     expect(await traiter(contact, deps)).toBe('envoye');
     expect(appels[0]).toEqual(['envoyerModele', {
       modele: 21,
-      a: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' },
+      a: { email: 'contact@ecolemontessorinantes.com', nom: 'Les Petons dans l’Herbe' },
       repondreA: { email: 'c@b.fr', nom: 'Camille <b>M</b>' },
       params: { nom: 'Camille &lt;b&gt;M&lt;/b&gt;', email: 'c@b.fr', telephone: '', structure: 'Asso', sujet: 'Organiser une visite', message: 'Bonjour', lettre: 'non' },
     }]);
     expect(appels.slice(1)).toEqual([
       ['enregistrerContact', { email: 'c@b.fr', attributs: { NOM_COMPLET: 'Camille <b>M</b>', TELEPHONE: '', STRUCTURE: 'Asso' }, listes: [11] }],
-      ['envoyerModele', { modele: 22, a: { email: 'c@b.fr', nom: 'Camille <b>M</b>' }, repondreA: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' }, params: { sujet: 'Organiser une visite' } }],
+      ['envoyerModele', { modele: 22, a: { email: 'c@b.fr', nom: 'Camille <b>M</b>' }, repondreA: { email: 'contact@ecolemontessorinantes.com', nom: 'Les Petons dans l’Herbe' }, params: { sujet: 'Organiser une visite' } }],
     ]);
   });
 
@@ -85,8 +85,8 @@ describe('inscription', () => {
     });
     expect(appels.slice(1)).toEqual([
       ['enregistrerContact', { email: 'c@b.fr', attributs: { NOM_COMPLET: 'Camille', TELEPHONE: '06', RENTREE_SOUHAITEE: 'sept. 2027', TRANCHE_AGE: '3–6 ans — Les Chenilles' }, listes: [12] }],
-      ['envoyerModele', { modele: 24, a: { email: 'c@b.fr', nom: 'Camille' }, repondreA: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' }, params: { age: '3–6 ans — Les Chenilles' } }],
-      ['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://lespetons.fr/lettre-confirmee.html' }],
+      ['envoyerModele', { modele: 24, a: { email: 'c@b.fr', nom: 'Camille' }, repondreA: { email: 'contact@ecolemontessorinantes.com', nom: 'Les Petons dans l’Herbe' }, params: { age: '3–6 ans — Les Chenilles' } }],
+      ['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://ecolemontessorinantes.com/lettre-confirmee.html' }],
     ]);
   });
 });
@@ -102,7 +102,7 @@ describe('double confirmation après le contact', () => {
       envoyerModele: async (envoi) => { appels.push(envoi.modele === 22 ? 'accuse' : 'notification'); },
       demanderConfirmation: async () => { appels.push('confirmation'); },
     };
-    const fin = traiter(avecLettre, { client, config, origine: 'https://lespetons.fr', journal: () => {} });
+    const fin = traiter(avecLettre, { client, config, origine: 'https://ecolemontessorinantes.com', journal: () => {} });
     await new Promise((r) => setTimeout(r, 10));
     expect(appels).toEqual(['notification', 'contact:début', 'accuse']);
     terminerContact();
@@ -130,7 +130,7 @@ describe('lettre', () => {
   test('lance seulement la double confirmation', async () => {
     const { appels, deps } = faux();
     expect(await traiter(lettre, deps)).toBe('envoye');
-    expect(appels).toEqual([['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://lespetons.fr/lettre-confirmee.html' }]]);
+    expect(appels).toEqual([['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://ecolemontessorinantes.com/lettre-confirmee.html' }]]);
   });
 
   test('un échec de la double confirmation fait échouer l’envoi', async () => {

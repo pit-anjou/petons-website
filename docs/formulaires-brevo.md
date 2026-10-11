@@ -16,7 +16,7 @@ Ce guide dit **quoi configurer dans Brevo**, **où reporter les numéros** et **
 - La case « Je souhaite recevoir la lettre d’information des Petons » n’est **jamais cochée d’avance**.
 - **Règle : la notification à l’école est indispensable, le reste se fait au mieux.** Si la notification ne part pas, le visiteur voit un message d’échec. Pour le formulaire de lettre d’information, la double confirmation est la seule étape et elle est indispensable : si elle échoue, le visiteur voit le message d’échec. Pour contact et inscription, si c’est l’enregistrement du contact, l’accusé ou la double confirmation qui échoue, le visiteur voit quand même « merci » (pour qu’il ne renvoie pas son message, ce qui doublerait la notification), et l’incident est noté dans les journaux (voir plus bas).
 - **Repli sur la messagerie** : quand l’envoi échoue, la page affiche « L’envoi n’a pas abouti » avec les boutons « Ouvrir ma messagerie » et « Copier le message ». Le visiteur garde ainsi un moyen d’écrire à l’école. Attention : en cas de délai dépassé, Brevo a pu envoyer la notification quand même (le visiteur peut alors renvoyer son message par la messagerie, et l’école le recevra deux fois). Sans JavaScript, le formulaire ouvre directement la messagerie, comme avant.
-- Les **accusés de réception** ont toujours `contact@lespetons.fr` comme adresse de réponse (le site l’impose, quel que soit l’expéditeur choisi dans le modèle). Le visiteur peut donc répondre à l’accusé, par exemple pour joindre son CV.
+- Les **accusés de réception** ont toujours `contact@ecolemontessorinantes.com` comme adresse de réponse (le site l’impose, quel que soit l’expéditeur choisi dans le modèle). Le visiteur peut donc répondre à l’accusé, par exemple pour joindre son CV.
 - Les **notifications** ont comme adresse de réponse celle du visiteur : « Répondre » dans la boîte de l’école écrit directement à la personne.
 
 ## Configurer Brevo, pas à pas
@@ -25,8 +25,8 @@ Ce guide dit **quoi configurer dans Brevo**, **où reporter les numéros** et **
 
 ### 1. Authentifier le domaine et valider l’expéditeur
 
-1. Dans Brevo, ouvrir **Expéditeurs, domaines et IP dédiées → Domaines**, ajouter **lespetons.fr** et suivre les consignes pour authentifier le domaine (Brevo indique les enregistrements à ajouter chez l’hébergeur du nom de domaine).
-2. Dans la même rubrique, ajouter et valider l’expéditeur **contact@lespetons.fr**.
+1. Dans Brevo, ouvrir **Expéditeurs, domaines et IP dédiées → Domaines**, ajouter **ecolemontessorinantes.com** et suivre les consignes pour authentifier le domaine (Brevo indique les enregistrements à ajouter chez l’hébergeur du nom de domaine).
+2. Dans la même rubrique, ajouter et valider l’expéditeur **contact@ecolemontessorinantes.com**.
 
 Sans cela, les e-mails risquent d’arriver en courrier indésirable, voire de ne pas arriver.
 
@@ -86,7 +86,7 @@ Créer **quatre modèles d’e-mail transactionnel** (les deux notifications et 
   <div style="white-space: pre-line;">{{ params.message }}</div>
   ```
 
-- **Accusé de réception de contact : inviter à répondre avec un CV.** Les candidats écrivent via le formulaire de contact (sujets « Postuler dans l’équipe » ou « Demander un stage »). Ajouter par exemple : « Pour joindre votre CV, répondez simplement à cet e-mail. » Ça fonctionne parce que la réponse arrive à `contact@lespetons.fr`.
+- **Accusé de réception de contact : inviter à répondre avec un CV.** Les candidats écrivent via le formulaire de contact (sujets « Postuler dans l’équipe » ou « Demander un stage »). Ajouter par exemple : « Pour joindre votre CV, répondez simplement à cet e-mail. » Ça fonctionne parce que la réponse arrive à `contact@ecolemontessorinantes.com`.
 - **Double confirmation.** Le modèle doit contenir un **bouton (ou un lien) dont l’adresse est `{{ params.DOIurl }}`**. Brevo remplace cette adresse par le lien de confirmation propre à chaque personne. Sans elle, personne ne peut confirmer son abonnement.
 
 ### 5. Reporter les numéros dans le code
@@ -112,7 +112,7 @@ Un `0` signifie « pas encore configuré » : tant qu’il en reste un, le site 
 
 ### 6. Créer la clé API et la ranger dans Vercel
 
-1. Dans Brevo, créer une **clé API dédiée**, nommée « site lespetons.fr ». La copier tout de suite, par précaution.
+1. Dans Brevo, créer une **clé API dédiée**, nommée « site ecolemontessorinantes.com ». La copier tout de suite, par précaution.
 2. Dans Vercel, ouvrir le projet, **Settings → Environment Variables**, et ajouter **`BREVO_API_KEY`** avec cette valeur, pour **Production** et **Preview**.
 3. **Redéployer** le site (une variable ajoutée n’est prise en compte qu’au déploiement suivant).
 4. Vérifier dans Brevo (**Sécurité → IP autorisées**) que le **blocage des adresses IP inconnues est désactivé**. Les adresses IP de Vercel ne sont pas prévisibles (à confirmer) : si le blocage est actif, Brevo risque de refuser les envois du site. L’existence de cette option dans le compte de l’école reste à confirmer.
@@ -126,7 +126,7 @@ Ne jamais écrire la clé dans le code, dans un message ou dans un fichier envoy
 3. Envoyer **chaque formulaire** avec une adresse de test que vous pouvez lire : contact, inscription (une fois case cochée, une fois non cochée), lettre.
 4. Vérifier :
    - l’école reçoit la notification, et « Répondre » écrit bien à l’adresse de test ;
-   - l’adresse de test reçoit l’accusé de réception, et « Répondre » écrit à `contact@lespetons.fr` ;
+   - l’adresse de test reçoit l’accusé de réception, et « Répondre » écrit à `contact@ecolemontessorinantes.com` ;
    - le contact apparaît dans la bonne liste de Brevo, avec ses attributs ;
    - la lettre : le mail de confirmation arrive, et le clic mène à la page « lettre confirmée ».
 
@@ -190,7 +190,7 @@ Lors du premier test réel, envoyer un message contenant par exemple `Tom & Jerr
 
 ### Prérequis avant la mise en ligne
 
-- [ ] Domaine **lespetons.fr** authentifié dans Brevo (étape 1).
+- [ ] Domaine **ecolemontessorinantes.com** authentifié dans Brevo (étape 1).
 - [ ] Restriction par adresses IP de la clé API **désactivée** (étape 6). L’existence de cette option dans le compte de l’école est à confirmer.
 - [ ] Numéros reportés dans `src/data/brevo.ts` et `BREVO_API_KEY` ajoutée dans Vercel, puis site redéployé.
 - [ ] Premier test réel des trois formulaires, y compris la vérification du HTML ci-dessus.

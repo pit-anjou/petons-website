@@ -4,7 +4,7 @@ import type { Fetch } from '../src/lib/brevo';
 import { TAILLE_MAX_OCTETS, traiterRequete } from '../src/lib/formulaires/requete';
 
 const config: ConfigBrevo = {
-  ecole: { email: 'contact@lespetons.fr', nom: 'Les Petons dans l’Herbe' },
+  ecole: { email: 'contact@ecolemontessorinantes.com', nom: 'Les Petons dans l’Herbe' },
   listes: { contact: 1, inscription: 2, lettre: 3 },
   modeles: { notificationContact: 4, accuseContact: 5, notificationInscription: 6, accuseInscription: 7, confirmationLettre: 8 },
   pageConfirmationLettre: 'lettre-confirmee.html',
@@ -22,8 +22,8 @@ const preparer = (statutBrevo = 201) => {
 };
 
 const lettre = { formulaire: 'lettre', champs: { email: 'a@b.fr' }, piege: '', dureeMs: 10_000 };
-const requete = (corps: unknown = lettre, { methode = 'POST', origine = 'https://lespetons.fr' as string | null } = {}) =>
-  new Request('https://lespetons.fr/api/formulaire', {
+const requete = (corps: unknown = lettre, { methode = 'POST', origine = 'https://ecolemontessorinantes.com' as string | null } = {}) =>
+  new Request('https://ecolemontessorinantes.com/api/formulaire', {
     method: methode,
     headers: { 'content-type': 'application/json', ...(origine ? { origin: origine } : {}) },
     body: methode === 'POST' ? (typeof corps === 'string' ? corps : JSON.stringify(corps)) : undefined,
