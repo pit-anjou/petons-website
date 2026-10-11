@@ -56,6 +56,8 @@ Dans **Contacts → Paramètres → Attributs**, créer cinq attributs de type *
 
 ### 4. Créer les modèles
 
+Les modèles de la V1, aux couleurs du site, sont prêts dans `docs/modeles-brevo/` : un fichier HTML par modèle, à coller dans l’éditeur HTML de Brevo (« Coder votre propre modèle »), et le logo `logo-email.png`, à téléverser dans Brevo puis à référencer à la place de `logo-email.png`. Pour les modifier, changer `docs/modeles-brevo/generer.ts` puis lancer `bun docs/modeles-brevo/generer.ts`.
+
 Créer **quatre modèles d’e-mail transactionnel** (les deux notifications et les deux accusés de réception) **et un modèle de double confirmation** (double opt-in ; type de modèle à confirmer dans Brevo), et noter le **numéro** de chacun. Dans le texte, chaque information du visiteur s’écrit avec des doubles accolades, par exemple `{{ params.nom }}`.
 
 | Modèle | Destinataire | Informations disponibles |
