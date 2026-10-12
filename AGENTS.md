@@ -29,7 +29,7 @@ Un fichier `.astro` ressemble à du HTML, mais quelques caractères y ont un sen
 2. **Toujours écrire `<style is:inline>` et `<script is:inline>`**, jamais `<style>` ou `<script>` seuls. Sans `is:inline`, Astro limite les styles à la page : les règles visant le header ou le footer cessent de s'appliquer **sans aucun message d'erreur**, et les scripts sont déplacés ou regroupés.
 3. **Ne pas recopier le HTML du header ou du footer dans une page.** Chaque page contient seulement `<Header />`, `<Footer />` et `<SiteNavScript />`. Pour changer un lien du menu ou une coordonnée, modifier `src/data/site.ts`.
 4. **Ne pas écrire `aria-current="page"` ni `is-current-parent` à la main** dans le header ou le footer : ils sont calculés automatiquement à partir de l'adresse de la page.
-5. **Garder les liens internes sous la forme `nom-de-page.html`** (ex. `href="contact-petons.html"`) : les adresses publiées se terminent par `.html` et doivent rester stables pour le référencement.
+5. **Écrire les liens internes sans `.html`** : `href="contact-petons"`, `href="actualites-petons#agenda"`, et `href="/"` pour l'accueil. Les pages sont publiées à `/contact-petons` ; l'ancienne forme `/contact-petons.html` redirige vers elle. Seul l'attribut `data-local-href` (ouverture des fichiers en local) garde le `.html`. `bun test` signale tout lien vers une page inexistante ou écrit avec `.html`.
 6. **Garder le bloc d'en-tête en haut de chaque page** (entre les deux lignes `---`) : il importe les composants. Le supprimer casse le build.
 7. **Un lien qui ouvre un nouvel onglet (`target="_blank"`) doit le dire** : ajouter `<span class="sr-only"> (nouvel onglet)</span>` avant `</a>`, et définir `.sr-only` dans la page si elle ne l'a pas. `bun test` signale tout oubli.
 
@@ -43,7 +43,7 @@ Un fichier `.astro` ressemble à du HTML, mais quelques caractères y ont un sen
 
 ## Ajouter une nouvelle page
 
-1. Copier une page existante proche dans `src/pages/`, par exemple `tarifs-petons.astro` vers `ma-page.astro`. Elle sera publiée à l'adresse `ma-page.html`.
+1. Copier une page existante proche dans `src/pages/`, par exemple `tarifs-petons.astro` vers `ma-page.astro`. Elle sera publiée à l'adresse `/ma-page`.
 2. Remplacer le titre et la description dans `<Referencement … />`, puis le contenu de `<main>`.
 3. Si elle doit apparaître dans le menu ou le footer, l'ajouter dans `src/data/site.ts` (`mainNav` ou `footerNav`).
 

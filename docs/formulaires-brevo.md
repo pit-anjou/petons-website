@@ -8,11 +8,11 @@ Ce guide dit **quoi configurer dans Brevo**, **où reporter les numéros** et **
 
 | Formulaire | Page | Notification à l’école | Accusé de réception au visiteur | Liste Brevo | Lettre d’information |
 | --- | --- | --- | --- | --- | --- |
-| Contact | `contact-petons.html` | Oui | Oui | « Contact site » | Double confirmation, **seulement si la case est cochée** |
-| Demande d’inscription | `inscriptions-petons.html` | Oui | Oui | « Demandes d’inscription » | Double confirmation, **seulement si la case est cochée** |
-| Lettre d’information | `actualites-petons.html` | Non | Non (le mail de confirmation en tient lieu) | « Lettre d’information » | Double confirmation, toujours |
+| Contact | `contact-petons` | Oui | Oui | « Contact site » | Double confirmation, **seulement si la case est cochée** |
+| Demande d’inscription | `inscriptions-petons` | Oui | Oui | « Demandes d’inscription » | Double confirmation, **seulement si la case est cochée** |
+| Lettre d’information | `actualites-petons` | Non | Non (le mail de confirmation en tient lieu) | « Lettre d’information » | Double confirmation, toujours |
 
-- La **double confirmation** : le visiteur reçoit un e-mail avec un lien. Il n’est abonné à la lettre qu’après avoir cliqué. Il arrive alors sur la page `lettre-confirmee.html`.
+- La **double confirmation** : le visiteur reçoit un e-mail avec un lien. Il n’est abonné à la lettre qu’après avoir cliqué. Il arrive alors sur la page `lettre-confirmee`.
 - La case « Je souhaite recevoir la lettre d’information des Petons » n’est **jamais cochée d’avance**.
 - **Règle : la notification à l’école est indispensable, le reste se fait au mieux.** Si la notification ne part pas, le visiteur voit un message d’échec. Pour le formulaire de lettre d’information, la double confirmation est la seule étape et elle est indispensable : si elle échoue, le visiteur voit le message d’échec. Pour contact et inscription, si c’est l’enregistrement du contact, l’accusé ou la double confirmation qui échoue, le visiteur voit quand même « merci » (pour qu’il ne renvoie pas son message, ce qui doublerait la notification), et l’incident est noté dans les journaux (voir plus bas).
 - **Repli sur la messagerie** : quand l’envoi échoue, la page affiche « L’envoi n’a pas abouti » avec les boutons « Ouvrir ma messagerie » et « Copier le message ». Le visiteur garde ainsi un moyen d’écrire à l’école. Attention : en cas de délai dépassé, Brevo a pu envoyer la notification quand même (le visiteur peut alors renvoyer son message par la messagerie, et l’école le recevra deux fois). Sans JavaScript, le formulaire ouvre directement la messagerie, comme avant.
@@ -106,7 +106,7 @@ export const brevo: ConfigBrevo = {
     accuseInscription: 14,
     confirmationLettre: 15,
   },
-  pageConfirmationLettre: 'lettre-confirmee.html',
+  pageConfirmationLettre: 'lettre-confirmee',
 };
 ```
 
@@ -183,7 +183,7 @@ Lors du premier test réel, envoyer un message contenant par exemple `Tom & Jerr
 
 À faire une fois, sur le déploiement de prévisualisation (la clé `BREVO_API_KEY` doit être définie pour l’environnement Preview) :
 
-- [ ] Les adresses en `*.html` (par exemple `contact-petons.html`), `/` et `/api/formulaire` répondent (cette dernière avec un `GET` : 405, c’est normal).
+- [ ] Les adresses des pages (par exemple `/contact-petons`), `/` et `/api/formulaire` répondent (cette dernière avec un `GET` : 405, c’est normal).
 - [ ] Le contrôle d’origine accepte les vrais envois. **Si chaque envoi aboutit au repli messagerie et que les journaux montrent un 403**, l’adresse du site vue par la fonction n’est pas celle du navigateur (par exemple derrière un domaine personnalisé ou un proxy) : prévenir Philippe, la comparaison est dans `src/lib/formulaires/requete.ts` (`origineDuSite`).
 - [ ] Double confirmation pour une **adresse déjà abonnée** à la lettre : noter ce que Brevo répond (erreur, ou nouveau mail de confirmation) et vérifier que le visiteur voit un message cohérent.
 - [ ] Brevo accepte les **paramètres vides** (téléphone, structure, rentrée, âge laissés vides) sans refuser l’envoi.

@@ -27,7 +27,7 @@ test('les ancres visées depuis les autres pages existent', async () => {
   const manquantes: string[] = [];
   for (const fichier of new Glob('*.html').scanSync(DOSSIER_PAGES)) {
     const autre = await chargerHtml(`${DOSSIER_PAGES}/${fichier}`);
-    for (const lien of autre.querySelectorAll('a[href^="actualites-petons.html#"]')) {
+    for (const lien of autre.querySelectorAll('a[href^="actualites-petons#"]')) {
       const ancre = lien.getAttribute('href')!.split('#')[1]!;
       if (!page.querySelector(`[id="${ancre}"]`)) manquantes.push(`${fichier} → #${ancre}`);
     }

@@ -35,9 +35,9 @@ test('envoyerModele sans repondreA n’envoie pas de replyTo', async () => {
 
 test('demanderConfirmation lance la double confirmation', async () => {
   const { appels, client } = enregistreur();
-  await client.demanderConfirmation({ email: 'a@b.fr', listes: [3], modele: 9, redirection: 'https://site.fr/lettre-confirmee.html' });
+  await client.demanderConfirmation({ email: 'a@b.fr', listes: [3], modele: 9, redirection: 'https://site.fr/lettre-confirmee' });
   expect(appels[0]!.url).toBe('https://api.brevo.com/v3/contacts/doubleOptinConfirmation');
-  expect(corps(appels[0]!.init)).toEqual({ email: 'a@b.fr', includeListIds: [3], templateId: 9, redirectionUrl: 'https://site.fr/lettre-confirmee.html' });
+  expect(corps(appels[0]!.init)).toEqual({ email: 'a@b.fr', includeListIds: [3], templateId: 9, redirectionUrl: 'https://site.fr/lettre-confirmee' });
 });
 
 test('une réponse en erreur devient une ErreurBrevo avec son statut', async () => {

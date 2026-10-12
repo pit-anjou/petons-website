@@ -1,8 +1,8 @@
 ---
 import OpenHouseAnnouncement from './OpenHouseAnnouncement.astro';
-import { brand, contactCta, currentFile, mainNav } from '../data/site';
+import { brand, contactCta, currentPage, mainNav } from '../data/site';
 
-const current = currentFile(Astro.url.pathname);
+const current = currentPage(Astro.url.pathname);
 const isCurrent = (href: string) => href === current;
 const isParent = (item: (typeof mainNav)[number]) =>
   item.children?.some((child) => isCurrent(child.href)) ?? false;

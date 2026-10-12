@@ -20,5 +20,5 @@ encadre:
   titre: Un rendez-vous pour les enfants de l’école.
 liens:
   - libelle: Une question sur ce rendez-vous ?
-    url: contact-petons.html?sujet=information
+    url: contact-petons?sujet=information
 ---

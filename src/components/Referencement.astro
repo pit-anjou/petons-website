@@ -1,7 +1,7 @@
 ---
 // Titre, description, canonical, aperçu de partage (Open Graph, X/Twitter) et JSON-LD de la page.
 // Les adresses absolues viennent toutes de `site` dans astro.config.mjs.
-import { currentFile } from '../data/site';
+import { currentPage } from '../data/site';
 
 interface Props {
   /** Titre de l’onglet, repris par les aperçus de partage. */
@@ -24,8 +24,7 @@ const { title, description, image = imageParDefaut, page } = Astro.props;
 const site = Astro.site;
 if (!site) throw new Error('Déclarer `site` dans astro.config.mjs.');
 
-const fichier = currentFile(Astro.url.pathname);
-const canonical = new URL(fichier === 'index.html' ? '/' : fichier, site).href;
+const canonical = new URL(currentPage(Astro.url.pathname), site).href;
 const imageAbsolue = new URL(image.src, site).href;
 const jsonLd = page && {
   '@context': 'https://schema.org',

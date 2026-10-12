@@ -78,7 +78,7 @@ components:
         label: Adresse
         type: string
         required: true
-        description: "Une page du site : contact-petons.html?sujet=visite. Un autre site : https://…"
+        description: "Une page du site : contact-petons?sujet=visite. Un autre site : https://…"
       - name: style
         label: Apparence
         type: select

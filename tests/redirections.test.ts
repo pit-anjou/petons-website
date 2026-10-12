@@ -14,23 +14,23 @@ const destinationDe = (chemin: string): string | undefined =>
 // Toutes les adresses des sitemaps Yoast de l’ancien site (relevé du 9 octobre 2026), avec leur cible.
 const ANCIENNES_ADRESSES: Readonly<Record<string, string>> = {
   '/ecole-montessori-nantes/': '/',
-  '/lecole/': '/ecole-petons.html',
-  '/qui-sommes-nous/': '/equipe-petons.html',
-  '/nous-rejoindre/': '/equipe-petons.html#rejoindre',
-  '/nos-valeurs/': '/pedagogie-petons.html',
-  '/la-vie-a-lecole/': '/vie-pratique-petons.html',
-  '/informations-pratiques/': '/vie-pratique-petons.html',
-  '/portfolio/': '/vie-pratique-petons.html#familles',
-  '/portfolio/role-de-lape/': '/vie-pratique-petons.html#familles',
-  '/portfolio/roles-des-membres-de-lape/': '/vie-pratique-petons.html#familles',
-  '/portfolio/election-du-bureau/': '/vie-pratique-petons.html#familles',
-  '/journees-portes-ouvertes/': '/actualites-petons.html#portes-ouvertes',
-  '/tarifs/': '/tarifs-petons.html',
-  '/inscription/': '/inscriptions-petons.html',
-  '/contact/': '/contact-petons.html',
-  '/boite-a-idees/': '/contact-petons.html',
+  '/lecole/': '/ecole-petons',
+  '/qui-sommes-nous/': '/equipe-petons',
+  '/nous-rejoindre/': '/equipe-petons#rejoindre',
+  '/nos-valeurs/': '/pedagogie-petons',
+  '/la-vie-a-lecole/': '/vie-pratique-petons',
+  '/informations-pratiques/': '/vie-pratique-petons',
+  '/portfolio/': '/vie-pratique-petons#familles',
+  '/portfolio/role-de-lape/': '/vie-pratique-petons#familles',
+  '/portfolio/roles-des-membres-de-lape/': '/vie-pratique-petons#familles',
+  '/portfolio/election-du-bureau/': '/vie-pratique-petons#familles',
+  '/journees-portes-ouvertes/': '/actualites-petons#portes-ouvertes',
+  '/tarifs/': '/tarifs-petons',
+  '/inscription/': '/inscriptions-petons',
+  '/contact/': '/contact-petons',
+  '/boite-a-idees/': '/contact-petons',
   '/la-creche/': '/',
-  '/feed/': '/actualites-petons.html',
+  '/feed/': '/actualites-petons',
   '/category/non-classe/': '/',
   '/tag/design/': '/',
 };
@@ -51,7 +51,7 @@ test('toutes les redirections sont permanentes (308) et chaque règle sert au mo
 
 const pageAstro = (destination: string): string => {
   const chemin = destination.split('#')[0]!;
-  return chemin === '/' ? 'src/pages/index.astro' : `src/pages/${chemin.replace(/^\//, '').replace(/\.html$/, '')}.astro`;
+  return chemin === '/' ? 'src/pages/index.astro' : `src/pages/${chemin.replace(/^\//, '')}.astro`;
 };
 
 test('chaque destination est une page qui existe, et chaque ancre un id de cette page', async () => {
@@ -65,7 +65,7 @@ test('chaque destination est une page qui existe, et chaque ancre un id de cette
 
 test('aucune règle ne capture une page du nouveau site', async () => {
   const pages = [...new Bun.Glob('*.astro').scanSync('src/pages')].map((fichier) =>
-    fichier === 'index.astro' ? '/' : `/${fichier.replace(/\.astro$/, '.html')}`,
+    fichier === 'index.astro' ? '/' : `/${fichier.replace(/\.astro$/, '')}`,
   );
   expect(pages.length).toBeGreaterThan(10);
   expect(pages.filter((page) => destinationDe(page) !== undefined && page !== '/')).toEqual([]);
@@ -83,16 +83,28 @@ test('le contrôle détecte une adresse non couverte', () => {
 test('le routage publié redirige chaque ancienne adresse, avant de servir les fichiers', async () => {
   const fichier = Bun.file('.vercel/output/config.json');
   if (!(await fichier.exists())) throw new Error('.vercel/output/config.json introuvable : lancez d’abord « bun run build ».');
-  const { routes } = (await fichier.json()) as { routes: ReadonlyArray<{ src?: string; handle?: string; status?: number; headers?: Record<string, string> }> };
+  const { routes, overrides } = (await fichier.json()) as {
+    routes: ReadonlyArray<{ src?: string; handle?: string; status?: number; headers?: Record<string, string> }>;
+    overrides?: Record<string, { path?: string }>;
+  };
   const avantFichiers = routes.slice(0, routes.findIndex((route) => route.handle === 'filesystem'));
   const publiee = (chemin: string) => {
     const route = avantFichiers.find(({ src, status }) => status !== undefined && src !== undefined && new RegExp(src).test(chemin));
-    return route && { status: route.status, cible: route.headers?.Location };
+    return route && { status: route.status, cible: route.headers?.Location?.replace(/\$(\d)/g, (_, n: string) => new RegExp(route.src!).exec(chemin)![Number(n)] ?? '') };
   };
   for (const [ancienne, attendue] of Object.entries(ANCIENNES_ADRESSES)) {
     for (const chemin of [ancienne, ancienne.replace(/\/$/, '')]) {
       expect({ chemin, redirection: publiee(chemin) }).toEqual({ chemin, redirection: { status: 308, cible: attendue } });
     }
   }
-  expect(publiee('/contact-petons.html')).toBeUndefined();
+  // Adresses sans « .html » : la page est servie telle quelle, l’ancienne forme et la barre finale y redirigent.
+  expect(publiee('/contact-petons')).toBeUndefined();
+  expect(publiee('/contact-petons.html')).toEqual({ status: 308, cible: '/contact-petons' });
+  expect(publiee('/contact-petons/')).toEqual({ status: 308, cible: '/contact-petons' });
+  expect(publiee('/index.html')).toEqual({ status: 308, cible: '/' });
+  const pages = [...new Bun.Glob('*.html').scanSync('.vercel/output/static')].filter((page) => page !== 'index.html');
+  expect(pages.length).toBeGreaterThan(10);
+  for (const page of pages) {
+    expect({ page, servie: overrides?.[page]?.path }).toEqual({ page, servie: page.replace(/\.html$/, '') });
+  }
 });

@@ -9,20 +9,23 @@ export default defineConfig({
   // Domaine retenu le 9 octobre 2026 (voir docs/plan-de-redirection.md, §3). En cas de changement,
   // modifier cette seule ligne : rien d'autre à modifier.
   site: 'https://ecolemontessorinantes.com',
-  // Conserve les URL actuelles : /chenilles-petons.html, /index.html…
+  // Pages écrites en chenilles-petons.html, publiées sans extension à /chenilles-petons
+  // (src/integrations/redirections-vercel.ts). Sans barre finale : /chenilles-petons/ redirige vers /chenilles-petons.
   build: { format: 'file' },
+  trailingSlash: 'never',
   // Toutes les pages restent statiques ; seule src/pages/api/formulaire.ts tourne sur Vercel (prerender = false).
   adapter: vercel(),
   integrations: [
     {
-      // L'adaptateur Vercel impose build.format: 'directory' (contact-petons/index.html, donc plus
-      // de contact-petons.html). Cette intégration, placée après lui, rétablit le format « file ».
-      name: 'conserver-urls-html',
+      // L'adaptateur Vercel impose build.format: 'directory' (contact-petons/index.html). Cette intégration,
+      // placée après lui, rétablit le format « file » (contact-petons.html), que les tests lisent dans dist/client.
+      name: 'pages-en-fichiers-html',
       hooks: {
         'astro:config:setup': ({ updateConfig }) => updateConfig({ build: { format: 'file' } }),
       },
     },
-    // Redirections de l’ancien site WordPress : src/data/redirections.ts (plan : docs/plan-de-redirection.md).
+    // Adresses sans « .html » et redirections de l’ancien site WordPress : src/data/redirections.ts
+    // (plan : docs/plan-de-redirection.md).
     redirectionsVercel(redirections),
   ],
   vite: {

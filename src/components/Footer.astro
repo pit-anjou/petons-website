@@ -1,5 +1,5 @@
 ---
-import { brand, contact, currentFile, footerNav, support } from '../data/site';
+import { brand, contact, currentPage, footerNav, support } from '../data/site';
 
 interface Props {
   /** Remplace le lien « mailto: » de l'adresse email (ex. vers le formulaire de contact). */
@@ -7,7 +7,7 @@ interface Props {
 }
 
 const { emailHref = `mailto:${contact.email}` } = Astro.props;
-const current = currentFile(Astro.url.pathname);
+const current = currentPage(Astro.url.pathname);
 const supportHref = current === support.href ? support.anchor : support.href;
 const ariaCurrent = (href: string) => (href === current ? 'page' : undefined);
 const icon = {

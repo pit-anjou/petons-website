@@ -6,13 +6,28 @@ import { chargerHtml, DOSSIER_PAGES } from './outils/html';
 
 const site = config.site;
 if (!site) throw new Error('Déclarer `site` dans astro.config.mjs.');
-const adresse = (fichier: string): string => new URL(fichier === 'index.html' ? '/' : fichier, site).href;
+/** Adresse publique d’un fichier du build : tarifs-petons.html est publié à /tarifs-petons, index.html à /. */
+const adresse = (fichier: string): string => new URL(fichier === 'index.html' ? '/' : fichier.replace(/\.html$/, ''), site).href;
 
 const pagesPubliees = [...new Bun.Glob('*.html').scanSync(DOSSIER_PAGES)].sort();
 
 test('le build publie une page par fichier de src/pages', () => {
   const sources = [...new Bun.Glob('*.astro').scanSync('src/pages')].map((fichier) => fichier.replace(/\.astro$/, '.html'));
   expect(pagesPubliees).toEqual(sources.sort());
+});
+
+test('les liens internes visent une page publiée, sans « .html »', async () => {
+  const pages = new Set(pagesPubliees.map((fichier) => (fichier === 'index.html' ? '/' : fichier.replace(/\.html$/, ''))));
+  const fautifs: string[] = [];
+  for (const fichier of pagesPubliees) {
+    for (const lien of (await chargerHtml(`${DOSSIER_PAGES}/${fichier}`)).querySelectorAll('a[href]')) {
+      const href = lien.getAttribute('href')!;
+      if (/^(?:[a-z]+:|\/\/|#|assets\/)/i.test(href)) continue;
+      const page = href.split(/[?#]/)[0]!;
+      if (!pages.has(page)) fautifs.push(`${fichier} → ${href}`);
+    }
+  }
+  expect(fautifs).toEqual([]);
 });
 
 test('chaque page a une seule balise canonical, vers son adresse sur le domaine du site', async () => {

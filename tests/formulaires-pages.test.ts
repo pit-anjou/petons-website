@@ -50,8 +50,8 @@ for (const { page, selecteur, limites, caseLettre } of formulaires) {
 
 test('la page de confirmation de la lettre existe et n’est pas indexée', async () => {
   const { brevo } = await import('../src/data/brevo');
-  const page = await chargerHtml(`${DOSSIER_PAGES}/${brevo.pageConfirmationLettre}`);
+  const page = await chargerHtml(`${DOSSIER_PAGES}/${brevo.pageConfirmationLettre}.html`);
   expect(page.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('noindex');
   expect(page.querySelector('h1')?.text).toContain('confirmé');
-  expect(page.querySelector('a[href="actualites-petons.html"]')).not.toBeNull();
+  expect(page.querySelector('a[href="actualites-petons"]')).not.toBeNull();
 });
