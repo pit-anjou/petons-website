@@ -3,6 +3,7 @@ import { defineConfig, envField } from 'astro/config';
 import vercel from '@astrojs/vercel';
 import { redirections } from './src/data/redirections';
 import { redirectionsVercel } from './src/integrations/redirections-vercel';
+import { imagesAdaptees } from './src/integrations/images-adaptees';
 
 export default defineConfig({
   // Domaine public du site : sert aux balises canonical, au sitemap, à robots.txt et au JSON-LD.
@@ -27,6 +28,8 @@ export default defineConfig({
     // Adresses sans « .html » et redirections de l’ancien site WordPress : src/data/redirections.ts
     // (plan : docs/plan-de-redirection.md).
     redirectionsVercel(redirections),
+    // Versions WebP de chaque image à plusieurs tailles, et srcset dans les pages : src/integrations/images-adaptees.ts.
+    imagesAdaptees(),
   ],
   vite: {
     build: {
