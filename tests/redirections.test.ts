@@ -11,7 +11,8 @@ const correspond = (source: string, chemin: string): boolean =>
 const destinationDe = (chemin: string): string | undefined =>
   redirections.find(({ source }) => correspond(source, chemin))?.destination;
 
-// Toutes les adresses des sitemaps Yoast de l’ancien site (relevé du 9 octobre 2026), avec leur cible.
+// Toutes les adresses des sitemaps Yoast de l’ancien site (relevé du 9 octobre 2026), avec leur cible,
+// plus celles que la Search Console a relevées le 12 octobre 2026 (/le-lieu/, ancien dossier d’inscription).
 const ANCIENNES_ADRESSES: Readonly<Record<string, string>> = {
   '/ecole-montessori-nantes/': '/',
   '/lecole/': '/ecole-petons.html',
@@ -21,15 +22,17 @@ const ANCIENNES_ADRESSES: Readonly<Record<string, string>> = {
   '/la-vie-a-lecole/': '/vie-pratique-petons.html',
   '/informations-pratiques/': '/vie-pratique-petons.html',
   '/portfolio/': '/vie-pratique-petons.html#familles',
-  '/portfolio/role-de-lape/': '/vie-pratique-petons.html#familles',
-  '/portfolio/roles-des-membres-de-lape/': '/vie-pratique-petons.html#familles',
-  '/portfolio/election-du-bureau/': '/vie-pratique-petons.html#familles',
+  '/portfolio/role-de-lape/': '/equipe-petons.html#association',
+  '/portfolio/roles-des-membres-de-lape/': '/equipe-petons.html#association',
+  '/portfolio/election-du-bureau/': '/equipe-petons.html#association',
+  '/portfolio/une-autre-fiche/': '/vie-pratique-petons.html#familles',
   '/journees-portes-ouvertes/': '/actualites-petons.html#portes-ouvertes',
   '/tarifs/': '/tarifs-petons.html',
   '/inscription/': '/inscriptions-petons.html',
   '/contact/': '/contact-petons.html',
   '/boite-a-idees/': '/contact-petons.html',
   '/la-creche/': '/',
+  '/le-lieu/': '/ecole-petons.html',
   '/feed/': '/actualites-petons.html',
   '/category/non-classe/': '/',
   '/tag/design/': '/',
@@ -43,9 +46,18 @@ test('chaque ancienne adresse redirige vers sa nouvelle page, avec ou sans barre
   }
 });
 
+// Fichier, donc sans barre finale : testé à part.
+const ANCIEN_DOSSIER_PDF = '/wp-content/uploads/2018/07/Dossier_Inscription_LPDLH_2018_2019.pdf';
+
+test('l’ancien dossier d’inscription en PDF redirige vers la page Inscriptions', () => {
+  expect(destinationDe(ANCIEN_DOSSIER_PDF)).toBe('/inscriptions-petons.html');
+  expect(destinationDe('/wp-content/uploads/2018/07/autre.pdf')).toBeUndefined();
+});
+
 test('toutes les redirections sont permanentes (308) et chaque règle sert au moins une ancienne adresse', () => {
   expect(redirections.filter(({ permanent }) => !permanent)).toEqual([]);
-  const inutiles = redirections.filter(({ source }) => !Object.keys(ANCIENNES_ADRESSES).some((chemin) => correspond(source, chemin)));
+  const servies = [...Object.keys(ANCIENNES_ADRESSES), ANCIEN_DOSSIER_PDF];
+  const inutiles = redirections.filter(({ source }) => !servies.some((chemin) => correspond(source, chemin)));
   expect(inutiles).toEqual([]);
 });
 
@@ -94,5 +106,6 @@ test('le routage publié redirige chaque ancienne adresse, avant de servir les f
       expect({ chemin, redirection: publiee(chemin) }).toEqual({ chemin, redirection: { status: 308, cible: attendue } });
     }
   }
+  expect(publiee(ANCIEN_DOSSIER_PDF)).toEqual({ status: 308, cible: '/inscriptions-petons.html' });
   expect(publiee('/contact-petons.html')).toBeUndefined();
 });

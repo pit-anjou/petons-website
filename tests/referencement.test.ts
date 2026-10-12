@@ -84,10 +84,23 @@ test('le JSON-LD se lit et désigne la page et le site sur le bon domaine', asyn
   expect(blocs).toBe(3);
 });
 
-test('sitemap.xml liste toutes les pages publiées, et elles seules', async () => {
+test('le domaine principal est www.ecolemontessorinantes.com (décision du 12 octobre 2026)', () => {
+  expect(new URL(site).origin).toBe('https://www.ecolemontessorinantes.com');
+});
+
+const estNoindex = async (fichier: string): Promise<boolean> =>
+  (await chargerHtml(`${DOSSIER_PAGES}/${fichier}`))
+    .querySelectorAll('head meta[name="robots"]')
+    .some((balise) => (balise.getAttribute('content') ?? '').includes('noindex'));
+
+test('sitemap.xml liste toutes les pages publiées indexables, et elles seules', async () => {
   const xml = await Bun.file(`${DOSSIER_PAGES}/sitemap.xml`).text();
   const listees = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((trouve) => trouve[1]!);
-  expect(listees.sort()).toEqual(pagesPubliees.map(adresse).sort());
+  const noindex: string[] = [];
+  for (const fichier of pagesPubliees) if (await estNoindex(fichier)) noindex.push(fichier);
+  // La Search Console signale « Envoyée mais marquée noindex » pour une page du sitemap qui refuse l’indexation.
+  expect(noindex).toContain('lettre-confirmee.html');
+  expect(listees.sort()).toEqual(pagesPubliees.filter((fichier) => !noindex.includes(fichier)).map(adresse).sort());
 });
 
 test('robots.txt laisse tout indexer et annonce le sitemap', async () => {
