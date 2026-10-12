@@ -25,7 +25,6 @@ export const brand = {
 
 export const contact = {
   address: ['6 rue de la Petite Sensive', '44300 Nantes'],
-  phone: { label: '06 45 09 53 37', href: 'tel:+33645095337' },
   email: 'contact@ecolemontessorinantes.com',
   instagram: {
     handle: '@lespetonsdanslherbe',
