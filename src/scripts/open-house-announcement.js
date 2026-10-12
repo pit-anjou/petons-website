@@ -33,8 +33,6 @@
     if(!active())return;
     opener=trigger||null;
     card.toggleAttribute('data-manual',Boolean(trigger));
-    const illustration=card.querySelector('img');
-    if(!illustration.getAttribute('src'))illustration.src=illustration.dataset.src;
     card.hidden=false;card.scrollTop=0;setExpanded(true);stop();
     if(trigger)card.querySelector('[data-oh-close-card]').focus({preventScroll:true});
   }

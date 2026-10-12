@@ -1,7 +1,9 @@
 ---
-// Titre, description, canonical, aperçu de partage (Open Graph, X/Twitter) et JSON-LD de la page.
+// Titre, description, canonical, aperçu de partage (Open Graph, X/Twitter) et JSON-LD de la page
+// (l’école, le site, la page : src/data/donneesStructurees.ts).
 // Les adresses absolues viennent toutes de `site` dans astro.config.mjs.
 import { currentPage } from '../data/site';
+import { donneesStructurees } from '../data/donneesStructurees';
 
 interface Props {
   /** Titre de l’onglet, repris par les aperçus de partage. */
@@ -10,8 +12,10 @@ interface Props {
   readonly description: string;
   /** Image d’aperçu (1200 × 630, JPEG ou PNG) ; par défaut, l’image commune du site. */
   readonly image?: { readonly src: string; readonly alt: string };
-  /** Description schema.org « WebPage » de la page (facultative). */
+  /** Nom et description schema.org « WebPage » de la page ; par défaut, le titre et la description. */
   readonly page?: { readonly name: string; readonly description: string };
+  /** Ajoute aux données structurées l’événement des portes ouvertes (src/data/openHouse.ts). */
+  readonly portesOuvertes?: boolean;
 }
 
 const nomDuSite = 'Les Petons dans l’Herbe';
@@ -20,21 +24,18 @@ const imageParDefaut = {
   alt: 'Une enfant aux cheveux bouclés pose le plus petit cube de la tour rose Montessori, dans une classe lumineuse.',
 };
 
-const { title, description, image = imageParDefaut, page } = Astro.props;
+const { title, description, image = imageParDefaut, page, portesOuvertes } = Astro.props;
 const site = Astro.site;
 if (!site) throw new Error('Déclarer `site` dans astro.config.mjs.');
 
 const canonical = new URL(currentPage(Astro.url.pathname), site).href;
 const imageAbsolue = new URL(image.src, site).href;
-const jsonLd = page && {
-  '@context': 'https://schema.org',
-  '@type': 'WebPage',
-  name: page.name,
-  description: page.description,
-  inLanguage: 'fr-FR',
-  url: canonical,
-  isPartOf: { '@type': 'WebSite', name: nomDuSite, url: new URL('/', site).href },
-};
+const jsonLd = donneesStructurees({
+  site,
+  page: { url: canonical, name: page?.name ?? title, description: page?.description ?? description },
+  image: imageParDefaut.src,
+  portesOuvertes,
+});
 ---
 <title>{title}</title>
 <meta name="description" content={description}>
@@ -53,4 +54,4 @@ const jsonLd = page && {
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content={image.alt}>
 <meta name="twitter:card" content="summary_large_image">
-{jsonLd && <script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd)} />}
+<script is:inline type="application/ld+json" set:html={JSON.stringify(jsonLd).replace(/</g, '\\u003c')} />
