@@ -29,7 +29,7 @@
     item.openTimer=null;
     if(!item.hovered||!desktop.matches||!hover.matches)return;
     // A pointer must never hide another panel being used with the keyboard.
-    if(groups.some(other=>other!==item&&other.group.contains(document.activeElement)))return;
+    if(groups.some(other=>other!==item&&other.submenu.contains(document.activeElement)))return;
     openOnly(item);
    },350);
   });
