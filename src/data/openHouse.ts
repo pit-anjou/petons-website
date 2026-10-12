@@ -4,6 +4,8 @@ export const openHouse = {
   date: 'Samedi 21 novembre 2026',
   shortDate: '21 novembre 2026',
   hours: '10h–13h',
+  // Texte de la carte de l’agenda, repris par les données structurées (src/data/donneesStructurees.ts).
+  summary: 'Découvrez notre école Montessori et écocitoyenne en famille : explorez les ambiances 3–6 ans et 6–12 ans, rencontrez les éducateurs et échangez avec les parents.',
   start: '2026-11-21T10:00:00+01:00',
   end: '2026-11-21T13:00:00+01:00',
   href: 'actualites-petons#portes-ouvertes',

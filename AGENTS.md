@@ -19,6 +19,7 @@ Le site est construit avec [Astro](https://astro.build). Le résultat publié re
 | Les versions réduites des images (téléphones) | Rien à faire : produites au build par `src/integrations/images-adaptees.ts` (voir la règle 8) |
 | Le titre et la description d'une page (onglet, moteurs de recherche, aperçu de partage) | `<Referencement title="…" description="…" />` dans le `<head>` de la page |
 | Le domaine du site (canonical, Open Graph, sitemap.xml, robots.txt, JSON-LD) et l'image de partage par défaut | `site` dans `astro.config.mjs` (une seule fois) ; balises et image dans `src/components/Referencement.astro` |
+| Les données structurées (JSON-LD) : l'école, ses horaires, l'association, l'événement des portes ouvertes | `src/data/donneesStructurees.ts` (coordonnées reprises de `src/data/site.ts`, dates de `src/data/openHouse.ts`) ; vérifiées par `tests/referencement.test.ts` |
 | Les redirections des adresses de l'ancien site WordPress | `src/data/redirections.ts` et `tests/redirections.test.ts` ; plan dans `docs/plan-de-redirection.md` |
 
 Ne jamais modifier `dist/` : ce dossier est regénéré à chaque build.
@@ -43,6 +44,16 @@ Un fichier `.astro` ressemble à du HTML, mais quelques caractères y ont un sen
 3. **Les images des actualités vont dans `public/assets/img/actualites/`** et sont référencées en `assets/img/actualites/…`.
 4. **Ne pas renommer** `stage-fevrier-2027.yml` ni `eco-ecole-solidarites.md` : la page d’accueil pointe vers ces ancres.
 5. Vérifier avec `bun run check` (build puis tests) au lieu de `bun run build` seul.
+
+## Données structurées (JSON-LD)
+
+Chaque page décrit l'école aux moteurs de recherche et aux IA (`src/data/donneesStructurees.ts`). **Toute modification d'une information sur l'école doit y être reportée**, sinon Google et les IA affichent des informations périmées.
+
+1. **Mis à jour automatiquement** : l'adresse, l'email, Instagram et le logo (`src/data/site.ts`) ; la date, les horaires, le texte et l'image des portes ouvertes (`src/data/openHouse.ts`). Modifier ces fichiers suffit.
+2. **À mettre à jour à la main dans `src/data/donneesStructurees.ts`** quand le site change : les jours et horaires d'ouverture (aujourd'hui lundi, mardi, jeudi et vendredi, de 8h15 à 18h15, périscolaire compris), les âges accueillis (3–12 ans), le nom de l'association (Constellation Montessori), l'année d'ouverture (2018), la description (jardin, label Eco-École, statut hors contrat) et les communes desservies.
+3. **Ajout d'un téléphone** dans `src/data/site.ts` : l'ajouter aussi à l'école (`telephone`).
+4. **Nouvelles portes ouvertes** : changer les dates dans `src/data/openHouse.ts`. L'événement n'est publié que sur la page Actualités (`portesOuvertes` sur `<Referencement />`).
+5. Vérifier avec `bun run check` (`tests/referencement.test.ts`), puis, après mise en ligne, passer `/` et `/actualites-petons` dans le test des résultats enrichis de Google.
 
 ## Ajouter une nouvelle page
 
