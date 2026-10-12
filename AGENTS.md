@@ -16,6 +16,7 @@ Le site est construit avec [Astro](https://astro.build). Le résultat publié re
 | Les formulaires (contact, inscription, lettre) et leur envoi à Brevo | Textes : la page concernée ; numéros Brevo : `src/data/brevo.ts` ; logique serveur : `src/lib/formulaires/` ; guide : `docs/formulaires-brevo.md` |
 | Les styles de l'encart « Dons & mécénat » et des illustrations animées | `src/styles/support-footer.css`, `src/styles/enfants-animes.css` (écrits dans chaque page par `<SupportFooterStyles />` et `<EnfantsAnimesStyles />`) |
 | Ajouter ou remplacer une image, une vidéo, une police | `public/assets/…` (référencée dans les pages par `assets/…`, sans `public/`) |
+| Les versions réduites des images (téléphones) | Rien à faire : produites au build par `src/integrations/images-adaptees.ts` (voir la règle 8) |
 | Le titre et la description d'une page (onglet, moteurs de recherche, aperçu de partage) | `<Referencement title="…" description="…" />` dans le `<head>` de la page |
 | Le domaine du site (canonical, Open Graph, sitemap.xml, robots.txt, JSON-LD) et l'image de partage par défaut | `site` dans `astro.config.mjs` (une seule fois) ; balises et image dans `src/components/Referencement.astro` |
 | Les redirections des adresses de l'ancien site WordPress | `src/data/redirections.ts` et `tests/redirections.test.ts` ; plan dans `docs/plan-de-redirection.md` |
@@ -33,6 +34,7 @@ Un fichier `.astro` ressemble à du HTML, mais quelques caractères y ont un sen
 5. **Écrire les liens internes sans `.html`** : `href="contact-petons"`, `href="actualites-petons#agenda"`, et `href="/"` pour l'accueil. Les pages sont publiées à `/contact-petons` ; l'ancienne forme `/contact-petons.html` redirige vers elle. Seul l'attribut `data-local-href` (ouverture des fichiers en local) garde le `.html`. `bun test` signale tout lien vers une page inexistante ou écrit avec `.html`.
 6. **Garder le bloc d'en-tête en haut de chaque page** (entre les deux lignes `---`) : il importe les composants. Le supprimer casse le build.
 7. **Un lien qui ouvre un nouvel onglet (`target="_blank"`) doit le dire** : ajouter `<span class="sr-only"> (nouvel onglet)</span>` avant `</a>`, et définir `.sr-only` dans la page si elle ne l'a pas. `bun test` signale tout oubli.
+8. **Images : écrire simplement `<img src="assets/img/…" alt="…" width="…" height="…">`**, sans redimensionner à la main. Au build, chaque image PNG, JPEG ou WebP reçoit des versions WebP de 320 à 1600 px et un `srcset` : un téléphone télécharge la petite. Ajouter `loading="lazy"` à toute image qui n'est pas visible à l'ouverture de la page. Sans `sizes`, le build suppose une image en pleine largeur sur mobile (600 px au-delà) : pour une petite image (icône, vignette, portrait), indiquer sa largeur affichée, par exemple `sizes="130px"`. Pour l'image principale du haut de page, ajouter `fetchpriority="high"` et sa largeur affichée, par exemple `sizes="(max-width: 700px) calc(100vw - 48px), 570px"`. `bun test` signale une image sans `width` ou `height`.
 
 ## Actualités et Page CMS
 
