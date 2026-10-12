@@ -1,5 +1,6 @@
 // Données structurées (JSON-LD, schema.org) : décrivent l’école aux moteurs de recherche et aux IA.
-// Chaque page publie un graphe : l’école, le site, la page, et, sur la page Actualités, les portes ouvertes.
+// Chaque page publie un graphe : l’école, le site, la page, et, sur l’accueil et la page Actualités,
+// les portes ouvertes (même @id sur les deux pages : un seul événement pour les moteurs).
 // Écrit dans le <head> par src/components/Referencement.astro ; vérifié par tests/referencement.test.ts.
 // Les coordonnées viennent de src/data/site.ts et les portes ouvertes de src/data/openHouse.ts.
 import { brand, contact } from './site';
