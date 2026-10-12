@@ -3,6 +3,8 @@
 import { expect, test } from 'bun:test';
 import config from '../astro.config.mjs';
 import { chargerHtml, DOSSIER_PAGES } from './outils/html';
+import { contact } from '../src/data/site';
+import { openHouse } from '../src/data/openHouse';
 
 const site = config.site;
 if (!site) throw new Error('Déclarer `site` dans astro.config.mjs.');
@@ -87,16 +89,73 @@ test('l’image de partage par défaut mesure 1200 × 630', async () => {
   expect({ largeur, hauteur }).toEqual({ largeur: 1200, hauteur: 630 });
 });
 
-test('le JSON-LD se lit et désigne la page et le site sur le bon domaine', async () => {
-  let blocs = 0;
+type Noeud = Record<string, unknown> & { '@type': string; '@id'?: string };
+
+/** Graphe JSON-LD d’une page publiée (un seul bloc par page). */
+const grapheDe = async (fichier: string): Promise<Noeud[]> => {
+  const blocs = (await chargerHtml(`${DOSSIER_PAGES}/${fichier}`)).querySelectorAll('script[type="application/ld+json"]');
+  expect({ fichier, blocs: blocs.length }).toEqual({ fichier, blocs: 1 });
+  const donnees = JSON.parse(blocs[0]!.text) as { '@context': string; '@graph': Noeud[] };
+  expect(donnees['@context']).toBe('https://schema.org');
+  return donnees['@graph'];
+};
+
+test('chaque page décrit l’école, le site et elle-même en JSON-LD, sur le bon domaine', async () => {
+  const accueil = adresse('index.html');
   for (const fichier of pagesPubliees) {
-    for (const script of (await chargerHtml(`${DOSSIER_PAGES}/${fichier}`)).querySelectorAll('script[type="application/ld+json"]')) {
-      const donnees = JSON.parse(script.text) as { url: string; isPartOf: { url: string } };
-      expect({ fichier, url: donnees.url, site: donnees.isPartOf.url }).toEqual({ fichier, url: adresse(fichier), site: adresse('index.html') });
-      blocs += 1;
+    const graphe = await grapheDe(fichier);
+    const types = graphe.map((noeud) => noeud['@type']);
+    expect({ fichier, types: types.filter((type) => type !== 'Event') }).toEqual({ fichier, types: ['School', 'WebSite', 'WebPage'] });
+    const [ecole, siteWeb, page] = graphe as [Noeud, Noeud, Noeud];
+    expect(ecole['@id']).toBe(`${accueil}#ecole`);
+    expect(ecole.url).toBe(accueil);
+    expect(siteWeb.url).toBe(accueil);
+    expect({ fichier, url: page.url, site: page.isPartOf, sujet: page.about }).toEqual({
+      fichier,
+      url: adresse(fichier),
+      site: { '@id': `${accueil}#site` },
+      sujet: { '@id': `${accueil}#ecole` },
+    });
+    expect((page.name as string).length).toBeGreaterThan(10);
+    // Toute adresse absolue du graphe vise le domaine du site, et ses images existent.
+    for (const url of JSON.stringify(graphe).match(/https:\/\/[^"]+/g) ?? []) {
+      if (url.startsWith('https://schema.org/') || url.startsWith('https://www.instagram.com/')) continue;
+      expect({ fichier, url: url.startsWith(accueil) }).toEqual({ fichier, url: true });
+      if (/\.(?:jpe?g|png|webp|svg)$/.test(url)) expect(await Bun.file(`${DOSSIER_PAGES}${new URL(url).pathname}`).exists()).toBe(true);
     }
   }
-  expect(blocs).toBe(3);
+});
+
+test('l’école est décrite avec ses coordonnées, les âges accueillis, ses horaires et son association', async () => {
+  const [ecole] = (await grapheDe('index.html')) as [Noeud];
+  expect(ecole).toMatchObject({
+    name: 'Les Petons dans l’Herbe',
+    email: contact.email,
+    address: { streetAddress: contact.address[0], postalCode: '44300', addressLocality: 'Nantes', addressCountry: 'FR' },
+    audience: { suggestedMinAge: 3, suggestedMaxAge: 12 },
+    openingHoursSpecification: { opens: '08:15', closes: '18:15' },
+    parentOrganization: { '@type': 'NGO', name: 'Constellation Montessori' },
+    sameAs: [contact.instagram.href],
+  });
+});
+
+test('les portes ouvertes sont un événement de la page Actualités, et d’elle seule', async () => {
+  for (const fichier of pagesPubliees) {
+    const evenements = (await grapheDe(fichier)).filter((noeud) => noeud['@type'] === 'Event');
+    expect({ fichier, evenements: evenements.length }).toEqual({ fichier, evenements: fichier === 'actualites-petons.html' ? 1 : 0 });
+  }
+  const evenement = (await grapheDe('actualites-petons.html')).find((noeud) => noeud['@type'] === 'Event')!;
+  expect(evenement).toMatchObject({
+    startDate: openHouse.start,
+    endDate: openHouse.end,
+    url: new URL(openHouse.href, site).href,
+    isAccessibleForFree: true,
+    location: { address: { streetAddress: contact.address[0] } },
+    organizer: { '@id': `${adresse('index.html')}#ecole` },
+  });
+  // L’ancre de l’événement existe sur la page.
+  const page = await chargerHtml(`${DOSSIER_PAGES}/actualites-petons.html`);
+  expect(page.querySelector(`#${openHouse.href.split('#')[1]}`)).not.toBeNull();
 });
 
 test('le domaine principal est www.ecolemontessorinantes.com (décision du 12 octobre 2026)', () => {
