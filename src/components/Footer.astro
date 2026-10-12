@@ -34,10 +34,6 @@ const icon = {
             <span>{contact.address[0]}<br>{contact.address[1]}</span>
           </p>
           <p class="cm-footer-contact-line">
-            <svg {...icon}><path d="M22 17v3a2 2 0 0 1-2 2A18 18 0 0 1 2 4a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2v3a2 2 0 0 1-1 1.7l-1.2.7a14 14 0 0 0 7.8 7.8l.7-1.2A2 2 0 0 1 17 15h3a2 2 0 0 1 2 2Z"></path></svg>
-            <a href={contact.phone.href}>{contact.phone.label}</a>
-          </p>
-          <p class="cm-footer-contact-line">
             <svg {...icon}><rect x="2" y="4" width="20" height="16" rx="2"></rect><path d="m2 7 9 6a2 2 0 0 0 2 0l9-6"></path></svg>
             <a href={emailHref}>{contact.email}</a>
           </p>

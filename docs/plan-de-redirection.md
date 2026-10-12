@@ -27,26 +27,31 @@ Les pages du nouveau site sont publiées sans extension (`/tarifs-petons`). La m
 | `/nos-valeurs/` (et `#ecocitoyenne`, `#montessori`) | `/pedagogie-petons` | Menu « Le projet pédagogique » et « Pédagogie Montessori » |
 | `/la-vie-a-lecole/` | `/vie-pratique-petons` | Déroulement de la journée, horaires |
 | `/informations-pratiques/` | `/vie-pratique-petons` | Lieu, horaires, organisation de l'année |
-| `/portfolio/` et `/portfolio/*` (rôle de l'APE, rôles des membres, élection du bureau) | `/vie-pratique-petons#familles` | « Les familles à l'école » (parents, APE) |
+| `/portfolio/role-de-lape/`, `/portfolio/roles-des-membres-de-lape/`, `/portfolio/election-du-bureau/` | `/equipe-petons#association` | Fiches APE → bureau de l'association (revu le 12 octobre 2026) |
+| `/portfolio/` et toute autre fiche `/portfolio/*` | `/vie-pratique-petons#familles` | « Les familles à l'école » (parents, APE) |
 | `/journees-portes-ouvertes/` | `/actualites-petons#portes-ouvertes` | Carte « portes ouvertes » de l'agenda |
 | `/tarifs/` | `/tarifs-petons` | Tarifs |
 | `/inscription/` | `/inscriptions-petons` | Processus d'inscription |
 | `/contact/` | `/contact-petons` | Contact |
 | `/boite-a-idees/` | `/contact-petons` | Page vide sur l'ancien site |
 | `/la-creche/` | `/` | **À décider** : la micro-crèche a fermé le 30 juin 2026 et n'a pas d'équivalent |
+| `/le-lieu/` | `/ecole-petons` | Déjà en 404 sur l'ancien site, encore 8e dans Google (Search Console, 12 octobre 2026) |
+| `/wp-content/uploads/2018/07/Dossier_Inscription_LPDLH_2018_2019.pdf` | `/inscriptions-petons` | Ancien dossier d'inscription, qui reçoit encore des clics |
 | `/feed/` | `/actualites-petons` | Flux RSS WordPress |
 | `/category/*`, `/tag/*` | `/` | Taxonomies vides, au cas où Google les aurait indexées |
 
 Volontairement **sans** redirection (elles renverront une erreur 404) :
 
 - `/wp-admin`, `/wp-login.php`, `/xmlrpc.php`, `/wp-json/`, `/comments/feed/` : propres à WordPress.
-- `/wp-content/uploads/…` : les PDF de 2018 à 2022 (règlement intérieur, grilles tarifaires, dossiers d'inscription) sont périmés. **À vérifier** : si la Search Console ou un outil de liens entrants montre qu'un site externe pointe vers un de ces PDF, ajouter une règle vers la page actuelle (tarifs ou inscriptions).
+- `/wp-content/uploads/…` : les PDF de 2018 à 2022 (règlement intérieur, grilles tarifaires, dossiers d'inscription) sont périmés. Seul le dossier d'inscription 2018-2019, relevé par la Search Console, est redirigé (voir le tableau). Si un autre PDF apparaît dans la Search Console ou un outil de liens entrants, ajouter une règle vers la page actuelle (tarifs ou inscriptions).
 
 Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. Si la destination n'a pas d'ancre, le navigateur garde celle d'origine ; aucun `id` de la nouvelle page ne correspondant, la page s'ouvre en haut.
 
 ## 3. Le domaine du nouveau site
 
-**Décision du 9 octobre 2026 : pour l'instant, on garde `ecolemontessorinantes.com` (scénario A).** Le nouveau site est déployé sur Vercel (`ecolemontessorinantes.vercel.app`). Pour mémoire, les deux scénarios étudiés :
+**Décision du 9 octobre 2026 : pour l'instant, on garde `ecolemontessorinantes.com` (scénario A).**
+
+**Décision du 12 octobre 2026 : le domaine principal est `https://www.ecolemontessorinantes.com`.** Canonical, `og:url`, JSON-LD, sitemap et robots.txt en découlent (`site` dans `astro.config.mjs`, figé par `tests/referencement.test.ts`). Le domaine nu `ecolemontessorinantes.com` redirige vers `www` dans Vercel, en une seule redirection permanente. Cette règle inverse celle de l'ancien WordPress (`www` → domaine nu). Le nouveau site est déployé sur Vercel (`ecolemontessorinantes.vercel.app`). Pour mémoire, les deux scénarios étudiés :
 
 **A. Garder `ecolemontessorinantes.com` (retenu).** On fait pointer le domaine vers Vercel, les règles ci-dessus suffisent. C'est le scénario le plus sûr pour le référencement, car Google ne voit qu'un changement d'adresses, pas un déménagement.
 
@@ -59,15 +64,15 @@ Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. 
 ### Avant la bascule
 
 1. **Search Console** : vérifier que la propriété `ecolemontessorinantes.com` existe, ou la créer, et exporter les pages et liens entrants qui comptent (« Pages », « Liens »). Si une adresse absente du tableau du §2 apparaît, ajouter une règle et une ligne au test.
-2. **Le domaine est déclaré dans `astro.config.mjs`** (`site: 'https://ecolemontessorinantes.com'`). Les éléments suivants en découlent automatiquement, déjà en place et vérifiés par `tests/referencement.test.ts` :
+2. **Le domaine est déclaré dans `astro.config.mjs`** (`site: 'https://www.ecolemontessorinantes.com'`). Les éléments suivants en découlent automatiquement, déjà en place et vérifiés par `tests/referencement.test.ts` :
    - une balise `<link rel="canonical">` par page (`src/components/Referencement.astro`), qui désigne l’adresse sans `.html` de la page ;
    - les balises Open Graph et la carte X/Twitter de chaque page (`og:url`, `og:image`…) ;
    - le JSON-LD des pages Chenilles, Papillons et Pédagogie, qui pointait jusqu'ici vers `ecolemontessorinantes.vercel.app` ;
-   - `/sitemap.xml` (`src/pages/sitemap.xml.ts`), qui liste toute page ajoutée dans `src/pages/` ;
+   - `/sitemap.xml` (`src/pages/sitemap.xml.ts`), qui liste toute page ajoutée dans `src/pages/`, sauf celles marquées `noindex` (comme `lettre-confirmee`) ;
    - `/robots.txt` (`src/pages/robots.txt.ts`), qui annonce le sitemap.
 3. Avant la bascule, les canonical et les aperçus de partage du déploiement `vercel.app` désignent déjà `ecolemontessorinantes.com`, qui sert encore l'ancien WordPress. Ce n'est pas gênant, puisque l'adresse de prévisualisation n'a pas vocation à être référencée. Conséquence à connaître : un lien `vercel.app` partagé avant la bascule s'affiche sans image, car `og:image` pointe vers une image que l'ancien site ne sert pas. Si l'on revient un jour sur le choix du domaine, il suffit de changer `site` avant de soumettre le sitemap.
 4. **Baisser le TTL** des enregistrements DNS `A` et `www` chez OVH (par exemple à 300 s) **48 h avant** la bascule.
-5. Ajouter `ecolemontessorinantes.com` et `www.ecolemontessorinantes.com` dans Vercel (Project → Settings → Domains), avec `www` redirigé vers le domaine nu, comme aujourd'hui.
+5. Ajouter `ecolemontessorinantes.com` et `www.ecolemontessorinantes.com` dans Vercel (Project → Settings → Domains). Depuis le 12 octobre 2026, `www.ecolemontessorinantes.com` est le domaine principal : le domaine nu y redirige (« Redirect to www.ecolemontessorinantes.com », code 308 ou 301).
 
 ### Le jour de la bascule (zone DNS chez OVH)
 
@@ -75,7 +80,7 @@ Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. 
 2. **Ne toucher ni aux `MX` (Google), ni aux `TXT` (SPF, DKIM, vérification Google), ni aux serveurs DNS.**
 3. Attendre que Vercel ait émis le certificat HTTPS (le domaine apparaît « Valid Configuration »).
 4. Vérifier toutes les redirections, voir §5.
-5. Search Console : soumettre `https://ecolemontessorinantes.com/sitemap.xml`.
+5. Search Console : soumettre `https://www.ecolemontessorinantes.com/sitemap.xml`, puis retirer les anciens `sitemap_index.xml` (`www.` et `http://www.`).
 
 ### Après la bascule
 
@@ -90,12 +95,12 @@ Avant la bascule, sur un déploiement de prévisualisation Vercel (remplacer l'a
 
 ```bash
 BASE=https://ecolemontessorinantes.vercel.app
-for p in /ecole-montessori-nantes/ /lecole/ /qui-sommes-nous/ /nous-rejoindre/ /nos-valeurs/ /la-vie-a-lecole/ /informations-pratiques/ /portfolio/ /portfolio/role-de-lape/ /portfolio/roles-des-membres-de-lape/ /portfolio/election-du-bureau/ /journees-portes-ouvertes/ /tarifs/ /inscription/ /contact/ /boite-a-idees/ /la-creche/; do
+for p in /ecole-montessori-nantes/ /lecole/ /qui-sommes-nous/ /nous-rejoindre/ /nos-valeurs/ /la-vie-a-lecole/ /informations-pratiques/ /portfolio/ /portfolio/role-de-lape/ /portfolio/roles-des-membres-de-lape/ /portfolio/election-du-bureau/ /journees-portes-ouvertes/ /tarifs/ /inscription/ /contact/ /boite-a-idees/ /la-creche/ /le-lieu/ /wp-content/uploads/2018/07/Dossier_Inscription_LPDLH_2018_2019.pdf; do
   printf '%-45s ' "$p"; curl -s -o /dev/null -w '%{http_code} → %{redirect_url}\n' "$BASE$p"
 done
 ```
 
-Chaque ligne doit afficher `308 → …/nouvelle-page`. Après la bascule, refaire la même vérification avec `BASE=https://ecolemontessorinantes.com`, puis `http://` et `https://www.`.
+Chaque ligne doit afficher `308 → …/nouvelle-page`. Vercel répond 308 pour une redirection permanente : Google la traite comme une 301. Après la bascule, refaire la même vérification avec `BASE=https://www.ecolemontessorinantes.com` : une seule redirection, cible en 200. Avec `BASE=https://ecolemontessorinantes.com` ou `http://…`, la première réponse doit être la redirection d'hôte vers `https://www.ecolemontessorinantes.com` (même chemin), suivie de la redirection de page.
 
 Les règles se testent aussi sans déploiement avec `bun test tests/redirections.test.ts`. Le test reproduit la comparaison d'adresses de Vercel (`path-to-regexp` 6, mêmes options), vérifie que chaque page et chaque ancre de destination existe, et, après `bun run build`, que le routage construit redirige chaque ancienne adresse.
 

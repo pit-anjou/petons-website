@@ -6,9 +6,9 @@ import { redirectionsVercel } from './src/integrations/redirections-vercel';
 
 export default defineConfig({
   // Domaine public du site : sert aux balises canonical, au sitemap, à robots.txt et au JSON-LD.
-  // Domaine retenu le 9 octobre 2026 (voir docs/plan-de-redirection.md, §3). En cas de changement,
-  // modifier cette seule ligne : rien d'autre à modifier.
-  site: 'https://ecolemontessorinantes.com',
+  // Domaine principal en www depuis le 12 octobre 2026 (voir docs/plan-de-redirection.md, §3) ; le domaine
+  // nu redirige vers lui dans Vercel. En cas de changement, modifier cette seule ligne : rien d'autre à modifier.
+  site: 'https://www.ecolemontessorinantes.com',
   // Pages écrites en chenilles-petons.html, publiées sans extension à /chenilles-petons
   // (src/integrations/redirections-vercel.ts). Sans barre finale : /chenilles-petons/ redirige vers /chenilles-petons.
   build: { format: 'file' },

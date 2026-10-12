@@ -1,8 +1,14 @@
 // Publié à /sitemap.xml : liste chaque page de src/pages, une nouvelle page y entre toute seule.
+// Une page marquée `<meta name="robots" content="noindex">` en est exclue : la Search Console signale
+// sinon « Envoyée mais marquée noindex ».
 import type { APIRoute } from 'astro';
 
-const pages = Object.keys(import.meta.glob('./*.astro'))
-  .map((chemin) => chemin.replace(/^\.\//, '').replace(/\.astro$/, ''))
+const sources = import.meta.glob<string>('./*.astro', { query: '?raw', import: 'default', eager: true });
+const noindex = /<meta\s+name="robots"\s+content="[^"]*noindex/;
+
+const pages = Object.entries(sources)
+  .filter(([, source]) => !noindex.test(source))
+  .map(([chemin]) => chemin.replace(/^\.\//, '').replace(/\.astro$/, ''))
   .map((nom) => (nom === 'index' ? '/' : nom))
   .sort((a, b) => (a === '/' ? -1 : b === '/' ? 1 : a.localeCompare(b)));
 
