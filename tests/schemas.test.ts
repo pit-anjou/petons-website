@@ -20,6 +20,7 @@ const stage = (surcharge: Record<string, unknown> = {}) => ({
   fin: '2027-02-26',
   vacances: 'hiver',
   image,
+  alt: 'Une scène de théâtre',
   prix: 200,
   prixFratrie: 180,
   effectif: 14,

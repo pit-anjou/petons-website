@@ -89,10 +89,13 @@ sac:
   sousTitre: car la création, ça creuse !
   objets:
     - image: assets/img/actualites/stage-sac-repas.png
+      alt: Une gourde, une boîte à repas et une pomme
       texte: Une **gourde**, un repas pour le midi et un goûter.
     - image: assets/img/actualites/stage-sac-tenue.png
+      alt: Un pull rayé et un pantalon souple
       texte: Une **tenue souple** pour bouger et jouer.
     - image: assets/img/actualites/stage-sac-blouse.png
+      alt: Une grande chemise tachée de peinture
       texte: Une **grande chemise** en guise de blouse pour les arts plastiques.
 inscription: Un **acompte de 100 €** valide l’inscription, par Wero ou virement bancaire. Contactez l’école pour connaître les modalités.
 ---

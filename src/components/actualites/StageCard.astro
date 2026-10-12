@@ -27,7 +27,7 @@ const { width, height } = await dimensionsImage(stage.image);
 const dialogue = `${id}-dialog`;
 ---
 <article class={`news-card stage-card stage-card--${stage.couleur}`} id={id} aria-labelledby={`${id}-heading ${id}-date`} data-category="evenements">
-  <div class="stage-visual"><img src={stage.image} alt="" width={width} height={height} loading="lazy" decoding="async" style={`object-position:center ${stage.cadrage}%`}><h3 id={`${id}-heading`}><TitreLignes texte={programme.titre} /></h3><small>{programme.accroche}</small><span class="visual-label stage-audience-label" set:html={enLigne(programme.etiquette)}></span></div>
+  <div class="stage-visual"><img src={stage.image} alt={stage.alt} width={width} height={height} loading="lazy" decoding="async" style={`object-position:center ${stage.cadrage}%`}><h3 id={`${id}-heading`}><TitreLignes texte={programme.titre} /></h3><small>{programme.accroche}</small><span class="visual-label stage-audience-label" set:html={enLigne(programme.etiquette)}></span></div>
   <div class="card-content">
     <div class="stage-meta">
       <div class="stage-date" id={`${id}-date`}><span class="stage-season">Vacances<br>{LIBELLES_VACANCES[stage.vacances]}</span><time datetime={dateIso(stage.debut)} aria-label={majuscule(plage.longue)}><strong>{plage.jours}</strong><b>{plage.mois}<br>{plage.annee}</b></time></div>

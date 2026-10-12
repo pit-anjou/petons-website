@@ -409,6 +409,11 @@ content:
                 label: Dessin
                 type: image
                 required: true
+              - name: alt
+                label: Description du dessin
+                type: string
+                required: true
+                description: Ce que montre le dessin, en quelques mots, pour les personnes qui ne le voient pas.
               - name: texte
                 label: Texte
                 type: text
@@ -475,6 +480,11 @@ content:
         type: image
         required: true
         description: Affichée en fond pâle derrière le titre du stage.
+      - name: alt
+        label: Description de l’image
+        type: string
+        required: true
+        description: Ce que montre l’image, en une phrase, pour les personnes qui ne la voient pas.
       - name: cadrage
         label: Cadrage vertical de l’image (%)
         type: number

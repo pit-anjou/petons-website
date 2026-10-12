@@ -33,7 +33,7 @@ const datePart = (type: string) => parts.find(part => part.type === type)?.value
         <p class="oh-card-hours">{openHouse.hours}<span>Entrée libre</span></p>
       </div>
     </div>
-    <div class="oh-card-art"><img src={openHouse.illustration} alt="" width="1200" height="800" sizes="(max-width: 700px) calc(100vw - 54px), 360px" loading="lazy" decoding="async"></div>
+    <div class="oh-card-art"><img src={openHouse.illustration} alt={openHouse.illustrationAlt} width="1200" height="800" sizes="(max-width: 700px) calc(100vw - 54px), 360px" loading="lazy" decoding="async"></div>
     <div class="oh-card-copy">
       <div class="oh-card-programme">
         <div><h3>Explorez</h3><p>Les ambiances <strong>3–6 ans et 6–12 ans</strong> et le matériel Montessori.</p></div>

@@ -68,7 +68,7 @@ export const support = {
   title: 'Aux côtés des enfants',
   text: 'Un don, du matériel, un savoir-faire : votre soutien a sa place.',
   cta: 'Soutenir l’école',
-  image: { src: 'assets/img/soutien-ensemble-maison-petons-v2.webp', width: 1536, height: 1024 },
+  image: { src: 'assets/img/soutien-ensemble-maison-petons-v2.webp', alt: 'Deux adultes et deux enfants tiennent ensemble une petite maison.', width: 1536, height: 1024 },
 } as const;
 
 export const footerNav: ReadonlyArray<{ readonly title: string; readonly links: ReadonlyArray<NavLink> }> = [
