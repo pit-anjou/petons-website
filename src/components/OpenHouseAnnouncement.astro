@@ -1,9 +1,12 @@
 ---
 import { openHouse } from '../data/openHouse';
+// Styles et script écrits dans la page : ils ne bloquent plus l’affichage par une requête à part.
+import css from '../styles/open-house-announcement.css?raw';
+import js from '../scripts/open-house-announcement.js?raw';
 const parts = new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' }).formatToParts(new Date(openHouse.start));
 const datePart = (type: string) => parts.find(part => part.type === type)?.value;
 ---
-<link rel="stylesheet" href="assets/css/open-house-announcement.css?v=20261008-3">
+<style is:inline set:html={css}></style>
 <div id="open-house-announcement" data-campaign={openHouse.id} data-end={openHouse.end}>
   <aside class="oh-banner" aria-label="Prochaines portes ouvertes" hidden>
     <div class="oh-banner-inner">
@@ -30,7 +33,7 @@ const datePart = (type: string) => parts.find(part => part.type === type)?.value
         <p class="oh-card-hours">{openHouse.hours}<span>Entrée libre</span></p>
       </div>
     </div>
-    <div class="oh-card-art"><img data-src={openHouse.illustration} alt="" width="1200" height="800" decoding="async"></div>
+    <div class="oh-card-art"><img data-src={openHouse.cardIllustration} alt="" width="720" height="480" decoding="async"></div>
     <div class="oh-card-copy">
       <div class="oh-card-programme">
         <div><h3>Explorez</h3><p>Les ambiances <strong>3–6 ans et 6–12 ans</strong> et le matériel Montessori.</p></div>
@@ -40,4 +43,4 @@ const datePart = (type: string) => parts.find(part => part.type === type)?.value
     </div>
   </aside>
 </div>
-<script is:inline src="assets/js/open-house-announcement.js?v=20261008-3"></script>
+<script is:inline set:html={js}></script>

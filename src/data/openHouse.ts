@@ -8,6 +8,8 @@ export const openHouse = {
   end: '2026-11-21T13:00:00+01:00',
   href: 'actualites-petons#portes-ouvertes',
   illustration: 'assets/img/portes-ouvertes-ecole-2026.webp',
+  // Même image réduite à 720 px pour la fenêtre d’annonce (affichée à moins de 400 px de large).
+  cardIllustration: 'assets/img/portes-ouvertes-ecole-2026-720.webp',
   illustrationAlt: 'Deux adultes et trois enfants vous accueillent devant l’école des Petons.',
   admissions: 'Rentrées de janvier et septembre 2027',
 };

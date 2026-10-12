@@ -3,6 +3,8 @@ import Referencement from '../components/Referencement.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
+import SupportFooterStyles from '../components/SupportFooterStyles.astro';
+import EnfantsAnimesStyles from '../components/EnfantsAnimesStyles.astro';
 ---
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#fffdf8"><Referencement title={"Les Chenilles · Montessori 3–6 ans à Nantes | Les Petons dans l’Herbe"} description={"Découvrez Les Chenilles, l’ambiance Montessori 3–6 ans des Petons à Nantes : le quotidien avec Antoine, les activités, la musique et le rythme de chacun."} page={{ name: "Les Chenilles · 3–6 ans — Les Petons dans l’Herbe, Nantes", description: "Le quotidien de l’ambiance Montessori 3–6 ans avec Antoine : activités, autonomie, préparation des fruits et du pain, musique et respect du rythme de chacun." }} /><style is:inline>@font-face {
   font-family: 'Nunito';
@@ -474,8 +476,8 @@ body .button:not(.secondary){color:#203f4d;}
 @media(max-width:700px){.jumpnav{margin-bottom:29px}}
 @media print{.jumpnav{display:none!important}}
 </style>
-<link rel="stylesheet" href="assets/css/enfants-animes.css"><script is:inline src="assets/js/enfants-animes.js" defer></script>
-<link rel="stylesheet" href="assets/css/support-footer.css?v=20261001-7"></head><body><a class="skip" href="#main">Aller au contenu</a><Header /><main id="main">
+<EnfantsAnimesStyles /><script is:inline src="assets/js/enfants-animes.js" defer></script>
+<SupportFooterStyles /></head><body><a class="skip" href="#main">Aller au contenu</a><Header /><main id="main">
   <div class="wrap breadcrumb"><a href="pedagogie-petons" data-local-href="pedagogie-petons.html">Notre pédagogie</a><span aria-hidden="true">/</span><span>Les Chenilles · 3–6 ans</span></div>
   <section class="wrap caterpillars-hero" aria-labelledby="page-title">
     <div class="hero-copy">

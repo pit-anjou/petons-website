@@ -3,6 +3,7 @@ import Referencement from '../components/Referencement.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
+import SupportFooterStyles from '../components/SupportFooterStyles.astro';
 ---
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><Referencement title={"Dons et solidarité · Soutenir Les Petons dans l’Herbe"} description={"Soutenez Les Petons dans l’Herbe à Nantes : bourses, aide ponctuelle aux familles, matériel, jardin et compétences. Découvrez les différentes façons de contribuer."} /><style is:inline>@font-face {
   font-family: 'Nunito';
@@ -184,7 +185,7 @@ body .button:not(.secondary){color:#203f4d;}
 .enterprise-compact{align-items:start}.partner-row{padding:0 0 16px;margin-bottom:17px;border-bottom:1px solid var(--line)}.partner-row h3{font:800 17px/1.5 Nunito,sans-serif;letter-spacing:0;margin:0 0 9px}.partner-row p{margin-bottom:0}.partner-followup{font-size:14px!important;line-height:1.8}
 @media(min-width:701px) and (max-width:900px){#soutiens .support-choices{grid-template-columns:1fr}#soutiens .choice-heading{grid-template-columns:minmax(0,1fr) 160px;min-height:135px}#soutiens .choice-art{width:155px;height:130px}.shared-grid,.bridge-panel,.enterprise-compact{grid-template-columns:1fr;gap:27px}.shared-art{max-width:350px;margin:auto}.three-cols{grid-template-columns:1fr}.three-cols.cycles{grid-template-columns:repeat(3,1fr)}.three-cols.cycles .cycle{padding-right:5px}.three-cols.cycles .total{font-size:24px}#soutiens .unrestricted{grid-template-columns:1fr}.free-action{max-width:390px;justify-self:center;width:100%}}
 @media(max-width:380px){#soutiens .choice-heading{grid-template-columns:minmax(0,1fr) 82px}#soutiens .choice-art{width:82px;height:105px}#soutiens .choice-heading h3{font-size:24px}.support-hero h1{font-size:38px}#soutiens .free-amounts span{font-size:20px;padding:6px}.section-title .tiny-star{display:none}}
-</style><link rel="stylesheet" href="assets/css/support-footer.css?v=20261001-7"><style is:inline>
+</style><SupportFooterStyles /><style is:inline>
 /* A readable introduction with room for both access and shared projects. */
 .support-hero{grid-template-columns:minmax(0,1.35fr) minmax(0,.85fr);gap:48px}
 .support-hero .lead{font-size:18px;line-height:1.7}

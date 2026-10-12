@@ -3,6 +3,7 @@ import Referencement from '../components/Referencement.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
+import SupportFooterStyles from '../components/SupportFooterStyles.astro';
 ---
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><Referencement title={"L’équipe · Les Petons dans l’Herbe"} description={"Découvrez les éducateurs et le bureau associatif des Petons dans l’Herbe, école Montessori à Nantes."} /><style is:inline>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 @font-face {
@@ -303,7 +304,7 @@ body .button:not(.secondary){color:#203f4d;}
 @media(prefers-reduced-motion:reduce){.cm-submenu-toggle svg{transition:none;}}
 @media print{.cm-site-header,.cm-site-footer{display:none;}}
 
-</style><link rel="stylesheet" href="assets/css/support-footer.css?v=20261001-7"></head><body>
+</style><SupportFooterStyles /></head><body>
 <a class="skip" href="#main">Aller au contenu</a>
 <Header />
 <main id="main">
