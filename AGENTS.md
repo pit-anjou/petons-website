@@ -8,12 +8,13 @@ Le site est construit avec [Astro](https://astro.build). Le résultat publié re
 | --- | --- |
 | Le texte, les images ou la mise en page d'une page | `src/pages/<page>.astro` (ex. `src/pages/tarifs-petons.astro`) |
 | Les programmes et sessions de stage, rendez-vous et articles de la page Actualités | Page CMS (voir `docs/page-cms.md`) ou les fichiers de `src/content/programmes/`, `src/content/stages/`, `src/content/rendez-vous/`, `src/content/articles/` |
-| Les portes ouvertes de novembre (carte de l'agenda, fenêtre) et le bandeau d'annonce du site | `src/data/openHouse.ts` (textes, dates), `src/components/OpenHouseAnnouncement.astro` (bandeau) ; carte et fenêtre dans `src/pages/actualites-petons.astro` |
+| Les portes ouvertes de novembre (carte de l'agenda, fenêtre) et le bandeau d'annonce du site | `src/data/openHouse.ts` (textes, dates), `src/components/OpenHouseAnnouncement.astro` (bandeau ; styles et script dans `src/styles/open-house-announcement.css` et `src/scripts/open-house-announcement.js`) ; carte et fenêtre dans `src/pages/actualites-petons.astro` |
 | La mise en page des fenêtres de stage (types de blocs, « En pratique ») | `src/components/actualites/StageDialog.astro`, `ProgrammeSection.astro` |
 | Le menu, les liens du footer, l'adresse, le téléphone, l'email, Instagram, l'encart « Dons & mécénat » | `src/data/site.ts` (une seule fois pour tout le site) |
 | La structure HTML du header ou du footer | `src/components/Header.astro`, `src/components/Footer.astro` |
 | Le script du menu mobile et des sous-menus | `src/components/SiteNavScript.astro` |
 | Les formulaires (contact, inscription, lettre) et leur envoi à Brevo | Textes : la page concernée ; numéros Brevo : `src/data/brevo.ts` ; logique serveur : `src/lib/formulaires/` ; guide : `docs/formulaires-brevo.md` |
+| Les styles de l'encart « Dons & mécénat » et des illustrations animées | `src/styles/support-footer.css`, `src/styles/enfants-animes.css` (écrits dans chaque page par `<SupportFooterStyles />` et `<EnfantsAnimesStyles />`) |
 | Ajouter ou remplacer une image, une vidéo, une police | `public/assets/…` (référencée dans les pages par `assets/…`, sans `public/`) |
 | Le titre et la description d'une page (onglet, moteurs de recherche, aperçu de partage) | `<Referencement title="…" description="…" />` dans le `<head>` de la page |
 | Le domaine du site (canonical, Open Graph, sitemap.xml, robots.txt, JSON-LD) et l'image de partage par défaut | `site` dans `astro.config.mjs` (une seule fois) ; balises et image dans `src/components/Referencement.astro` |

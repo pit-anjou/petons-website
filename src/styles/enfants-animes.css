@@ -13,6 +13,8 @@
    sans script, elle apparaît quand même au bout de 2,5 s. */
 svg.puppet{opacity:0;animation:pz-reveal .01s 2.5s forwards}
 svg.puppet.is-ready{opacity:1;animation:none;transition:opacity .35s ease-out}
+/* Planche chargée à l’approche (data-href) : attendre le script, pas les 2,5 s. */
+svg.puppet.is-lazy:not(.is-ready){animation:none}
 @keyframes pz-reveal{to{opacity:1}}
 
 /* Étoile peinte qui scintille. */
