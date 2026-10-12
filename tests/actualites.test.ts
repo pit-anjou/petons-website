@@ -6,7 +6,7 @@ const visuel = { image: 'assets/img/actualites/eco-ecole.svg', alt: 'Logo' };
 
 const stage = (id: string, debut: string, brouillon = false, programme = 'p.md') => ({
   id,
-  data: stageSchema.parse({ programme, debut, fin: debut, vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', prix: 1, prixFratrie: 1, effectif: 1, brouillon }),
+  data: stageSchema.parse({ programme, debut, fin: debut, vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', alt: 'Logo', prix: 1, prixFratrie: 1, effectif: 1, brouillon }),
 });
 const rendezVous = (id: string, date: string, brouillon = false) => ({
   id,
@@ -89,7 +89,7 @@ test('avecProgramme ne confond pas un id slugifié avec le nom de fichier réel'
 });
 
 test('stageSchema accepte un nom de fichier de programme libre mais pas un chemin ni une autre extension', () => {
-  const base = { debut: '2027-02-22', fin: '2027-02-22', vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', prix: 1, prixFratrie: 1, effectif: 1 };
+  const base = { debut: '2027-02-22', fin: '2027-02-22', vacances: 'hiver', image: 'assets/img/actualites/eco-ecole.svg', alt: 'Logo', prix: 1, prixFratrie: 1, effectif: 1 };
   expect(stageSchema.safeParse({ ...base, programme: 'Stage Été.md' }).success).toBe(true);
   expect(stageSchema.safeParse({ ...base, programme: '../x.md' }).success).toBe(false);
   expect(stageSchema.safeParse({ ...base, programme: 'x.yml' }).success).toBe(false);

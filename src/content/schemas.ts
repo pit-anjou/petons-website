@@ -67,7 +67,7 @@ export const programmeSchema = z.object({
   sac: z.object({
     titre: texteRequis,
     sousTitre: z.string().optional(),
-    objets: z.array(z.object({ image, texte: texteRequis }).strict()).min(1),
+    objets: z.array(z.object({ image, alt: texteRequis, texte: texteRequis }).strict()).min(1),
   }).strict().optional(),
   inscription: texteRequis,
 }).strict().refine(
@@ -82,6 +82,7 @@ export const stageSchema = z.object({
   fin: z.coerce.date(),
   vacances: z.enum(VACANCES),
   image,
+  alt: texteRequis,
   cadrage: pourcentage(5),
   couleur: z.enum(COULEURS_STAGE).default('vert'),
   prix: z.number().int().positive(),

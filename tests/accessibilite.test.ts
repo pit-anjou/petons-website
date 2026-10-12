@@ -54,6 +54,16 @@ test('chaque image a un attribut alt, et chaque illustration SVG est décrite ou
   }
 });
 
+/** Pages dont chaque image est décrite : aucun alt vide. Ajouter une page ici une fois ses images décrites. */
+const PAGES_IMAGES_DECRITES = ['actualites-petons.html', 'vie-pratique-petons.html'];
+
+test('chaque image des pages décrites a un texte alternatif non vide', () => {
+  for (const { fichier, html } of pages.filter((page) => PAGES_IMAGES_DECRITES.includes(page.fichier))) {
+    const altVides = html.querySelectorAll('img').filter((image) => !image.getAttribute('alt')?.trim()).map((image) => image.getAttribute('src') ?? image.getAttribute('data-src'));
+    expect({ fichier, altVides }).toEqual({ fichier, altVides: [] });
+  }
+});
+
 test('chaque lien et chaque bouton a un nom accessible', () => {
   for (const { fichier, html } of pages) {
     const muets = html
