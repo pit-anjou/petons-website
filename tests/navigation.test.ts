@@ -125,6 +125,15 @@ test('le focus dans le panneau le maintient ouvert, puis Échap revient à sa fl
   expect(n.hidden(item.panel)).toBe(true);
 });
 
+test('après un clic sur une flèche, le survol peut ouvrir un autre menu sans masquer le focus', () => {
+  const n = navigation(), item = n.groups[0]!;
+  n.focus(item.button); n.click(item.button);
+  n.enter(1); n.advance(350);
+  expect(n.hidden(item.panel)).toBe(true);
+  expect(n.hidden(n.groups[1]!.panel)).toBe(false);
+  expect(n.document.activeElement).toBe(item.button);
+});
+
 test('sortir au clavier ou cliquer ailleurs ferme le sous-menu', () => {
   const n = navigation(), item = n.groups[0]!, outside = n.document.querySelector('main')!;
   n.click(item.button); n.focus(item.panel.querySelector('a')!); n.focus(outside);
