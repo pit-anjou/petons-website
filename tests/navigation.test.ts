@@ -98,7 +98,7 @@ test('le menu tolère une sortie de 250 ms et reste ouvert lors du retour vers l
 
 test('la flèche ouvre immédiatement et le lien parent garde sa destination', () => {
   const n = navigation(), item = n.groups[0]!;
-  expect(item.link.getAttribute('href')).toBe('ecole-petons.html');
+  expect(item.link.getAttribute('href')).toBe('ecole-petons');
   n.click(item.link); expect(n.hidden(item.panel)).toBe(true);
   n.click(item.button); expect(n.hidden(item.panel)).toBe(false);
   n.click(n.groups[1]!.button);
