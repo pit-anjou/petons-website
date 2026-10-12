@@ -184,6 +184,15 @@ test('robots.txt laisse tout indexer et annonce le sitemap', async () => {
   expect(robots).toContain(`Sitemap: ${new URL('/sitemap.xml', site).href}`);
 });
 
+test('llms.txt suit le format llmstxt.org et liste les mêmes pages que sitemap.xml', async () => {
+  const llms = await Bun.file(`${DOSSIER_PAGES}/llms.txt`).text();
+  const xml = await Bun.file(`${DOSSIER_PAGES}/sitemap.xml`).text();
+  expect(llms).toMatch(/^# .+\n\n> .+\n/);
+  const lignes = [...llms.matchAll(/^- \[[^\]]+\]\(([^)]+)\): \S.*$/gm)].map((trouve) => trouve[1]!);
+  const sitemap = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((trouve) => trouve[1]!);
+  expect(lignes.sort()).toEqual(sitemap.sort());
+});
+
 test('aucune adresse de prévisualisation Vercel ne reste dans le site publié', async () => {
   const fichiers = [...new Bun.Glob('**/*.{html,xml,txt}').scanSync(DOSSIER_PAGES)];
   const restes: string[] = [];

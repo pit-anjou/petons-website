@@ -18,7 +18,7 @@ Le site est construit avec [Astro](https://astro.build). Le résultat publié re
 | Ajouter ou remplacer une image, une vidéo, une police | `public/assets/…` (référencée dans les pages par `assets/…`, sans `public/`) |
 | Les versions réduites des images (téléphones) | Rien à faire : produites au build par `src/integrations/images-adaptees.ts` (voir la règle 8) |
 | Le titre et la description d'une page (onglet, moteurs de recherche, aperçu de partage) | `<Referencement title="…" description="…" />` dans le `<head>` de la page |
-| Le domaine du site (canonical, Open Graph, sitemap.xml, robots.txt, JSON-LD) et l'image de partage par défaut | `site` dans `astro.config.mjs` (une seule fois) ; balises et image dans `src/components/Referencement.astro` |
+| Le domaine du site (canonical, Open Graph, sitemap.xml, robots.txt, llms.txt, JSON-LD) et l'image de partage par défaut | `site` dans `astro.config.mjs` (une seule fois) ; balises et image dans `src/components/Referencement.astro` ; `llms.txt` (sommaire pour les assistants IA) est généré par `src/pages/llms.txt.ts` à partir du footer et des descriptions des pages |
 | Les données structurées (JSON-LD) : l'école, ses horaires, l'association, l'événement des portes ouvertes | `src/data/donneesStructurees.ts` (coordonnées reprises de `src/data/site.ts`, dates de `src/data/openHouse.ts`) ; vérifiées par `tests/referencement.test.ts` |
 | Les redirections des adresses de l'ancien site WordPress | `src/data/redirections.ts` et `tests/redirections.test.ts` ; plan dans `docs/plan-de-redirection.md` |
 
