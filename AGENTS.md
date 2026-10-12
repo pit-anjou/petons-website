@@ -52,7 +52,7 @@ Chaque page décrit l'école aux moteurs de recherche et aux IA (`src/data/donne
 1. **Mis à jour automatiquement** : l'adresse, l'email, Instagram et le logo (`src/data/site.ts`) ; la date, les horaires, le texte et l'image des portes ouvertes (`src/data/openHouse.ts`). Modifier ces fichiers suffit.
 2. **À mettre à jour à la main dans `src/data/donneesStructurees.ts`** quand le site change : les jours et horaires d'ouverture (aujourd'hui lundi, mardi, jeudi et vendredi, de 8h15 à 18h15, périscolaire compris), les âges accueillis (3–12 ans), le nom de l'association (Constellation Montessori), l'année d'ouverture (2018), la description (jardin, label Eco-École, statut hors contrat) et les communes desservies.
 3. **Ajout d'un téléphone** dans `src/data/site.ts` : l'ajouter aussi à l'école (`telephone`).
-4. **Nouvelles portes ouvertes** : changer les dates dans `src/data/openHouse.ts`. L'événement n'est publié que sur la page Actualités (`portesOuvertes` sur `<Referencement />`).
+4. **Nouvelles portes ouvertes** : changer les dates dans `src/data/openHouse.ts`. L'événement est publié sur l'accueil, qui l'annonce dans son bandeau, et sur la page Actualités, qui le décrit (`portesOuvertes` sur `<Referencement />`). Quand le bandeau est retiré de l'accueil, retirer aussi `portesOuvertes` de `src/pages/index.astro`.
 5. Vérifier avec `bun run check` (`tests/referencement.test.ts`), puis, après mise en ligne, passer `/` et `/actualites-petons` dans le test des résultats enrichis de Google.
 
 ## Ajouter une nouvelle page

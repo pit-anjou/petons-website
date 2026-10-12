@@ -67,7 +67,7 @@ Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. 
 2. **Le domaine est déclaré dans `astro.config.mjs`** (`site: 'https://www.ecolemontessorinantes.com'`). Les éléments suivants en découlent automatiquement, déjà en place et vérifiés par `tests/referencement.test.ts` :
    - une balise `<link rel="canonical">` par page (`src/components/Referencement.astro`), qui désigne l’adresse sans `.html` de la page ;
    - les balises Open Graph et la carte X/Twitter de chaque page (`og:url`, `og:image`…) ;
-   - le JSON-LD de chaque page (l'école, le site, la page et, sur Actualités, les portes ouvertes : `src/data/donneesStructurees.ts`) ;
+   - le JSON-LD de chaque page (l'école, le site, la page et, sur l'accueil et Actualités, les portes ouvertes : `src/data/donneesStructurees.ts`) ;
    - `/sitemap.xml` (`src/pages/sitemap.xml.ts`), qui liste toute page ajoutée dans `src/pages/`, sauf celles marquées `noindex` (comme `lettre-confirmee`) ;
    - `/robots.txt` (`src/pages/robots.txt.ts`), qui annonce le sitemap.
 3. Avant la bascule, les canonical et les aperçus de partage du déploiement `vercel.app` désignent déjà `ecolemontessorinantes.com`, qui sert encore l'ancien WordPress. Ce n'est pas gênant, puisque l'adresse de prévisualisation n'a pas vocation à être référencée. Conséquence à connaître : un lien `vercel.app` partagé avant la bascule s'affiche sans image, car `og:image` pointe vers une image que l'ancien site ne sert pas. Si l'on revient un jour sur le choix du domaine, il suffit de changer `site` avant de soumettre le sitemap.
