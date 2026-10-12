@@ -66,7 +66,6 @@ const parentClass = (item: (typeof mainNav)[number]) => (isParent(item) ? 'is-cu
 /* Shared by every page: link and disclosure stay distinct, including at hover. */
 .cm-site-header .cm-submenu-toggle{border:0;border-radius:6px;margin-left:3px;min-width:30px;}
 .cm-site-header .cm-submenu-toggle:hover,.cm-site-header .cm-submenu-toggle:focus-visible{background:#eef4df;}
-.cm-site-header .cm-nav-parent>a:hover,.cm-site-header .cm-nav-parent>a:focus-visible{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px;}
 .cm-site-header .cm-submenu:not([hidden]){animation:cm-submenu-appear 160ms ease-out;}
 @keyframes cm-submenu-appear{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
 @media(prefers-reduced-motion:reduce){.cm-site-header .cm-submenu:not([hidden]){animation:none;}}
