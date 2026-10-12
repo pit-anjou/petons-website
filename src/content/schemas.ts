@@ -102,12 +102,12 @@ const visuelSchema = z.object({
   message: 'Choisir une image ou une illustration animée, pas les deux',
 });
 
-/** https://…, http://…, mailto:…, tel:…, une page du site (contact-petons.html?sujet=visite) ou une ancre (#agenda). Refuse notamment javascript:. */
-const ADRESSE_AUTORISEE = /^(?:https?:\/\/[^\s/]\S*|mailto:\S+|tel:\S+|[\w-]+\.html(?:[?#]\S*)?|#\S*)$/i;
+/** https://…, http://…, mailto:…, tel:…, une page du site (contact-petons?sujet=visite) ou une ancre (#agenda). Refuse notamment javascript:. */
+const ADRESSE_AUTORISEE = /^(?:https?:\/\/[^\s/]\S*|mailto:\S+|tel:\S+|[\w-]+(?:[?#]\S*)?|#\S*)$/i;
 
 const lienSchema = z.object({
   libelle: texteRequis,
-  url: z.string().trim().regex(ADRESSE_AUTORISEE, 'Adresse attendue : https://…, mailto:…, tel:…, une page du site (contact-petons.html) ou une ancre (#agenda)'),
+  url: z.string().trim().regex(ADRESSE_AUTORISEE, 'Adresse attendue : https://…, mailto:…, tel:…, une page du site (contact-petons) ou une ancre (#agenda)'),
   style: z.enum(STYLES_LIEN).default('lien'),
   nouvelOnglet: z.boolean().default(false),
 }).strict();

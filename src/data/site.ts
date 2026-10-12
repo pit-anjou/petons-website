@@ -13,7 +13,7 @@ export interface NavItem extends NavLink {
 }
 
 export const brand = {
-  href: 'index.html',
+  href: '/',
   label: 'Les Petons dans l’Herbe — Accueil',
   logo: {
     src: 'assets/img/logo-petons-2026.svg',
@@ -33,35 +33,35 @@ export const contact = {
 } as const;
 
 export const mainNav: ReadonlyArray<NavItem> = [
-  { href: 'index.html', label: 'Accueil' },
+  { href: '/', label: 'Accueil' },
   {
-    href: 'ecole-petons.html',
+    href: 'ecole-petons',
     label: 'L’école',
     submenu: { id: 'cm-school-menu', toggleLabel: 'Afficher les informations pratiques, les tarifs et les actualités' },
     children: [
-      { href: 'vie-pratique-petons.html', label: 'Informations pratiques' },
-      { href: 'tarifs-petons.html', label: 'Tarifs' },
-      { href: 'actualites-petons.html', label: 'Actualités' },
+      { href: 'vie-pratique-petons', label: 'Informations pratiques' },
+      { href: 'tarifs-petons', label: 'Tarifs' },
+      { href: 'actualites-petons', label: 'Actualités' },
     ],
   },
-  { href: 'equipe-petons.html', label: 'L’équipe' },
+  { href: 'equipe-petons', label: 'L’équipe' },
   {
-    href: 'pedagogie-petons.html',
+    href: 'pedagogie-petons',
     label: 'Pédagogie et ambiances',
     submenu: { id: 'cm-ambiences-menu', toggleLabel: 'Afficher les deux ambiances' },
     children: [
-      { href: 'chenilles-petons.html', label: 'L’ambiance 3–6 ans aux Petons' },
-      { href: 'papillons-petons.html', label: 'L’ambiance 6–12 ans aux Petons' },
+      { href: 'chenilles-petons', label: 'L’ambiance 3–6 ans aux Petons' },
+      { href: 'papillons-petons', label: 'L’ambiance 6–12 ans aux Petons' },
     ],
   },
-  { href: 'inscriptions-petons.html', label: 'Inscriptions' },
+  { href: 'inscriptions-petons', label: 'Inscriptions' },
 ];
 
-export const contactCta: NavLink = { href: 'contact-petons.html', label: 'Rencontrons-nous' };
+export const contactCta: NavLink = { href: 'contact-petons', label: 'Rencontrons-nous' };
 
 /** Encart « Dons & mécénat » en bas de page. */
 export const support = {
-  href: 'soutenir-les-petons.html',
+  href: 'soutenir-les-petons',
   /** Ancre utilisée quand on est déjà sur la page Soutenir. */
   anchor: '#soutiens',
   eyebrow: 'Dons & mécénat',
@@ -75,34 +75,33 @@ export const footerNav: ReadonlyArray<{ readonly title: string; readonly links: 
   {
     title: 'L’école',
     links: [
-      { href: 'index.html', label: 'Accueil' },
-      { href: 'ecole-petons.html', label: 'L’école' },
-      { href: 'equipe-petons.html', label: 'L’équipe' },
-      { href: 'vie-pratique-petons.html', label: 'Informations pratiques' },
-      { href: 'actualites-petons.html', label: 'Actualités' },
+      { href: '/', label: 'Accueil' },
+      { href: 'ecole-petons', label: 'L’école' },
+      { href: 'equipe-petons', label: 'L’équipe' },
+      { href: 'vie-pratique-petons', label: 'Informations pratiques' },
+      { href: 'actualites-petons', label: 'Actualités' },
     ],
   },
   {
     title: 'Pédagogie et ambiances',
     links: [
-      { href: 'pedagogie-petons.html', label: 'Notre pédagogie' },
-      { href: 'chenilles-petons.html', label: 'L’ambiance 3–6 ans aux Petons' },
-      { href: 'papillons-petons.html', label: 'L’ambiance 6–12 ans aux Petons' },
+      { href: 'pedagogie-petons', label: 'Notre pédagogie' },
+      { href: 'chenilles-petons', label: 'L’ambiance 3–6 ans aux Petons' },
+      { href: 'papillons-petons', label: 'L’ambiance 6–12 ans aux Petons' },
     ],
   },
   {
     title: 'Nous rejoindre',
     links: [
-      { href: 'inscriptions-petons.html', label: 'Inscriptions' },
-      { href: 'tarifs-petons.html', label: 'Tarifs' },
-      { href: 'contact-petons.html', label: 'Contact' },
+      { href: 'inscriptions-petons', label: 'Inscriptions' },
+      { href: 'tarifs-petons', label: 'Tarifs' },
+      { href: 'contact-petons', label: 'Contact' },
     ],
   },
 ];
 
-/** Fichier de la page courante (« index.html » pour la racine). */
-export const currentFile = (pathname: string): string => {
-  const last = pathname.split('/').filter(Boolean).pop() ?? '';
-  if (last === '') return 'index.html';
-  return last.endsWith('.html') ? last : `${last}.html`;
+/** Adresse de la page courante, sous la forme des liens du menu : « / » pour l’accueil, sinon « tarifs-petons ». */
+export const currentPage = (pathname: string): string => {
+  const last = (pathname.split('/').filter(Boolean).pop() ?? '').replace(/\.html$/, '');
+  return last === '' || last === 'index' ? '/' : last;
 };

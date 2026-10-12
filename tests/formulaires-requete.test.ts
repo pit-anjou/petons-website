@@ -7,7 +7,7 @@ const config: ConfigBrevo = {
   ecole: { email: 'contact@ecolemontessorinantes.com', nom: 'Les Petons dans l’Herbe' },
   listes: { contact: 1, inscription: 2, lettre: 3 },
   modeles: { notificationContact: 4, accuseContact: 5, notificationInscription: 6, accuseInscription: 7, confirmationLettre: 8 },
-  pageConfirmationLettre: 'lettre-confirmee.html',
+  pageConfirmationLettre: 'lettre-confirmee',
 };
 
 const preparer = (statutBrevo = 201) => {

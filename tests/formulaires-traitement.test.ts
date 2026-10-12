@@ -8,7 +8,7 @@ const config: ConfigBrevo = {
   ecole: { email: 'contact@ecolemontessorinantes.com', nom: 'Les Petons dans l’Herbe' },
   listes: { contact: 11, inscription: 12, lettre: 13 },
   modeles: { notificationContact: 21, accuseContact: 22, notificationInscription: 23, accuseInscription: 24, confirmationLettre: 25 },
-  pageConfirmationLettre: 'lettre-confirmee.html',
+  pageConfirmationLettre: 'lettre-confirmee',
 };
 
 type Appel = [methode: keyof ClientBrevo, argument: unknown];
@@ -86,7 +86,7 @@ describe('inscription', () => {
     expect(appels.slice(1)).toEqual([
       ['enregistrerContact', { email: 'c@b.fr', attributs: { NOM_COMPLET: 'Camille', TELEPHONE: '06', RENTREE_SOUHAITEE: 'sept. 2027', TRANCHE_AGE: '3–6 ans — Les Chenilles' }, listes: [12] }],
       ['envoyerModele', { modele: 24, a: { email: 'c@b.fr', nom: 'Camille' }, repondreA: { email: 'contact@ecolemontessorinantes.com', nom: 'Les Petons dans l’Herbe' }, params: { age: '3–6 ans — Les Chenilles' } }],
-      ['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://ecolemontessorinantes.com/lettre-confirmee.html' }],
+      ['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://ecolemontessorinantes.com/lettre-confirmee' }],
     ]);
   });
 });
@@ -130,7 +130,7 @@ describe('lettre', () => {
   test('lance seulement la double confirmation', async () => {
     const { appels, deps } = faux();
     expect(await traiter(lettre, deps)).toBe('envoye');
-    expect(appels).toEqual([['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://ecolemontessorinantes.com/lettre-confirmee.html' }]]);
+    expect(appels).toEqual([['demanderConfirmation', { email: 'c@b.fr', listes: [13], modele: 25, redirection: 'https://ecolemontessorinantes.com/lettre-confirmee' }]]);
   });
 
   test('un échec de la double confirmation fait échouer l’envoi', async () => {

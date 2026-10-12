@@ -40,9 +40,9 @@ test('les liens acceptent https, http, mailto, tel, une page du site et une ancr
     'https://www.google.com/maps/dir/?api=1&destination=6%20rue%20de%20la%20Petite%20Sensive%2C%2044300%20Nantes',
     'mailto:contact@exemple.fr',
     'tel:+33600000000',
-    'contact-petons.html',
-    'contact-petons.html?sujet=visite',
-    'actualites-petons.html#agenda',
+    'contact-petons',
+    'contact-petons?sujet=visite',
+    'actualites-petons#agenda',
     '#agenda',
   ]) {
     expect(messages(avecLien(url))).toEqual([]);
@@ -50,7 +50,7 @@ test('les liens acceptent https, http, mailto, tel, une page du site et une ancr
 });
 
 test('les liens refusent javascript:, data: et les adresses sans schéma reconnu', () => {
-  for (const url of ['javascript:alert(1)', ' javascript:alert(1)', 'JaVaScRiPt:alert(1)', 'data:text/html,x', 'vbscript:x', 'ftp://exemple.fr', '//exemple.fr', 'exemple.fr', 'page.php', 'https://', 'https://a b']) {
+  for (const url of ['javascript:alert(1)', ' javascript:alert(1)', 'JaVaScRiPt:alert(1)', 'data:text/html,x', 'vbscript:x', 'ftp://exemple.fr', '//exemple.fr', 'exemple.fr', 'page.php', 'contact-petons.html', 'https://', 'https://a b']) {
     expect(messages(avecLien(url)).join(' ')).toContain('Adresse attendue');
   }
 });

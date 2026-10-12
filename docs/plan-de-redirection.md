@@ -15,27 +15,29 @@ Sources : `sitemap_index.xml` (Yoast), l'API `wp-json/wp/v2` (pages, articles, c
 
 Ces règles sont dans `src/data/redirections.ts`, avec la syntaxe des redirections Vercel. Au build, `src/integrations/redirections-vercel.ts` les écrit dans le routage produit par l’adaptateur Vercel (`.vercel/output/config.json`) : l’adaptateur ne reprend pas les redirections de `vercel.json`. Toutes sont permanentes (308) et marchent avec ou sans barre finale. Le test `tests/redirections.test.ts` vérifie chaque ligne, et leur présence dans le routage construit.
 
+Les pages du nouveau site sont publiées sans extension (`/tarifs-petons`). La même intégration redirige `/tarifs-petons.html` vers `/tarifs-petons` et `/index.html` vers `/` (308), et `/tarifs-petons/` perd sa barre finale : une seule adresse par page pour les moteurs de recherche.
+
 | Ancienne adresse | Nouvelle page | Pourquoi |
 | --- | --- | --- |
 | `/` | `/` (inchangée) | Accueil |
 | `/ecole-montessori-nantes/` | `/` | Ancienne page d'accueil de 2019 |
-| `/lecole/` | `/ecole-petons.html` | Histoire, lieu, organisation de l'école |
-| `/qui-sommes-nous/` (et `#equipe`) | `/equipe-petons.html` | Présentation de l'équipe |
-| `/nous-rejoindre/` | `/equipe-petons.html#rejoindre` | Candidatures → « Vous souhaitez rejoindre l'équipe ? » |
-| `/nos-valeurs/` (et `#ecocitoyenne`, `#montessori`) | `/pedagogie-petons.html` | Menu « Le projet pédagogique » et « Pédagogie Montessori » |
-| `/la-vie-a-lecole/` | `/vie-pratique-petons.html` | Déroulement de la journée, horaires |
-| `/informations-pratiques/` | `/vie-pratique-petons.html` | Lieu, horaires, organisation de l'année |
-| `/portfolio/role-de-lape/`, `/portfolio/roles-des-membres-de-lape/`, `/portfolio/election-du-bureau/` | `/equipe-petons.html#association` | Fiches APE → bureau de l'association (revu le 12 octobre 2026) |
-| `/portfolio/` et toute autre fiche `/portfolio/*` | `/vie-pratique-petons.html#familles` | « Les familles à l'école » (parents, APE) |
-| `/journees-portes-ouvertes/` | `/actualites-petons.html#portes-ouvertes` | Carte « portes ouvertes » de l'agenda |
-| `/tarifs/` | `/tarifs-petons.html` | Tarifs |
-| `/inscription/` | `/inscriptions-petons.html` | Processus d'inscription |
-| `/contact/` | `/contact-petons.html` | Contact |
-| `/boite-a-idees/` | `/contact-petons.html` | Page vide sur l'ancien site |
+| `/lecole/` | `/ecole-petons` | Histoire, lieu, organisation de l'école |
+| `/qui-sommes-nous/` (et `#equipe`) | `/equipe-petons` | Présentation de l'équipe |
+| `/nous-rejoindre/` | `/equipe-petons#rejoindre` | Candidatures → « Vous souhaitez rejoindre l'équipe ? » |
+| `/nos-valeurs/` (et `#ecocitoyenne`, `#montessori`) | `/pedagogie-petons` | Menu « Le projet pédagogique » et « Pédagogie Montessori » |
+| `/la-vie-a-lecole/` | `/vie-pratique-petons` | Déroulement de la journée, horaires |
+| `/informations-pratiques/` | `/vie-pratique-petons` | Lieu, horaires, organisation de l'année |
+| `/portfolio/role-de-lape/`, `/portfolio/roles-des-membres-de-lape/`, `/portfolio/election-du-bureau/` | `/equipe-petons#association` | Fiches APE → bureau de l'association (revu le 12 octobre 2026) |
+| `/portfolio/` et toute autre fiche `/portfolio/*` | `/vie-pratique-petons#familles` | « Les familles à l'école » (parents, APE) |
+| `/journees-portes-ouvertes/` | `/actualites-petons#portes-ouvertes` | Carte « portes ouvertes » de l'agenda |
+| `/tarifs/` | `/tarifs-petons` | Tarifs |
+| `/inscription/` | `/inscriptions-petons` | Processus d'inscription |
+| `/contact/` | `/contact-petons` | Contact |
+| `/boite-a-idees/` | `/contact-petons` | Page vide sur l'ancien site |
 | `/la-creche/` | `/` | **À décider** : la micro-crèche a fermé le 30 juin 2026 et n'a pas d'équivalent |
-| `/le-lieu/` | `/ecole-petons.html` | Déjà en 404 sur l'ancien site, encore 8e dans Google (Search Console, 12 octobre 2026) |
-| `/wp-content/uploads/2018/07/Dossier_Inscription_LPDLH_2018_2019.pdf` | `/inscriptions-petons.html` | Ancien dossier d'inscription, qui reçoit encore des clics |
-| `/feed/` | `/actualites-petons.html` | Flux RSS WordPress |
+| `/le-lieu/` | `/ecole-petons` | Déjà en 404 sur l'ancien site, encore 8e dans Google (Search Console, 12 octobre 2026) |
+| `/wp-content/uploads/2018/07/Dossier_Inscription_LPDLH_2018_2019.pdf` | `/inscriptions-petons` | Ancien dossier d'inscription, qui reçoit encore des clics |
+| `/feed/` | `/actualites-petons` | Flux RSS WordPress |
 | `/category/*`, `/tag/*` | `/` | Taxonomies vides, au cas où Google les aurait indexées |
 
 Volontairement **sans** redirection (elles renverront une erreur 404) :
@@ -63,10 +65,10 @@ Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. 
 
 1. **Search Console** : vérifier que la propriété `ecolemontessorinantes.com` existe, ou la créer, et exporter les pages et liens entrants qui comptent (« Pages », « Liens »). Si une adresse absente du tableau du §2 apparaît, ajouter une règle et une ligne au test.
 2. **Le domaine est déclaré dans `astro.config.mjs`** (`site: 'https://www.ecolemontessorinantes.com'`). Les éléments suivants en découlent automatiquement, déjà en place et vérifiés par `tests/referencement.test.ts` :
-   - une balise `<link rel="canonical">` par page (`src/components/Referencement.astro`), pour que `/` et `/index.html` ne comptent pas comme deux pages ;
+   - une balise `<link rel="canonical">` par page (`src/components/Referencement.astro`), qui désigne l’adresse sans `.html` de la page ;
    - les balises Open Graph et la carte X/Twitter de chaque page (`og:url`, `og:image`…) ;
    - le JSON-LD des pages Chenilles, Papillons et Pédagogie, qui pointait jusqu'ici vers `ecolemontessorinantes.vercel.app` ;
-   - `/sitemap.xml` (`src/pages/sitemap.xml.ts`), qui liste toute page ajoutée dans `src/pages/`, sauf celles marquées `noindex` (comme `lettre-confirmee.html`) ;
+   - `/sitemap.xml` (`src/pages/sitemap.xml.ts`), qui liste toute page ajoutée dans `src/pages/`, sauf celles marquées `noindex` (comme `lettre-confirmee`) ;
    - `/robots.txt` (`src/pages/robots.txt.ts`), qui annonce le sitemap.
 3. Avant la bascule, les canonical et les aperçus de partage du déploiement `vercel.app` désignent déjà `ecolemontessorinantes.com`, qui sert encore l'ancien WordPress. Ce n'est pas gênant, puisque l'adresse de prévisualisation n'a pas vocation à être référencée. Conséquence à connaître : un lien `vercel.app` partagé avant la bascule s'affiche sans image, car `og:image` pointe vers une image que l'ancien site ne sert pas. Si l'on revient un jour sur le choix du domaine, il suffit de changer `site` avant de soumettre le sitemap.
 4. **Baisser le TTL** des enregistrements DNS `A` et `www` chez OVH (par exemple à 300 s) **48 h avant** la bascule.
@@ -85,7 +87,7 @@ Les ancres (`#equipe`, `#ecocitoyenne`…) ne sont jamais envoyées au serveur. 
 - **Garder l'hébergement WordPress OVH en lecture seule pendant 1 à 3 mois**, avec une sauvegarde, avant de le résilier.
 - Suivre les erreurs 404 dans la Search Console et les journaux Vercel pendant 4 à 8 semaines, et ajouter des règles si besoin.
 - **Renouveler le domaine** avant le 26 juin 2027, et garder les redirections au moins un an.
-- Liens externes à mettre à jour : fiche Google Business Profile, Instagram, annuaires d'écoles Montessori, HelloAsso (APE). Le lien d'adhésion APE et l'espace Slack figuraient dans le menu « Espace parents » de l'ancien site. Le nouveau site mentionne Slack dans `vie-pratique-petons.html`, mais **ne propose plus le lien d'adhésion HelloAsso**.
+- Liens externes à mettre à jour : fiche Google Business Profile, Instagram, annuaires d'écoles Montessori, HelloAsso (APE). Le lien d'adhésion APE et l'espace Slack figuraient dans le menu « Espace parents » de l'ancien site. Le nouveau site mentionne Slack dans `vie-pratique-petons`, mais **ne propose plus le lien d'adhésion HelloAsso**.
 
 ## 5. Vérifier les redirections
 
@@ -98,7 +100,7 @@ for p in /ecole-montessori-nantes/ /lecole/ /qui-sommes-nous/ /nous-rejoindre/ /
 done
 ```
 
-Chaque ligne doit afficher `308 → …/nouvelle-page.html`. Vercel répond 308 pour une redirection permanente : Google la traite comme une 301. Après la bascule, refaire la même vérification avec `BASE=https://www.ecolemontessorinantes.com` : une seule redirection, cible en 200. Avec `BASE=https://ecolemontessorinantes.com` ou `http://…`, la première réponse doit être la redirection d'hôte vers `https://www.ecolemontessorinantes.com` (même chemin), suivie de la redirection de page.
+Chaque ligne doit afficher `308 → …/nouvelle-page`. Vercel répond 308 pour une redirection permanente : Google la traite comme une 301. Après la bascule, refaire la même vérification avec `BASE=https://www.ecolemontessorinantes.com` : une seule redirection, cible en 200. Avec `BASE=https://ecolemontessorinantes.com` ou `http://…`, la première réponse doit être la redirection d'hôte vers `https://www.ecolemontessorinantes.com` (même chemin), suivie de la redirection de page.
 
 Les règles se testent aussi sans déploiement avec `bun test tests/redirections.test.ts`. Le test reproduit la comparaison d'adresses de Vercel (`path-to-regexp` 6, mêmes options), vérifie que chaque page et chaque ancre de destination existe, et, après `bun run build`, que le routage construit redirige chaque ancienne adresse.
 

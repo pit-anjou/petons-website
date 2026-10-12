@@ -45,6 +45,6 @@ const objets = programme.sac
 <div class="stage-bag"><div class="stage-bag-heading"><h4>{programme.sac.titre}</h4>{programme.sac.sousTitre && <span>{programme.sac.sousTitre}</span>}</div>
 <ul>{objets.map((objet) => <li><img src={objet.image} alt="" width={objet.width} height={objet.height} loading="lazy" decoding="async"><span set:html={enLigne(objet.texte)}></span></li>)}</ul></div>
 )}
-<div class="stage-booking"><div><h4>Pour s’inscrire</h4><p set:html={enLigne(programme.inscription)}></p></div><a class="button" href="contact-petons.html?sujet=vacances#ecrire">S’informer et s’inscrire <span aria-hidden="true">→</span></a></div>
+<div class="stage-booking"><div><h4>Pour s’inscrire</h4><p set:html={enLigne(programme.inscription)}></p></div><a class="button" href="contact-petons?sujet=vacances#ecrire">S’informer et s’inscrire <span aria-hidden="true">→</span></a></div>
 </section>
 </div></dialog>
