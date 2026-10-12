@@ -16,10 +16,10 @@ export const brand = {
   href: 'index.html',
   label: 'Les Petons dans l’Herbe — Accueil',
   logo: {
-    src: 'assets/img/les-petons-dans-lherbe-ecole-montessori.webp',
-    alt: 'Les Petons dans l’Herbe — École Montessori',
-    width: 460,
-    height: 162,
+    src: 'assets/img/logo-petons-2026.svg',
+    alt: 'Les Petons dans l’Herbe — École Montessori Nantes',
+    width: 976,
+    height: 322,
   },
 } as const;
 

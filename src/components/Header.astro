@@ -22,7 +22,7 @@ const parentClass = (item: (typeof mainNav)[number]) => (isParent(item) ? 'is-cu
             <li class="cm-nav-group">
               <div class="cm-nav-parent">
                 <a href={item.href} class={parentClass(item)} aria-current={ariaCurrent(item.href)}>{item.label}</a>
-                <button class="cm-submenu-toggle" aria-expanded="false" aria-controls={item.submenu.id} aria-label={item.submenu.toggleLabel}>
+                <button type="button" class="cm-submenu-toggle" aria-expanded="false" aria-controls={item.submenu.id} aria-label={item.submenu.toggleLabel}>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
                 </button>
               </div>
@@ -62,3 +62,12 @@ const parentClass = (item: (typeof mainNav)[number]) => (isParent(item) ? 'is-cu
   </nav>
 </header>
 
+<style is:inline>
+/* Shared by every page: link and disclosure stay distinct, including at hover. */
+.cm-site-header .cm-submenu-toggle{border-left:1px solid #dfe6dc;border-radius:0 6px 6px 0;margin-left:3px;min-width:30px;}
+.cm-site-header .cm-submenu-toggle:hover,.cm-site-header .cm-submenu-toggle:focus-visible{background:#eef4df;}
+.cm-site-header .cm-nav-parent>a:hover,.cm-site-header .cm-nav-parent>a:focus-visible{text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:5px;}
+.cm-site-header .cm-submenu:not([hidden]){animation:cm-submenu-appear 160ms ease-out;}
+@keyframes cm-submenu-appear{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+@media(prefers-reduced-motion:reduce){.cm-site-header .cm-submenu:not([hidden]){animation:none;}}
+</style>

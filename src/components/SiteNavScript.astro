@@ -6,14 +6,45 @@
  const header=document.querySelector('.cm-site-header');
  if(!header)return;
  const toggle=header.querySelector('.cm-menu-toggle'),mobile=header.querySelector('#cm-mobile-menu');
- const groups=[...header.querySelectorAll('.cm-nav-group')].map(group=>({group,disclosure:group.querySelector('.cm-submenu-toggle'),submenu:group.querySelector('.cm-submenu')}));
+ const desktop=matchMedia('(min-width:1101px)');
+ const hover=matchMedia('(hover:hover) and (pointer:fine)');
+ const groups=[...header.querySelectorAll('.cm-nav-group')].map(group=>({group,disclosure:group.querySelector('.cm-submenu-toggle'),submenu:group.querySelector('.cm-submenu'),openTimer:null,closeTimer:null,hovered:false}));
+ function clearTimers(item){clearTimeout(item.openTimer);clearTimeout(item.closeTimer);item.openTimer=null;item.closeTimer=null;}
  function setMobile(open){toggle.setAttribute('aria-expanded',String(open));toggle.setAttribute('aria-label',open?'Fermer le menu':'Ouvrir le menu');mobile.hidden=!open;}
- function setSubmenu(item,open){item.disclosure.setAttribute('aria-expanded',String(open));item.submenu.hidden=!open;}
+ function setSubmenu(item,open){clearTimers(item);item.disclosure.setAttribute('aria-expanded',String(open));item.submenu.hidden=!open;}
+ function openOnly(item){groups.forEach(other=>setSubmenu(other,other===item));}
  toggle.addEventListener('click',()=>setMobile(toggle.getAttribute('aria-expanded')!=='true'));
  groups.forEach(item=>{
   item.disclosure.addEventListener('click',()=>{
    const open=item.disclosure.getAttribute('aria-expanded')!=='true';
-   groups.forEach(other=>setSubmenu(other,other===item&&open));
+   if(open)openOnly(item);else setSubmenu(item,false);
+  });
+  // The parent link and panel share one hover area, with no gap between them.
+  // Delay opening for passing pointers, and allow a short diagonal exit/re-entry.
+  item.group.addEventListener('pointerenter',e=>{
+   if(e.pointerType!=='mouse'||!desktop.matches||!hover.matches)return;
+   item.hovered=true;clearTimers(item);
+   if(!item.submenu.hidden)return;
+   item.openTimer=setTimeout(()=>{
+    item.openTimer=null;
+    if(!item.hovered||!desktop.matches||!hover.matches)return;
+    // A pointer must never hide another panel being used with the keyboard.
+    if(groups.some(other=>other!==item&&other.group.contains(document.activeElement)))return;
+    openOnly(item);
+   },350);
+  });
+  item.group.addEventListener('pointerleave',e=>{
+   if(e.pointerType!=='mouse')return;
+   item.hovered=false;clearTimers(item);
+   if(item.submenu.hidden)return;
+   item.closeTimer=setTimeout(()=>{
+    item.closeTimer=null;
+    if(!item.hovered&&!item.group.contains(document.activeElement))setSubmenu(item,false);
+   },250);
+  });
+  item.group.addEventListener('focusin',()=>{
+   clearTimers(item);
+   groups.forEach(other=>{if(other!==item)setSubmenu(other,false);});
   });
   item.group.addEventListener('focusout',e=>{if(!item.group.contains(e.relatedTarget))setSubmenu(item,false);});
  });
@@ -22,10 +53,14 @@
  document.addEventListener('keydown',e=>{
   if(e.key!=='Escape')return;
   const openGroup=groups.find(item=>!item.submenu.hidden);
-  if(openGroup){setSubmenu(openGroup,false);openGroup.disclosure.focus();}
+  // Also cancel a delayed opening: Escape must not be followed by a reopening.
+  groups.forEach(item=>setSubmenu(item,false));
+  if(openGroup&&openGroup.group.contains(document.activeElement)){openGroup.disclosure.focus();}
   else if(!mobile.hidden){setMobile(false);toggle.focus();}
  });
- matchMedia('(min-width:1101px)').addEventListener('change',()=>{setMobile(false);groups.forEach(item=>setSubmenu(item,false));});
+ function resetMenus(){setMobile(false);groups.forEach(item=>{item.hovered=false;setSubmenu(item,false);});}
+ desktop.addEventListener('change',resetMenus);
+ hover.addEventListener('change',resetMenus);
  if(location.protocol==='file:'){document.querySelectorAll('a[data-local-href]').forEach(a=>a.href=a.dataset.localHref);}
 })();
 </script>
