@@ -67,7 +67,7 @@ export const donneesStructurees = ({ site, page, image, portesOuvertes = false }
       name: nomDeLEcole,
       alternateName: 'École Montessori Les Petons dans l’Herbe',
       description:
-        'École Montessori associative hors contrat à Nantes Nord pour les enfants de 3 à 12 ans : une ambiance 3–6 ans, une ambiance 6–12 ans, une maison et près de 650 m² de jardin. Labellisée Eco-École depuis 2021.',
+        'École Montessori associative hors contrat à Nantes Nord pour les enfants de 3 à 12 ans : une ambiance 3–6 ans, une ambiance 6–12 ans, une maison et près de 650 m² de jardin. Labellisée Eco-École depuis 2021. Ouverte en 2018, elle est la plus ancienne école Montessori de Nantes toujours en activité.',
       url: accueil,
       logo: absolue(brand.logo.src),
       image: absolue(image),
