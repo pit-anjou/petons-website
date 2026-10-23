@@ -465,6 +465,30 @@ body .button:not(.secondary){color:#203f4d;}
 @media(prefers-reduced-motion:reduce){.cm-submenu-toggle svg{transition:none;}}
 @media print{.cm-site-header,.cm-site-footer{display:none;}}
 
+
+/* Le film reste inactif tant que le visiteur n’a pas choisi de le regarder. */
+.chenilles-film{padding-top:56px;padding-bottom:52px;scroll-margin-top:24px}
+.film-heading{max-width:780px;margin:0 auto 28px;text-align:center}
+.film-heading .eyebrow{color:#6b845b;margin-bottom:12px}
+.film-heading h2{font-size:39px;line-height:1.25;margin-bottom:16px}
+.film-heading h2 span{background:linear-gradient(transparent 79%,#e5edb7 79%,#e5edb7 92%,transparent 92%)}
+.film-heading p{font-size:16px;line-height:1.8;max-width:650px;margin:0 auto}
+.film-frame{max-width:1000px;margin:0 auto;padding:10px;background:#fffefa;border:1px solid #dfe4d1;border-radius:6px 45px 6px 6px;box-shadow:5px 6px 0 #edf0e4}
+.film-stage{position:relative;aspect-ratio:16/9;border-radius:3px 35px 3px 3px;overflow:hidden;background:#223e39}
+.film-cover{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;cursor:pointer;background:#223e39;color:#fffdf8}
+.film-cover img{display:block;width:100%;height:100%;object-fit:cover}
+.film-cover:after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 10%,rgba(13,38,35,.16) 45%,rgba(13,38,35,.48));pointer-events:none}
+.film-play-label{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:17px;font:800 17px/1.4 Nunito,sans-serif;text-shadow:0 2px 5px #203f4d}
+.film-play-icon{display:grid;place-items:center;width:76px;height:76px;background:#f79443;color:#203f4d;border:3px solid #fffdf8;border-radius:50%;box-shadow:0 3px 18px #203f4d44;transition:transform .2s}
+.film-play-icon svg{width:30px;height:30px;margin-left:4px}
+.film-cover:hover .film-play-icon{transform:scale(1.07)}
+.film-cover:focus-visible{outline:4px solid #f79443;outline-offset:-6px}
+.film-duration{position:absolute;right:20px;bottom:18px;z-index:1;border-radius:4px;padding:6px 10px;background:#fffdf8;color:#316573;font:800 12px/1.3 Nunito,sans-serif}
+.film-stage video{display:block;width:100%;height:100%;object-fit:contain}.film-stage [hidden]{display:none}
+.film-fallback{margin:18px auto 0;max-width:1000px;font-size:14px}.film-fallback[hidden]{display:none}
+.film-shortcut{display:flex;width:fit-content;align-items:center;gap:9px;margin-top:18px;font-size:14px}
+@media(max-width:700px){.chenilles-film{padding-top:36px;padding-bottom:36px}.film-heading h2{font-size:30px}.film-heading p{font-size:15px}.film-frame{padding:6px;border-radius:5px 29px 5px 5px}.film-stage{border-radius:3px 23px 3px 3px}.film-play-icon{width:55px;height:55px;border-width:2px}.film-play-icon svg{width:23px;height:23px}.film-play-label{gap:9px;font-size:14px}.film-duration{right:10px;bottom:10px;padding:4px 7px;font-size:10px}}
+@media(prefers-reduced-motion:reduce){.film-play-icon{transition:none}}
 </style><style is:inline id="ambiance-shared-page-index">
 .jumpnav{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-top:18px;padding-bottom:18px;flex-wrap:wrap;row-gap:8px;margin-bottom:46px}
 .jumpnav>span{font:700 22px/1.3 var(--title)}
@@ -487,6 +511,7 @@ body .button:not(.secondary){color:#203f4d;}
       <p>Choisir une activité, observer un geste, essayer et recommencer : chez les Chenilles, les petites expériences du quotidien deviennent de grandes découvertes.</p>
       <p>Auprès d’Antoine, dans une <strong>ambiance multi-âges</strong> adaptée aux enfants, chacun avance à son rythme, construit ses repères et découvre le plaisir de faire par lui-même.</p>
       <a class="button" href="#quotidien">Entrer dans leur quotidien <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16m-6-6 6 6 6-6"/></svg></a>
+      <a class="text-link film-shortcut" href="#film-chenilles">Découvrir en vidéo <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="m9 5 11 7-11 7Z"/></svg></a>
     </div>
     <figure class="hero-art"><img src="assets/img/antoine-observe-un-enfant-en-salopette-2026.webp" alt="Antoine observe un petit garçon qui verse de l’eau dans un verre sur un plateau ; tous deux portent des chaussons." width="1536" height="1024" loading="eager" decoding="async" fetchpriority="high" sizes="(max-width: 700px) calc(100vw - 48px), 590px"><figcaption>Un geste après l’autre. <br><span class="orange-mark">La confiance grandit.</span></figcaption></figure>
   </section>
@@ -507,6 +532,19 @@ body .button:not(.secondary){color:#203f4d;}
     </div>
     <div class="daily-notes chenilles-goals"><div><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13V6a1.5 1.5 0 0 1 3 0v6-8a1.5 1.5 0 0 1 3 0v8-6a1.5 1.5 0 0 1 3 0v7-3a1.5 1.5 0 0 1 3 0v6c0 4-2.5 6-6 6-3 0-5-1-6.5-3L3 13a1.5 1.5 0 0 1 2-2Z"/></svg><p><strong>Autonomie</strong>Essayer et faire <br>par soi-même.</p></div><div><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="7" r="3"/><path d="M3 21v-4a6 6 0 0 1 12 0v4M16 4a3 3 0 0 1 0 6m2 4a5 5 0 0 1 3 5v2"/></svg><p><strong>Coopération</strong>Trouver sa place <br>avec les autres.</p></div><div><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="10" cy="10" r="6.5"/><path d="m15 15 6 6M7 10h6m-3-3v6"/></svg><p><strong>Curiosité</strong>Observer, explorer <br>et poser des questions.</p></div><div><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.8 4.7a5.5 5.5 0 0 0-7.8 0L12 5.8l-1.1-1.1a5.5 5.5 0 1 0-7.8 7.8L12 21l8.8-8.5a5.5 5.5 0 0 0 0-7.8Z"/></svg><p><strong>Plaisir d’apprendre</strong>Garder l’envie <br>de découvrir.</p></div></div>
   </div></section>
+
+  <section class="wrap chenilles-film" id="film-chenilles" aria-labelledby="film-title">
+    <div class="film-heading"><p class="eyebrow">Entrez dans l’ambiance · 3–6 ans</p><h2 id="film-title">7 minutes <span>au cœur des Chenilles</span></h2><p>Découvrez les gestes, les découvertes et le quotidien des enfants, avec Antoine, dans la classe et au-delà.</p></div>
+    <div class="film-frame"><div class="film-stage">
+      <button class="film-cover" type="button" aria-label="Regarder le film : 7 minutes au cœur des Chenilles" aria-controls="chenilles-video">
+        <img src="assets/img/chenilles-film-apercu.jpg" alt="Des enfants explorent une carte du monde et des figurines d’animaux sur un tapis Montessori." width="1280" height="720" loading="lazy" decoding="async" sizes="(max-width: 700px) calc(100vw - 60px), (max-width: 1100px) calc(100vw - 100px), 980px">
+        <span class="film-play-label"><span class="film-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3 21 12 6 21Z"/></svg></span>Regarder le film</span><span class="film-duration" aria-hidden="true">7 min 03</span>
+      </button>
+      <video id="chenilles-video" width="1920" height="1080" controls playsinline preload="none" data-src="assets/video/chenilles-vie-de-classe.mp4" tabindex="0" aria-label="7 minutes au cœur des Chenilles" hidden></video>
+    </div></div>
+    <p class="film-fallback" hidden role="status">La lecture n’a pas démarré. <a href="assets/video/chenilles-vie-de-classe.mp4">Ouvrir le film directement</a>.</p>
+    <noscript><p class="film-fallback"><a href="assets/video/chenilles-vie-de-classe.mp4">Regarder le film · 7 min 03</a></p></noscript>
+  </section>
 
   <section class="wrap section learning-section" id="apprentissages" aria-labelledby="learning-title">
     <span class="eyebrow">Manipuler, ressentir, comprendre</span>
@@ -614,4 +652,23 @@ body .button:not(.secondary){color:#203f4d;}
 
   <section class="wrap closing-section" aria-labelledby="contact-title"><div class="contact-panel"><div><span class="eyebrow">Et si on se rencontrait ?</span><div class="closing-title"><h2 id="contact-title">Venez découvrir <br>son futur quotidien</h2><span class="tiny-star" aria-hidden="true">✧</span></div><p>Visiter l’ambiance, rencontrer l’équipe<br class="desktop-break"> et prendre le temps de parler de votre enfant.</p></div><div class="closing-actions"><a class="button" href="contact-petons" data-local-href="contact-petons.html">Demander une visite <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></a><a class="text-link" href="inscriptions-petons" data-local-href="inscriptions-petons.html">Comment s’inscrire ? <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></a><a class="text-link" href="tarifs-petons" data-local-href="tarifs-petons.html">Consulter les tarifs <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.55" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14m-7-7 7 7-7 7"/></svg></a></div></div></section>
 </main>
+<script is:inline>
+(() => {
+  const section = document.getElementById('film-chenilles');
+  const button = section?.querySelector('.film-cover');
+  const video = section?.querySelector('video');
+  const fallback = section?.querySelector('.film-fallback');
+  if (!button || !video || !fallback) return;
+  button.addEventListener('click', () => {
+    if (video.hasAttribute('src')) return;
+    video.src = video.dataset.src;
+    video.hidden = false;
+    button.hidden = true;
+    video.focus({ preventScroll: true });
+    video.play().catch(() => { fallback.hidden = false; });
+  });
+  video.addEventListener('error', () => { fallback.hidden = false; });
+  video.addEventListener('playing', () => { fallback.hidden = true; });
+})();
+</script>
 <Footer /><SiteNavScript /></body></html>
