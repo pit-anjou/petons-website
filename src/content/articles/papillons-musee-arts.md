@@ -15,7 +15,6 @@ blocs:
   - type: photo
     image: assets/img/actualites/papillons-musee-portraits.png
     alt: Les Papillons assis dans une salle du musée devant un grand portrait peint.
-    legende: Une visite autour du portrait pour les enfants de l’ambiance 6–12 ans.
   - type: intertitre
     titre: Le portrait, tout un monde à découvrir
   - type: texte
@@ -26,7 +25,6 @@ blocs:
   - type: photo
     image: assets/img/actualites/papillons-musee-portrait-jeu.png
     alt: Des enfants explorent un panneau de visite intitulé « Le bonheur est dans le portrait ».
-    legende: "« Le bonheur est dans le portrait » : une autre manière de regarder les œuvres."
   - type: intertitre
     titre: Une aventure aussi dans les petits moments
   - type: texte
@@ -37,7 +35,6 @@ blocs:
   - type: photo
     image: assets/img/actualites/papillons-musee-escalier.png
     alt: Les enfants découvrent le grand escalier du Musée d’arts de Nantes.
-    legende: Les Papillons dans le grand escalier du musée.
   - type: intertitre
     titre: Du musée à la classe
   - type: texte
@@ -45,4 +42,7 @@ blocs:
       De retour à l’école, la découverte ne s’est pas arrêtée à la porte du musée : **les enfants ont poursuivi leur travail sur les différents types de portraits**.
 
       Une sortie qui nourrit ainsi les apprentissages, tout en laissant de beaux souvenirs communs aux Papillons.
+  - type: photo
+    image: assets/img/actualites/papillons-portraits-retour-classe.png
+    alt: Un enfant dessine en classe devant un tableau présentant les portraits en pied, en buste, en tête et jusqu’aux genoux.
 ---
