@@ -52,7 +52,7 @@ Chaque **session** choisit son programme, puis fixe ses dates, ses vacances, l�
 
 ## Ce qui ne se modifie pas ici
 
-- Le bloc « Vie de l’école » de la **page d’accueil** : il pointe vers le stage de février et l’article Éco-École. Si l’un d’eux est supprimé, prévenir Philippe pour mettre l’accueil à jour.
+- Le bloc « Vie de l’école » de la **page d’accueil** : il pointe vers le stage de février et l’article sur la sortie des Papillons au Musée d’arts de Nantes. Si l’un d’eux est supprimé, prévenir Philippe pour mettre l’accueil à jour.
 - L’encart « Inscriptions ouvertes » (places disponibles), les tarifs, les coordonnées et les autres pages.
 - Les portes ouvertes de novembre et le bandeau d’annonce du site : ils se modifient dans le code (`src/data/openHouse.ts`).
 
