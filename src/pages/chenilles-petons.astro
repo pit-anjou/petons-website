@@ -467,14 +467,15 @@ body .button:not(.secondary){color:#203f4d;}
 
 
 /* Le film reste inactif tant que le visiteur n’a pas choisi de le regarder. */
-.chenilles-film{padding-top:56px;padding-bottom:52px;scroll-margin-top:24px}
-.film-heading{max-width:780px;margin:0 auto 28px;text-align:center}
+.chenilles-film{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);align-items:center;gap:0 56px;padding-top:56px;padding-bottom:0;scroll-margin-top:24px}
+.chenilles-film+.learning-section{padding-top:56px}
+.film-heading{grid-column:2;grid-row:1;min-width:0;text-align:left}
 .film-heading .eyebrow{color:#6b845b;margin-bottom:12px}
 .film-heading h2{font-size:39px;line-height:1.25;margin-bottom:16px}
-.film-heading h2 span{background:linear-gradient(transparent 79%,#e5edb7 79%,#e5edb7 92%,transparent 92%)}
+.film-heading h2 span{background:linear-gradient(transparent 79%,#f7bc78 79%,#f7bc78 92%,transparent 92%)}
 .film-heading p{font-size:16px;line-height:1.8;max-width:650px;margin:0 auto}
-.film-frame{max-width:1000px;margin:0 auto;padding:10px;background:#fffefa;border:1px solid #dfe4d1;border-radius:6px 45px 6px 6px;box-shadow:5px 6px 0 #edf0e4}
-.film-stage{position:relative;aspect-ratio:16/9;border-radius:3px 35px 3px 3px;overflow:hidden;background:#223e39}
+.film-frame{grid-column:1;grid-row:1;min-width:0;width:100%;border-radius:32px 6px 32px 6px;box-shadow:0 10px 28px #203f4d0d}
+.film-stage{position:relative;aspect-ratio:16/9;border-radius:32px 6px 32px 6px;overflow:hidden;background:#223e39}
 .film-cover{position:absolute;inset:0;width:100%;height:100%;padding:0;border:0;cursor:pointer;background:#223e39;color:#fffdf8}
 .film-cover img{display:block;width:100%;height:100%;object-fit:cover}
 .film-cover:after{content:'';position:absolute;inset:0;background:linear-gradient(transparent 10%,rgba(13,38,35,.16) 45%,rgba(13,38,35,.48));pointer-events:none}
@@ -485,8 +486,8 @@ body .button:not(.secondary){color:#203f4d;}
 .film-cover:focus-visible{outline:4px solid #f79443;outline-offset:-6px}
 .film-duration{position:absolute;right:20px;bottom:18px;z-index:1;border-radius:4px;padding:6px 10px;background:#fffdf8;color:#316573;font:800 12px/1.3 Nunito,sans-serif}
 .film-stage video{display:block;width:100%;height:100%;object-fit:contain}.film-stage [hidden]{display:none}
-.film-fallback{margin:18px auto 0;max-width:1000px;font-size:14px}.film-fallback[hidden]{display:none}
-@media(max-width:700px){.chenilles-film{padding-top:36px;padding-bottom:36px}.film-heading h2{font-size:30px}.film-heading p{font-size:15px}.film-frame{padding:6px;border-radius:5px 29px 5px 5px}.film-stage{border-radius:3px 23px 3px 3px}.film-play-icon{width:55px;height:55px;border-width:2px}.film-play-icon svg{width:23px;height:23px}.film-play-label{gap:9px;font-size:14px}.film-duration{right:10px;bottom:10px;padding:4px 7px;font-size:10px}}
+.film-fallback{grid-column:1/-1;margin:18px 0 0;font-size:14px}.film-fallback[hidden]{display:none}
+@media(max-width:800px){.chenilles-film{grid-template-columns:1fr;gap:24px;padding-top:36px;padding-bottom:0}.chenilles-film+.learning-section{padding-top:36px}.film-heading{grid-column:1;grid-row:1}.film-frame{grid-row:2}.film-heading h2{font-size:30px}.film-heading p{font-size:15px}.film-frame,.film-stage{border-radius:26px 5px 26px 5px}.film-play-icon{width:55px;height:55px;border-width:2px}.film-play-icon svg{width:23px;height:23px}.film-play-label{gap:9px;font-size:14px}.film-duration{right:10px;bottom:10px;padding:4px 7px;font-size:10px}}
 @media(prefers-reduced-motion:reduce){.film-play-icon{transition:none}}
 </style><style is:inline id="ambiance-shared-page-index">
 .jumpnav{display:flex;align-items:center;justify-content:space-between;gap:20px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding-top:18px;padding-bottom:18px;flex-wrap:wrap;row-gap:8px;margin-bottom:46px}
@@ -535,7 +536,7 @@ body .button:not(.secondary){color:#203f4d;}
     <div class="film-heading"><p class="eyebrow">Entrez dans l’ambiance · 3–6 ans</p><h2 id="film-title">7 minutes <span>au cœur des Chenilles</span></h2><p>Découvrez les gestes, les découvertes et le quotidien des enfants, avec Antoine, dans la classe et au-delà.</p></div>
     <div class="film-frame"><div class="film-stage">
       <button class="film-cover" type="button" aria-label="Regarder le film : 7 minutes au cœur des Chenilles" aria-controls="chenilles-video">
-        <img src="assets/img/chenilles-film-apercu.jpg" alt="Des enfants explorent une carte du monde et des figurines d’animaux sur un tapis Montessori." width="1280" height="720" loading="lazy" decoding="async" sizes="(max-width: 700px) calc(100vw - 60px), (max-width: 1100px) calc(100vw - 100px), 980px">
+        <img src="assets/img/chenilles-film-apercu.jpg" alt="Des enfants explorent une carte du monde et des figurines d’animaux sur un tapis Montessori." width="1280" height="720" loading="lazy" decoding="async" sizes="(max-width: 700px) calc(100vw - 48px), (max-width: 800px) calc(100vw - 80px), (max-width: 1216px) calc(60.8vw - 82.7px), 657px">
         <span class="film-play-label"><span class="film-play-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 3 21 12 6 21Z"/></svg></span>Regarder le film</span><span class="film-duration" aria-hidden="true">7 min 03</span>
       </button>
       <video id="chenilles-video" width="1920" height="1080" controls playsinline preload="none" data-src="assets/video/chenilles-vie-de-classe.mp4" tabindex="0" aria-label="7 minutes au cœur des Chenilles" hidden></video>
