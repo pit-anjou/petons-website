@@ -1,0 +1,74 @@
+/* A bright invitation using the site's aqua, orange and handwritten title font. */
+#stage-announcement{font-family:Nunito,Arial,sans-serif;color:var(--heading,#316573)}
+#stage-announcement [hidden],.sa-footer-access[hidden]{display:none!important}
+.sa-banner{background:#eff6f2;color:#203f4d;position:relative;isolation:isolate}
+.sa-banner::after{content:"";position:absolute;bottom:0;left:0;right:0;height:5px;background:var(--paper,#fffdf8);clip-path:polygon(0 60%,10% 15%,23% 55%,40% 0,58% 50%,73% 10%,88% 55%,100% 15%,100% 100%,0 100%);pointer-events:none}
+.sa-banner-inner{max-width:1216px;min-height:104px;margin:auto;padding:13px 24px 17px;display:flex;align-items:center;justify-content:center;gap:24px}
+.sa-banner-link{display:flex;align-items:center;justify-content:center;gap:28px;flex:1;min-width:0;text-decoration:none;color:inherit;line-height:1.4}
+.sa-banner-heading{display:grid;gap:0;min-width:0}
+.sa-banner-heading>strong{position:relative;isolation:isolate;width:fit-content;max-width:100%;font:700 30px/1.2 Kalam,cursive;letter-spacing:-.6px}
+.sa-banner-heading>strong::after{content:"";position:absolute;z-index:-1;left:0;right:-5px;bottom:3px;height:7px;background:#cfdd51;border-radius:60% 15% 55% 20%;transform:rotate(-1deg)}
+.sa-banner-heading>span{font-size:13px;font-weight:700;margin-top:4px}
+.sa-banner-date{display:grid;gap:4px;font-size:17px;font-weight:800;line-height:1.4}
+.sa-banner-date>span{font-size:15px;font-weight:700}
+.sa-banner-date b{font-weight:800}
+.sa-banner-link:hover .sa-banner-date{text-decoration:underline;text-underline-offset:4px}
+.sa-banner-cta{display:inline-flex;text-decoration:none;align-items:center;justify-content:center;gap:14px;flex-shrink:0;padding:12px 20px;min-height:46px;border:0;border-radius:4px 20px 4px 20px;background:var(--paper,#fffdf8);color:#203f4d;cursor:pointer;font:800 14px/1.4 Nunito,Arial,sans-serif;box-shadow:0 3px 0 #203f4d20}
+.sa-banner-cta>span{font-size:23px;line-height:1}
+.sa-banner-cta:hover{background:#f5efdb;box-shadow:0 4px 0 #203f4d30}
+.sa-close{display:grid;place-items:center;width:44px;height:44px;min-width:44px;padding:10px;border:0;border-radius:50%;background:transparent;color:inherit;cursor:pointer}
+.sa-close svg{width:21px;height:21px}
+.sa-close:hover{background:#203f4d12}
+#stage-announcement :is(a,button):focus-visible,.sa-footer-access button:focus-visible{outline:3px solid #203f4d;outline-offset:4px}
+.sa-card{position:fixed;z-index:90;right:24px;bottom:24px;width:390px;max-height:calc(100dvh - 48px);overflow:auto;background:var(--paper,#fffdf8);border:1px solid #dce5dd;border-radius:6px 30px 6px 6px;box-shadow:0 12px 44px #294c5b24}
+.sa-card>.sa-close{position:absolute;top:6px;right:7px;z-index:1;color:var(--heading,#316573)}
+.sa-card-heading{display:grid;grid-template-columns:106px minmax(0,1fr);gap:18px;margin:30px 24px 0;color:var(--heading,#316573)}
+.sa-card-calendar{display:flex;flex-direction:column;align-items:center;align-self:center;border-right:1px solid #d7e4dc;padding:3px 14px 3px 0;text-align:center}
+.sa-calendar-weekday{font-size:12px;line-height:1.5;letter-spacing:1px;text-transform:uppercase;font-weight:800}
+.sa-card-calendar>strong{font:700 35px/1.1 Kalam,cursive;letter-spacing:-2px;white-space:nowrap;padding-top:11px}
+.sa-calendar-month{font:700 16px/1.25 Kalam,cursive;text-transform:uppercase;margin-top:5px}
+.sa-calendar-year{font:700 20px/1.2 Kalam,cursive;margin-top:1px}
+.sa-card-title-group{padding-top:8px}
+.sa-card h2{position:relative;isolation:isolate;display:inline-block;font:700 29px/1.15 Kalam,cursive;color:var(--heading,#316573);letter-spacing:-.8px;margin:0 0 11px}
+.sa-card h2::after{content:"";position:absolute;bottom:-4px;left:0;right:1px;height:5px;border-radius:50% 20% 55% 10%;background:#dce8af;transform:rotate(-1.5deg);z-index:-1}
+.sa-card .sa-card-welcome{font-size:14px;font-weight:700;line-height:1.5;margin:0 0 10px}
+.sa-card .sa-card-hours{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:800;line-height:1.3;margin:0;padding:5px 8px;background:#fbecd6;border-radius:4px;color:#765434;white-space:nowrap}
+.sa-card-hours>span{border-left:1px solid #dcc8a9;padding-left:7px;font-size:14px;font-weight:700}
+.sa-card-art{height:184px;margin:16px 20px 0;background:#fff;border-radius:4px 22px 4px 4px;overflow:hidden}
+.sa-card-art img{width:100%;height:100%;object-fit:cover}
+.sa-card-copy{padding:13px 23px 24px}
+.sa-card-button{display:flex;justify-content:center;align-items:center;gap:12px;min-height:47px;padding:12px 21px;border-radius:28px;background:var(--orange,#f89141);color:#203f4d;font-size:14px;line-height:1.4;font-weight:800;text-decoration:none}
+.sa-card-button:hover{background:#ffa35b}
+.sa-footer-access{margin-top:24px}
+.sa-footer-access button{display:inline-flex;align-items:center;gap:12px;min-height:44px;padding:0;border:0;background:transparent;color:var(--heading,#316573);font:800 14px/1.5 Nunito,Arial,sans-serif;text-align:left;text-decoration:underline;text-underline-offset:4px;cursor:pointer}
+@media(max-width:1050px){.sa-banner-inner{gap:16px}.sa-banner-link{gap:22px}.sa-banner-heading>strong{font-size:27px}.sa-banner-date{font-size:15px}.sa-banner-cta{padding:11px 16px;font-size:13px}}
+@media(max-width:760px){
+ .sa-banner-inner{position:relative;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px 16px;padding:14px 58px 18px 22px}
+ .sa-banner-link{display:contents}
+ .sa-banner-link:focus-visible .sa-banner-heading{outline:3px solid #203f4d;outline-offset:4px}
+ .sa-banner-heading{grid-column:1/-1}
+ .sa-banner-heading>strong{font-size:28px;line-height:1.15}
+ .sa-banner-heading>span{font-size:12px;margin-top:4px}
+ .sa-banner-date{font-size:14px;gap:2px}
+ .sa-banner-date>span{font-size:13px}
+ .sa-banner-cta{padding:9px 12px;font-size:12px;gap:7px;min-height:44px;border-radius:3px 14px 3px 14px}
+ .sa-banner-cta>span{font-size:21px}
+ .sa-banner-inner>.sa-close{position:absolute;right:9px;top:8px}
+}
+@media(max-width:480px){
+ .sa-banner-inner{padding:14px 16px 17px 20px;gap:10px 8px}
+ .sa-banner-heading{padding-right:36px}
+ .sa-banner-heading>span{font-size:14px}
+ .sa-banner-date{font-size:13px;letter-spacing:-.2px}
+ .sa-banner-date>span{font-size:12px}
+ .sa-banner-cta{max-width:110px;font-size:12px;padding:8px 10px;gap:4px}
+ .sa-card{right:12px;bottom:max(12px,env(safe-area-inset-bottom));width:calc(100% - 24px);max-height:calc(100dvh - 24px)}
+ .sa-card-heading{margin:28px 20px 0;grid-template-columns:102px minmax(0,1fr);gap:16px}
+ .sa-card h2{font-size:29px}
+ .sa-card-art{height:177px;margin-top:9px}
+ .sa-card-copy{padding:12px 20px 20px}
+}
+@media(max-width:350px){.sa-banner-heading>strong{font-size:26px}.sa-card-heading{margin-left:16px;margin-right:16px;grid-template-columns:88px minmax(0,1fr);gap:12px}.sa-card-calendar{padding-right:10px}.sa-card-calendar>strong{font-size:33px}.sa-card h2{font-size:25px}.sa-card .sa-card-hours{gap:5px;padding:5px}.sa-card-hours>span{padding-left:5px}.sa-card-art{height:156px}.sa-card-copy{padding-left:16px;padding-right:16px}}
+@media print{#stage-announcement,.sa-footer-access{display:none!important}}
+.sa-card .sa-card-discipline{font-size:12px;line-height:1.45;font-weight:800;margin:0 0 8px;color:#507c70}
+.sa-card .sa-card-description{font-size:14px;line-height:1.6;margin:0 0 16px;color:var(--body,#385567)}

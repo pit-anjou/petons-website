@@ -54,7 +54,8 @@ Chaque **session** choisit son programme, puis fixe ses dates, ses vacances, l�
 
 - Le bloc « Vie de l’école » de la **page d’accueil** : il pointe vers le stage de février et l’article sur la sortie des Papillons au Musée d’arts de Nantes. Si l’un d’eux est supprimé, prévenir Philippe pour mettre l’accueil à jour.
 - L’encart « Inscriptions ouvertes » (places disponibles), les tarifs, les coordonnées et les autres pages.
-- Les portes ouvertes de novembre et le bandeau d’annonce du site : ils se modifient dans le code (`src/data/openHouse.ts`).
+- Les portes ouvertes de novembre : elles se modifient dans le code (`src/data/openHouse.ts`).
+- Le bandeau et la petite fenêtre annoncent le stage de février 2027 : dates, image et programme viennent des contenus ci-dessus. Leur présentation se modifie dans `src/components/StageAnnouncement.astro`. L’annonce s’arrête au début du 22 février (heure de Paris). Pour la revoir : `/?invitation=stage-fevrier-2027`.
 
 ## Pour l’administrateur
 

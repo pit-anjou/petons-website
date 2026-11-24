@@ -1,5 +1,5 @@
 ---
-import OpenHouseAnnouncement from './OpenHouseAnnouncement.astro';
+import StageAnnouncement from './StageAnnouncement.astro';
 import { brand, contactCta, currentPage, mainNav } from '../data/site';
 
 const current = currentPage(Astro.url.pathname);
@@ -9,7 +9,7 @@ const isParent = (item: (typeof mainNav)[number]) =>
 const ariaCurrent = (href: string) => (isCurrent(href) ? 'page' : undefined);
 const parentClass = (item: (typeof mainNav)[number]) => (isParent(item) ? 'is-current-parent' : undefined);
 ---
-<OpenHouseAnnouncement />
+<StageAnnouncement />
 <header class="cm-site-header">
   <div class="cm-header-inner">
     <a class="cm-brand" href={brand.href} aria-label={brand.label} aria-current={ariaCurrent(brand.href)}>

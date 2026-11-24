@@ -1,8 +1,8 @@
 /* Keep the invitation available until explicitly dismissed for this visit. */
 (()=>{
-  const root=document.getElementById('open-house-announcement');
+  const root=document.getElementById('stage-announcement');
   if(!root)return;
-  const banner=root.querySelector('.oh-banner'),card=root.querySelector('.oh-card');
+  const banner=root.querySelector('.sa-banner'),card=root.querySelector('.sa-card');
   const prefix=`petons:${root.dataset.campaign}:invitation-v2:`,seenKey=prefix+'dismissed',bannerKey=prefix+'banner-dismissed',visitKey=prefix+'last-activity';
   const visitTimeout=30*60*1000;
   const expires=Date.parse(root.dataset.end);
@@ -24,23 +24,23 @@
   let timer,finished=false,opener=null,readyAt=Date.now()+2000;
   const active=()=>Number.isFinite(expires)&&Date.now()<expires;
   const manual=()=>card.hasAttribute('data-manual');
-  const setExpanded=value=>document.querySelectorAll('[data-oh-reopen]').forEach(button=>button.setAttribute('aria-expanded',String(value)));
+  const setExpanded=value=>document.querySelectorAll('[data-sa-reopen]').forEach(button=>button.setAttribute('aria-expanded',String(value)));
   function stop(){finished=true;clearTimeout(timer);}
   function hideCard(){card.hidden=true;card.removeAttribute('data-manual');setExpanded(false);stop();}
   function dismissCard(){remember(seenKey);hideCard();}
-  function hideAll(){banner.hidden=true;hideCard();document.querySelectorAll('[data-oh-footer]').forEach(el=>el.hidden=true);}
+  function hideAll(){banner.hidden=true;hideCard();document.querySelectorAll('[data-sa-footer]').forEach(el=>el.hidden=true);}
   function showCard(trigger){
     if(!active())return;
     opener=trigger||null;
     card.toggleAttribute('data-manual',Boolean(trigger));
     card.hidden=false;card.scrollTop=0;setExpanded(true);stop();
-    if(trigger)card.querySelector('[data-oh-close-card]').focus({preventScroll:true});
+    if(trigger)card.querySelector('[data-sa-close-card]').focus({preventScroll:true});
   }
   function closeCard(){
     const focused=card.contains(document.activeElement);
     dismissCard();
     if(focused){
-      const target=opener?.isConnected?opener:(!banner.hidden?banner.querySelector('.oh-banner-cta'):document.querySelector('.cm-brand'));
+      const target=opener?.isConnected?opener:(!banner.hidden?banner.querySelector('.sa-banner-cta'):document.querySelector('.cm-brand'));
       target?.focus({preventScroll:true});
     }
     opener=null;
@@ -61,12 +61,20 @@
   }
   if(!active())return;
   banner.hidden=read(bannerKey);
-  root.querySelector('[data-oh-close-card]').addEventListener('click',closeCard);
-  root.querySelector('[data-oh-close-banner]').addEventListener('click',()=>{
+  root.querySelector('[data-sa-close-card]').addEventListener('click',closeCard);
+  root.querySelector('[data-sa-close-banner]').addEventListener('click',()=>{
     remember(bannerKey);remember(seenKey);banner.hidden=true;hideCard();
     document.querySelector('.cm-brand')?.focus({preventScroll:true});
   });
-  root.querySelectorAll('[data-oh-action]').forEach(link=>link.addEventListener('click',dismissCard));
+  root.querySelectorAll('[data-sa-action]').forEach(link=>link.addEventListener('click',event=>{
+    dismissCard();
+    // Sur la page Actualités, le lien doit aussi fonctionner si l’ancre est déjà dans l’URL.
+    const target=new URL(link.href),article=document.getElementById(target.hash.slice(1));
+    if(target.pathname===location.pathname&&article?.matches('.news-card')){
+      const button=article.querySelector('[data-open]');
+      if(button){event.preventDefault();button.click();}
+    }
+  }));
   function resumeVisit(){
     if(!active()){hideAll();return;}
     if(staleVisit()){
@@ -87,9 +95,9 @@
     }
   });
   document.addEventListener('click',event=>{
-    const trigger=event.target.closest('[data-oh-reopen]');
+    const trigger=event.target.closest('[data-sa-reopen]');
     if(trigger){showCard(trigger);return;}
-    if(event.target.closest('[data-open="open-house-dialog"]'))dismissCard();
+    if(event.target.closest(`[data-open="${root.dataset.dialog}"]`))dismissCard();
     else if(!card.hidden&&event.target.closest('[data-open],.cm-menu-toggle'))hideCard();
   });
   document.addEventListener('keydown',event=>{
@@ -97,12 +105,12 @@
   });
   function ready(){
     if(!active())return;
-    document.querySelectorAll('[data-oh-footer]').forEach(el=>el.hidden=false);
+    document.querySelectorAll('[data-sa-footer]').forEach(el=>el.hidden=false);
     // An explicit preview link also works after both surfaces have been dismissed.
     const url=new URL(location.href);
-    if(url.searchParams.get('invitation')==='portes-ouvertes'){
+    if(url.searchParams.get('invitation')===root.dataset.campaign){
       banner.hidden=false;
-      showCard(banner.querySelector('.oh-banner-cta'));
+      showCard(banner.querySelector('.sa-banner-cta'));
       url.searchParams.delete('invitation');history.replaceState(null,'',url.pathname+url.search+url.hash);
     }
   }

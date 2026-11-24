@@ -139,19 +139,17 @@ test('l’école est décrite avec ses coordonnées, les âges accueillis, ses h
   });
 });
 
-// L’accueil annonce les portes ouvertes dans son bandeau ; la page Actualités les décrit.
-const pagesDesPortesOuvertes = ['index.html', 'actualites-petons.html'];
+// Les portes ouvertes restent décrites dans les Actualités ; l’accueil annonce désormais le stage.
+const pagesDesPortesOuvertes = ['actualites-petons.html'];
 
-test('les portes ouvertes sont un événement de l’accueil et de la page Actualités, et d’elles seules', async () => {
+test('les portes ouvertes sont un événement de la page Actualités uniquement', async () => {
   for (const fichier of pagesPubliees) {
     const evenements = (await grapheDe(fichier)).filter((noeud) => noeud['@type'] === 'Event');
     expect({ fichier, evenements: evenements.length }).toEqual({ fichier, evenements: pagesDesPortesOuvertes.includes(fichier) ? 1 : 0 });
   }
-  const [surLAccueil, surActualites] = await Promise.all(
+  const [surActualites] = await Promise.all(
     pagesDesPortesOuvertes.map(async (fichier) => (await grapheDe(fichier)).find((noeud) => noeud['@type'] === 'Event')!),
   );
-  // Un seul événement : le même @id et la même description sur les deux pages.
-  expect(surLAccueil).toEqual(surActualites!);
   expect(surActualites!['@id']).toBe(new URL(openHouse.href, site).href);
   const evenement = surActualites!;
   expect(evenement).toMatchObject({

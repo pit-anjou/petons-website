@@ -1,0 +1,62 @@
+---
+import { getCollection } from 'astro:content';
+import css from '../styles/stage-announcement.css?raw';
+import js from '../scripts/stage-announcement.js?raw';
+import { avecProgramme, stagesAffiches } from '../lib/actualites';
+import { dateIso, plageStage } from '../lib/dates';
+import { dimensionsImage } from '../lib/dimensions-image';
+import { enLigne } from '../lib/markdown';
+
+// Les informations restent celles de Page CMS, sans second programme à maintenir.
+const id = 'stage-fevrier-2027';
+const [campaign] = avecProgramme(
+  stagesAffiches(await getCollection('stages')).filter(stage => stage.id === id),
+  await getCollection('programmes'),
+);
+const stage = campaign?.data;
+const programme = campaign?.programme;
+const plage = stage && plageStage(stage.debut, stage.fin);
+const dimensions = stage && await dimensionsImage(stage.image);
+const localHref = `actualites-petons.html#${id}`;
+const href = localHref.replace('.html', '');
+// L’annonce de cette session de février s’arrête le matin de son démarrage (heure de Paris).
+const expires = stage && `${dateIso(stage.debut)}T00:00:00+01:00`;
+---
+{stage && programme && plage && dimensions && <>
+<style is:inline set:html={css}></style>
+<div id="stage-announcement" data-campaign={id} data-end={expires} data-dialog={`${id}-dialog`}>
+  <aside class="sa-banner" aria-label="Prochain stage théâtre et arts plastiques" hidden>
+    <div class="sa-banner-inner">
+      <a class="sa-banner-link" href={href} data-local-href={localHref} data-sa-action>
+        <span class="sa-banner-heading"><strong>Stage théâtre &amp; arts plastiques</strong><span>Ouvert à tous · {programme.ages} · Nantes</span></span>
+        <span class="sa-banner-date"><time datetime={dateIso(stage.debut)}>{plage.courte}</time><span><b>{programme.horaires}</b> · Vacances d’hiver</span></span>
+      </a>
+      <a class="sa-banner-cta" href={href} data-local-href={localHref} data-sa-action>Découvrir le stage</a>
+      <button type="button" class="sa-close" data-sa-close-banner aria-label="Masquer le bandeau du stage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+    </div>
+  </aside>
+  <aside id="stage-invitation" class="sa-card" aria-labelledby="sa-card-title" hidden>
+    <button type="button" class="sa-close" data-sa-close-card aria-label="Fermer l’annonce du stage"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"></path></svg></button>
+    <div class="sa-card-heading">
+      <time class="sa-card-calendar" datetime={dateIso(stage.debut)} aria-label={plage.longue}>
+        <span class="sa-calendar-weekday">Vacances<br>d’hiver</span>
+        <strong>{plage.jours}</strong>
+        <span class="sa-calendar-month">{plage.mois}</span>
+        <span class="sa-calendar-year">{plage.annee}</span>
+      </time>
+      <div class="sa-card-title-group">
+        <p class="sa-card-discipline">Théâtre &amp; arts plastiques</p>
+        <h2 id="sa-card-title">{programme.titre}</h2>
+        <p class="sa-card-hours">{programme.horaires}<span>{programme.ages}</span></p>
+      </div>
+    </div>
+    <div class="sa-card-art"><img src={stage.image} alt={stage.alt} sizes="(max-width: 480px) calc(100vw - 64px), 350px" loading="lazy" width={dimensions.width} height={dimensions.height} decoding="async" style={`object-position:center ${stage.cadrage}%`}></div>
+    <div class="sa-card-copy">
+      <p class="sa-card-welcome" set:html={enLigne(programme.public)}></p>
+      <p class="sa-card-description">Cinq jours pour inventer un personnage, rêver une histoire et fabriquer l’objet qui la porte.</p>
+      <a class="sa-card-button" href={href} data-local-href={localHref} data-sa-action>Découvrir le stage</a>
+    </div>
+  </aside>
+</div>
+<script is:inline set:html={js}></script>
+</>}

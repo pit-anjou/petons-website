@@ -26,12 +26,12 @@ const stages = avecProgramme(stagesAffiches(await getCollection('stages')), awai
 const rendezVous = rendezVousAffiches(await getCollection('rendezVous'));
 const articles = articlesAffiches(await getCollection('articles'));
 
-// Identifiants écrits en dur dans cette page, dans Header.astro (dont le bandeau OpenHouseAnnouncement.astro), Footer.astro et src/data/site.ts : une actualité ne doit pas porter le même nom de fichier.
+// Identifiants écrits en dur dans cette page, dans Header.astro (dont le bandeau StageAnnouncement.astro), Footer.astro et src/data/site.ts : une actualité ne doit pas porter le même nom de fichier.
 const IDENTIFIANTS_PAGE = [
   'agenda', 'agenda-priority-design', 'agenda-title', 'cm-ambiences-menu', 'cm-mobile-menu', 'cm-school-menu', 'dialog-title', 'enrol-title', 'footer-support-title',
   'holiday-stages-design', 'inscriptions-ouvertes', 'journal', 'journal-title', 'letter-title', 'lettre', 'main',
   'newsletter-copy', 'newsletter-draft', 'newsletter-email', 'newsletter-form', 'newsletter-mailto', 'newsletter-piege', 'newsletter-result', 'newsletter-status',
-  'oh-card-title', 'open-house-announcement', 'open-house-dialog', 'open-house-gallery-title', 'open-house-invitation',
+  'sa-card-title', 'stage-announcement', 'open-house-dialog', 'open-house-gallery-title', 'stage-invitation',
   'page-title', 'portes-ouvertes', 'proposer-activite', 'soutenir-footer',
 ];
 verifierIdentifiants([...stages, ...rendezVous, ...articles].map(({ id }) => id), IDENTIFIANTS_PAGE);
@@ -427,8 +427,12 @@ body .button:not(.secondary){color:#203f4d;}
   dialog.addEventListener('click',event=>{if(event.target===dialog){const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close();}});
   dialog.addEventListener('close',()=>{document.body.style.overflow=previousOverflow;if(opener)opener.focus({preventScroll:true});});
  });
- const linkedArticle=document.getElementById(window.location.hash.slice(1));
- if(linkedArticle?.matches('.news-card')) linkedArticle.querySelector('[data-open]')?.click();
+ const openLinkedArticle=()=>{
+  const linkedArticle=document.getElementById(window.location.hash.slice(1));
+  if(linkedArticle?.matches('.news-card')&&!document.querySelector('dialog[open]')) linkedArticle.querySelector('[data-open]')?.click();
+ };
+ addEventListener('hashchange',openLinkedArticle);
+ openLinkedArticle();
  const form=document.querySelector('#newsletter-form'),email=document.querySelector('#newsletter-email'),result=document.querySelector('#newsletter-result'),status=document.querySelector('#newsletter-status'),mailto=document.querySelector('#newsletter-mailto'),draft=document.querySelector('#newsletter-draft');let message='';
  form.addEventListener('submit',async event=>{
   event.preventDefault();if(!form.reportValidity())return;
