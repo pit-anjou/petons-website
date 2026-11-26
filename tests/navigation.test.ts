@@ -68,7 +68,7 @@ function navigation(desktop = true, souris = true) {
   });
   const groups = document.querySelectorAll('.cm-nav-group').map(group => ({
     group, button: group.querySelector('.cm-submenu-toggle')!,
-    panel: group.querySelector('.cm-submenu')!, link: group.querySelector('.cm-nav-parent a')!,
+    panel: group.querySelector('.cm-submenu')!,
   }));
   const hidden = (element: HTMLElement) => element.hasAttribute('hidden');
   const enter = (index = 0, pointerType = 'mouse') => event(groups[index]!.group, 'pointerenter', { pointerType });
@@ -79,85 +79,65 @@ function navigation(desktop = true, souris = true) {
     resize: () => { width.matches = !width.matches; event(width, 'change'); } };
 }
 
-test('un passage rapide ne déclenche rien, un survol stable ouvre après 350 ms', () => {
-  const n = navigation(), item = n.groups[0]!;
-  n.enter(); n.advance(200); n.leave(); n.advance(500);
-  expect(n.hidden(item.panel)).toBe(true);
-  n.enter(); n.advance(349); expect(n.hidden(item.panel)).toBe(true);
-  n.advance(1); expect(n.hidden(item.panel)).toBe(false);
-  expect(item.button.getAttribute('aria-expanded')).toBe('true');
+test('les trois intitulés ouvrent leur sous-menu au clic sans lien parent', () => {
+  const n = navigation();
+  expect(n.groups).toHaveLength(3);
+  expect(n.document.querySelector('.cm-nav-parent a')).toBeNull();
+  for (const item of n.groups) {
+    expect(item.button.hasAttribute('href')).toBe(false);
+    expect(n.hidden(item.panel)).toBe(true);
+    n.click(item.button);
+    expect(n.hidden(item.panel)).toBe(false);
+    expect(item.button.getAttribute('aria-expanded')).toBe('true');
+    n.click(item.button); expect(n.hidden(item.panel)).toBe(true);
+  }
 });
 
-test('le menu tolère une sortie de 250 ms et reste ouvert lors du retour vers le panneau', () => {
-  const n = navigation(), item = n.groups[0]!;
-  n.enter(); n.advance(350); n.leave(); n.advance(200); n.enter(); n.advance(500);
-  expect(n.hidden(item.panel)).toBe(false);
-  n.leave(); n.advance(249); expect(n.hidden(item.panel)).toBe(false);
-  n.advance(1); expect(n.hidden(item.panel)).toBe(true);
+test('les destinations initiales et les deux équipes sont dans les sous-menus', () => {
+  const n = navigation();
+  expect(n.groups.map(item => item.panel.querySelectorAll('a').map(a=>a.getAttribute('href')))).toEqual([
+    ['ecole-petons','vie-pratique-petons','tarifs-petons','actualites-petons'],
+    ['equipe-petons','association-petons'],
+    ['pedagogie-petons','chenilles-petons','papillons-petons'],
+  ]);
 });
 
-test('la flèche ouvre immédiatement et le lien parent garde sa destination', () => {
-  const n = navigation(), item = n.groups[0]!;
-  expect(item.link.getAttribute('href')).toBe('ecole-petons');
-  n.click(item.link); expect(n.hidden(item.panel)).toBe(true);
-  n.click(item.button); expect(n.hidden(item.panel)).toBe(false);
+test('un seul sous-menu reste ouvert, le survol ne change pas la sélection', () => {
+  const n=navigation(); n.click(n.groups[0]!.button); n.enter(1); n.advance(500);
+  expect(n.hidden(n.groups[0]!.panel)).toBe(false);
+  expect(n.hidden(n.groups[1]!.panel)).toBe(true);
   n.click(n.groups[1]!.button);
-  expect(n.hidden(item.panel)).toBe(true);
-  expect(n.hidden(n.groups[1]!.panel)).toBe(false);
-  n.click(n.groups[1]!.button); expect(n.hidden(n.groups[1]!.panel)).toBe(true);
-});
-
-test('Échap annule aussi une ouverture en attente sans déplacer le focus au survol', () => {
-  const n = navigation(), initial = n.document.activeElement;
-  n.enter(); n.advance(100); n.escape(); n.advance(500);
   expect(n.hidden(n.groups[0]!.panel)).toBe(true);
-  n.leave(); n.enter(); n.advance(350); n.escape();
-  expect(n.document.activeElement).toBe(initial);
-  expect(n.hidden(n.groups[0]!.panel)).toBe(true);
-});
-
-test('le focus dans le panneau le maintient ouvert, puis Échap revient à sa flèche', () => {
-  const n = navigation(), item = n.groups[0]!;
-  n.click(item.button); n.focus(item.panel.querySelector('a')!);
-  n.leave(); n.advance(500); expect(n.hidden(item.panel)).toBe(false);
-  n.enter(1); n.advance(350); expect(n.hidden(n.groups[1]!.panel)).toBe(true);
-  n.escape(); expect(n.document.activeElement).toBe(item.button);
-  expect(n.hidden(item.panel)).toBe(true);
-});
-
-test('après un clic sur une flèche, le survol peut ouvrir un autre menu sans masquer le focus', () => {
-  const n = navigation(), item = n.groups[0]!;
-  n.focus(item.button); n.click(item.button);
-  n.enter(1); n.advance(350);
-  expect(n.hidden(item.panel)).toBe(true);
   expect(n.hidden(n.groups[1]!.panel)).toBe(false);
+});
+
+test('Échap ferme le panneau et rend le focus au bouton', () => {
+  const n=navigation(), item=n.groups[0]!;
+  n.click(item.button); n.focus(item.panel.querySelector('a')!); n.escape();
+  expect(n.hidden(item.panel)).toBe(true);
   expect(n.document.activeElement).toBe(item.button);
 });
 
 test('sortir au clavier ou cliquer ailleurs ferme le sous-menu', () => {
-  const n = navigation(), item = n.groups[0]!, outside = n.document.querySelector('main')!;
+  const n=navigation(), item=n.groups[0]!, outside=n.document.querySelector('main')!;
   n.click(item.button); n.focus(item.panel.querySelector('a')!); n.focus(outside);
   expect(n.hidden(item.panel)).toBe(true);
-  n.enter(); n.advance(350); n.click(outside); expect(n.hidden(item.panel)).toBe(true);
+  n.click(item.button); n.click(outside); expect(n.hidden(item.panel)).toBe(true);
 });
 
-test('le tactile et le petit écran ne déclenchent pas de survol, le menu mobile reste utilisable', () => {
-  for (const n of [navigation(false), navigation(true, false), navigation()]) {
-    n.enter(0, 'touch'); n.advance(500); expect(n.hidden(n.groups[0]!.panel)).toBe(true);
-  }
-  const tactile = navigation(true, false);
-  tactile.enter(); tactile.advance(500); expect(tactile.hidden(tactile.groups[0]!.panel)).toBe(true);
-  const n = navigation(false);
-  n.enter(); n.advance(500); expect(n.hidden(n.groups[0]!.panel)).toBe(true);
-  const button = n.document.querySelector('.cm-menu-toggle')!, mobile = n.document.querySelector('#cm-mobile-menu')!;
-  n.click(button); expect(n.hidden(mobile)).toBe(false);
-  n.click(mobile.querySelector('a')!); expect(n.hidden(mobile)).toBe(true);
-  n.click(button); n.escape(); expect(n.hidden(mobile)).toBe(true);
+test('sur mobile, les intitulés déplient les liens et Échap ferme chaque niveau', () => {
+  const n=navigation(false), menu=n.document.querySelector('.cm-menu-toggle')!, mobile=n.document.querySelector('#cm-mobile-menu')!;
+  const button=mobile.querySelectorAll('.cm-mobile-submenu-toggle')[1]!, panel=mobile.querySelector('#cm-team-menu-mobile')!;
+  n.click(menu); expect(n.hidden(mobile)).toBe(false); expect(n.hidden(panel)).toBe(true);
+  n.click(button); expect(n.hidden(panel)).toBe(false);
+  n.escape(); expect(n.hidden(panel)).toBe(true); expect(n.hidden(mobile)).toBe(false);
   expect(n.document.activeElement).toBe(button);
+  n.escape(); expect(n.hidden(mobile)).toBe(true); expect(n.document.activeElement).toBe(menu);
+  n.click(menu); n.click(button); n.click(panel.querySelector('a')!);
+  expect(n.hidden(mobile)).toBe(true); expect(n.hidden(panel)).toBe(true);
 });
 
-test('changer de taille annule une ouverture en attente et ferme les menus', () => {
-  const n = navigation();
-  n.enter(); n.advance(200); n.resize(); n.advance(500);
+test('changer de taille ferme les menus', () => {
+  const n=navigation(); n.click(n.groups[0]!.button); n.resize();
   expect(n.hidden(n.groups[0]!.panel)).toBe(true);
 });

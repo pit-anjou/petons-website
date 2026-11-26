@@ -20,12 +20,10 @@ const parentClass = (item: (typeof mainNav)[number]) => (isParent(item) ? 'is-cu
         {mainNav.map((item) =>
           item.submenu ? (
             <li class="cm-nav-group">
-              <div class="cm-nav-parent">
-                <a href={item.href} class={parentClass(item)} aria-current={ariaCurrent(item.href)}>{item.label}</a>
-                <button type="button" class="cm-submenu-toggle" aria-expanded="false" aria-controls={item.submenu.id} aria-label={item.submenu.toggleLabel}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
-                </button>
-              </div>
+              <button type="button" class:list={['cm-submenu-toggle', 'cm-nav-trigger', parentClass(item)]} aria-expanded="false" aria-controls={item.submenu.id}>
+                <span>{item.label}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+              </button>
               <ul class="cm-submenu" id={item.submenu.id} hidden>
                 {item.children?.map((child) => (
                   <li><a href={child.href} aria-current={ariaCurrent(child.href)}>{child.label}</a></li>
@@ -46,14 +44,21 @@ const parentClass = (item: (typeof mainNav)[number]) => (isParent(item) ? 'is-cu
   <nav class="cm-mobile-nav" id="cm-mobile-menu" aria-label="Navigation mobile" hidden>
     <ul>
       {mainNav.map((item) => (
-        <li>
-          <a href={item.href} class={parentClass(item)} aria-current={ariaCurrent(item.href)}>{item.label}</a>
-          {item.children && (
-            <ul class="cm-mobile-children">
-              {item.children.map((child) => (
-                <li><a href={child.href} aria-current={ariaCurrent(child.href)}>{child.label}</a></li>
-              ))}
-            </ul>
+        <li class={item.submenu ? 'cm-mobile-nav-group' : undefined}>
+          {item.submenu ? (
+            <>
+              <button type="button" class:list={['cm-mobile-submenu-toggle', parentClass(item)]} aria-expanded="false" aria-controls={`${item.submenu.id}-mobile`}>
+                <span>{item.label}</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg>
+              </button>
+              <ul class="cm-mobile-children" id={`${item.submenu.id}-mobile`} hidden>
+                {item.children?.map((child) => (
+                  <li><a href={child.href} aria-current={ariaCurrent(child.href)}>{child.label}</a></li>
+                ))}
+              </ul>
+            </>
+          ) : (
+            <a href={item.href} aria-current={ariaCurrent(item.href)}>{item.label}</a>
           )}
         </li>
       ))}
@@ -63,10 +68,16 @@ const parentClass = (item: (typeof mainNav)[number]) => (isParent(item) ? 'is-cu
 </header>
 
 <style is:inline>
-/* Shared by every page: link and disclosure stay distinct, including at hover. */
-.cm-site-header .cm-submenu-toggle{border:0;border-radius:6px;margin-left:3px;min-width:30px;}
-.cm-site-header .cm-submenu-toggle:hover,.cm-site-header .cm-submenu-toggle:focus-visible{background:#eef4df;}
-.cm-site-header .cm-submenu:not([hidden]){animation:cm-submenu-appear 160ms ease-out;}
-@keyframes cm-submenu-appear{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
-@media(prefers-reduced-motion:reduce){.cm-site-header .cm-submenu:not([hidden]){animation:none;}}
+/* Intitulé et flèche forment un seul bouton de menu. */
+.cm-site-header .cm-nav{font-size:13px}
+.cm-site-header .cm-submenu a{font-size:14px}
+.cm-site-header .cm-nav .cm-nav-trigger{position:relative;display:flex;align-items:center;gap:7px;padding:10px 0;border:0;border-radius:0;background:none;color:#316573;font:inherit;cursor:pointer;white-space:nowrap;min-height:40px}
+.cm-site-header .cm-nav-trigger>svg{width:13px;height:13px;flex:none;transition:transform .15s}
+.cm-site-header .cm-nav-trigger:hover:after,.cm-site-header .cm-nav-trigger.is-current-parent:after,.cm-site-header .cm-nav-trigger[aria-expanded="true"]:after{content:'';position:absolute;bottom:3px;left:0;right:20px;height:3px;background:#f89141;border-radius:60%}
+.cm-site-header .cm-mobile-submenu-toggle{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:12px 0;border:0;background:none;color:#316573;text-align:left;font:800 15px/1.6 Nunito,Arial,sans-serif;cursor:pointer}
+.cm-site-header .cm-mobile-submenu-toggle>svg{width:16px;height:16px;flex:none;transition:transform .15s}
+.cm-site-header .cm-mobile-submenu-toggle[aria-expanded="true"]>svg{transform:rotate(180deg)}
+.cm-site-header .cm-mobile-submenu-toggle.is-current-parent>span{ text-decoration:underline;text-decoration-color:#f89141;text-decoration-thickness:3px;text-underline-offset:5px}
+.cm-site-header .cm-mobile-children[hidden],.cm-site-header .cm-submenu[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){.cm-site-header .cm-nav-trigger>svg,.cm-site-header .cm-mobile-submenu-toggle>svg{transition:none}}
 </style>

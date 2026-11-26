@@ -37,21 +37,31 @@ export const mainNav: ReadonlyArray<NavItem> = [
   {
     href: 'ecole-petons',
     label: 'L’école',
-    submenu: { id: 'cm-school-menu', toggleLabel: 'Afficher les informations pratiques, les tarifs et les actualités' },
+    submenu: { id: 'cm-school-menu', toggleLabel: 'L’école' },
     children: [
+      { href: 'ecole-petons', label: 'L’ADN de l’école' },
       { href: 'vie-pratique-petons', label: 'Informations pratiques' },
       { href: 'tarifs-petons', label: 'Tarifs' },
       { href: 'actualites-petons', label: 'Actualités' },
     ],
   },
-  { href: 'equipe-petons', label: 'L’équipe' },
+  {
+    href: 'equipe-petons',
+    label: 'L’équipe',
+    submenu: { id: 'cm-team-menu', toggleLabel: 'L’équipe' },
+    children: [
+      { href: 'equipe-petons', label: 'L’équipe éducative' },
+      { href: 'association-petons', label: 'L’association et son équipe' },
+    ],
+  },
   {
     href: 'pedagogie-petons',
     label: 'Pédagogie et ambiances',
-    submenu: { id: 'cm-ambiences-menu', toggleLabel: 'Afficher les deux ambiances' },
+    submenu: { id: 'cm-ambiences-menu', toggleLabel: 'Pédagogie et ambiances' },
     children: [
-      { href: 'chenilles-petons', label: 'L’ambiance 3–6 ans aux Petons' },
-      { href: 'papillons-petons', label: 'L’ambiance 6–12 ans aux Petons' },
+      { href: 'pedagogie-petons', label: 'La pédagogie Montessori' },
+      { href: 'chenilles-petons', label: 'L’ambiance 2–6 ans aux petons' },
+      { href: 'papillons-petons', label: 'L’ambiance 6–12 ans aux petons' },
     ],
   },
   { href: 'inscriptions-petons', label: 'Inscriptions' },
@@ -77,7 +87,8 @@ export const footerNav: ReadonlyArray<{ readonly title: string; readonly links: 
     links: [
       { href: '/', label: 'Accueil' },
       { href: 'ecole-petons', label: 'L’école' },
-      { href: 'equipe-petons', label: 'L’équipe' },
+      { href: 'equipe-petons', label: 'L’équipe éducative' },
+      { href: 'association-petons', label: 'L’association et son équipe' },
       { href: 'vie-pratique-petons', label: 'Informations pratiques' },
       { href: 'actualites-petons', label: 'Actualités' },
     ],

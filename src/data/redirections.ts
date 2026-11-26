@@ -20,11 +20,11 @@ export const redirections: ReadonlyArray<Redirection> = [
   permanente('/nos-valeurs{/}?', '/pedagogie-petons'),
   permanente('/la-vie-a-lecole{/}?', '/vie-pratique-petons'),
   permanente('/informations-pratiques{/}?', '/vie-pratique-petons'),
-  // Fiches APE de l’ancien portfolio : le bureau de l’association est présenté sur la page Équipe.
+  // Fiches APE de l’ancien portfolio : le bureau est présenté sur la page Association.
   // Elles doivent précéder la règle générale /portfolio/…, la première règle qui correspond l’emporte.
-  permanente('/portfolio/role-de-lape{/}?', '/equipe-petons#association'),
-  permanente('/portfolio/roles-des-membres-de-lape{/}?', '/equipe-petons#association'),
-  permanente('/portfolio/election-du-bureau{/}?', '/equipe-petons#association'),
+  permanente('/portfolio/role-de-lape{/}?', '/association-petons'),
+  permanente('/portfolio/roles-des-membres-de-lape{/}?', '/association-petons'),
+  permanente('/portfolio/election-du-bureau{/}?', '/association-petons'),
   permanente('/portfolio/:page*{/}?', '/vie-pratique-petons#familles'),
   permanente('/journees-portes-ouvertes{/}?', '/actualites-petons#portes-ouvertes'),
   permanente('/tarifs{/}?', '/tarifs-petons'),
