@@ -1,6 +1,8 @@
 ---
 // Envoi des formulaires marqués data-brevo vers /api/formulaire (voir docs/formulaires-brevo.md).
 // À placer avant le script de la page, qui appelle envoyerFormulaire() puis afficherEnvoiReussi().
+// Quand le site refuse le contenu (lien, téléphone : src/lib/formulaires/antispam.ts), l'explication
+// est dans form.dataset.refus : la page l'affiche à la place de « L'envoi n'a pas abouti ».
 ---
 <style is:inline>
 .form-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
@@ -12,9 +14,13 @@
 </style>
 <script is:inline>(()=>{
  const debut=performance.now(),DELAI_MINIMAL=3000;
+ const REFUS={
+  lien:'Pour limiter les spams, le formulaire n’accepte pas les liens ni les adresses de sites. Retirez-les de votre message puis renvoyez-le, ou écrivez-nous depuis votre messagerie.',
+  telephone:'Le numéro de téléphone n’est pas reconnu. Corrigez-le ou laissez ce champ vide, puis renvoyez votre message.'
+ };
  window.envoyerFormulaire=async(form,formulaire,champs)=>{
   const bouton=form.querySelector('button[type="submit"]'),contenu=bouton.innerHTML;
-  bouton.disabled=true;bouton.textContent='Envoi en cours…';
+  bouton.disabled=true;bouton.textContent='Envoi en cours…';delete form.dataset.refus;
   try{
    let dureeMs=Math.round(performance.now()-debut);
    if(dureeMs<DELAI_MINIMAL){
@@ -22,7 +28,9 @@
     dureeMs=Math.round(performance.now()-debut);
    }
    const reponse=await fetch('/api/formulaire',{method:'POST',headers:{'content-type':'application/json'},signal:AbortSignal.timeout?.(25000),body:JSON.stringify({formulaire,champs,piege:form.elements.piege?.value||'',dureeMs})});
-   return reponse.ok&&(await reponse.json()).ok===true;
+   const resultat=await reponse.json();
+   if(REFUS[resultat.motif])form.dataset.refus=REFUS[resultat.motif];
+   return reponse.ok&&resultat.ok===true;
   }catch{return false;}
   finally{bouton.disabled=false;bouton.innerHTML=contenu;}
  };

@@ -1,9 +1,10 @@
 // Contrôles de POST /api/formulaire, dans l'ordre de la spec :
-// méthode, origine, taille, configuration, anti-spam, validation, puis envoi à Brevo.
+// méthode, origine, taille, configuration, anti-spam, validation, contenu (liens, téléphone), puis envoi à Brevo.
 import { estConfiguree, type ConfigBrevo } from '../../data/brevo';
 import { creerClientBrevo, type Fetch } from '../brevo';
+import { motifDeRefus, type MotifDeRefus } from './antispam';
 import { traiter, type Journal } from './traitement';
-import { estSpam, valider } from './validation';
+import { estSpam, valider, type Demande } from './validation';
 
 export const TAILLE_MAX_OCTETS = 16384;
 
@@ -14,8 +15,8 @@ interface Dependances {
   readonly journal: Journal;
 }
 
-const repondre = (statut: number) =>
-  Response.json({ ok: statut === 200 }, { status: statut, headers: { 'cache-control': 'no-store', ...(statut === 405 ? { allow: 'POST' } : {}) } });
+const repondre = (statut: number, motif?: MotifDeRefus) =>
+  Response.json({ ok: statut === 200, ...(motif ? { motif } : {}) }, { status: statut, headers: { 'cache-control': 'no-store', ...(statut === 405 ? { allow: 'POST' } : {}) } });
 
 /** Origine de la requête si elle vient du même site (production, prévisualisation Vercel ou localhost), sinon null. */
 const origineDuSite = (requete: Request): string | null => {
@@ -43,6 +44,19 @@ const lireJson = (texte: string): Record<string, unknown> | null => {
   }
 };
 
+/** Textes libres (où un lien est refusé) et téléphone de chaque formulaire. */
+const champsControles = (demande: Demande): { textes: string[]; telephone?: string } => {
+  if (demande.formulaire === 'contact') {
+    const { name, organisation, message, phone } = demande.champs;
+    return { textes: [name, organisation, message], telephone: phone };
+  }
+  if (demande.formulaire === 'inscription') {
+    const { parentName, schoolStart, message, phone } = demande.champs;
+    return { textes: [parentName, schoolStart, message], telephone: phone };
+  }
+  return { textes: [] };
+};
+
 export const traiterRequete = async (requete: Request, { cleApi, config, fetch, journal }: Dependances): Promise<Response> => {
   if (requete.method !== 'POST') return repondre(405);
 
@@ -64,6 +78,13 @@ export const traiterRequete = async (requete: Request, { cleApi, config, fetch, 
 
   const demande = valider(corps.formulaire, corps.champs);
   if (!demande) return repondre(400);
+
+  // Refus expliqué au visiteur (422 et motif), contrairement au champ piège : une personne peut corriger et renvoyer.
+  const motif = motifDeRefus(champsControles(demande));
+  if (motif) {
+    journal({ formulaire: demande.formulaire, etape: `refus-${motif}`, statut: null });
+    return repondre(422, motif);
+  }
 
   const client = creerClientBrevo({ cleApi, fetch });
   return repondre((await traiter(demande, { client, config, origine, journal })) === 'envoye' ? 200 : 502);

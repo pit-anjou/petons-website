@@ -1,5 +1,6 @@
 // Invariants des formulaires construits (à lancer après « bun run build »).
 import { describe, expect, test } from 'bun:test';
+import { MOTIF_TELEPHONE } from '../src/lib/formulaires/antispam';
 import { LIMITES } from '../src/lib/formulaires/validation';
 import { chargerHtml, DOSSIER_PAGES } from './outils/html';
 
@@ -31,6 +32,16 @@ for (const { page, selecteur, limites, caseLettre } of formulaires) {
       for (const [nom, max] of Object.entries(limites)) {
         expect(form.querySelector(`[name="${nom}"]`)?.getAttribute('maxlength')).toBe(String(max));
       }
+    });
+
+    test('le téléphone, s’il existe, a le même format que la validation serveur', () => {
+      const telephone = form.querySelector('input[name="phone"]');
+      expect(telephone !== null).toBe(caseLettre);
+      if (!telephone) return;
+      expect(telephone.getAttribute('pattern')).toBe(MOTIF_TELEPHONE);
+      // Le navigateur compile pattern avec le drapeau « v » : une expression invalide serait ignorée sans message.
+      expect(() => new RegExp(`^(?:${MOTIF_TELEPHONE})$`, 'v')).not.toThrow();
+      expect(telephone.getAttribute('title')).toContain('06 12 34 56 78');
     });
 
     test('annonce l’usage des données, Brevo et la durée de conservation', () => {

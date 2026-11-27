@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
 import FormSubmitScript from '../components/FormSubmitScript.astro';
+import { MOTIF_TELEPHONE } from '../lib/formulaires/antispam';
 import SupportFooterStyles from '../components/SupportFooterStyles.astro';
 ---
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><link rel="preload" href="assets/fonts/kalam-700.woff2" as="font" type="font/woff2" crossorigin><Referencement title={"Inscriptions | Les Petons dans l’Herbe · École Montessori Nantes"} description={"Rejoindre Les Petons dans l’Herbe à Nantes : découvrez le parcours d’inscription, visitez l’école et échangez avec l’équipe sur votre projet pour votre enfant de 3 à 12 ans."} /><style is:inline>@font-face {
@@ -147,7 +148,7 @@ body .button:not(.secondary){color:#203f4d;}
           <div class="form-fields">
             <div class="field"><label for="parent-name">Nom du parent <span aria-hidden="true">*</span></label><input id="parent-name" name="parentName" type="text" autocomplete="name" placeholder="Prénom et nom" maxlength="150" required></div>
             <div class="field"><label for="parent-email">Adresse e-mail <span aria-hidden="true">*</span></label><input id="parent-email" name="email" type="email" autocomplete="email" placeholder="vous@exemple.fr" maxlength="254" required></div>
-            <div class="field"><label for="parent-phone">Téléphone <span class="optional">(facultatif)</span></label><input id="parent-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Votre numéro" maxlength="35"></div>
+            <div class="field"><label for="parent-phone">Téléphone <span class="optional">(facultatif)</span></label><input id="parent-phone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="Votre numéro" maxlength="35" pattern={MOTIF_TELEPHONE} title="Numéro français (06 12 34 56 78) ou international (+32 470 12 34 56)"></div>
             <div class="field"><label for="school-start">Rentrée souhaitée <span class="optional">(facultatif)</span></label><input id="school-start" name="schoolStart" type="text" placeholder="Ex. : septembre 2027" maxlength="100"></div>
           </div>
           <fieldset class="age-choice"><legend>Quelle ambiance pour votre enfant ?</legend><div class="age-options">
@@ -189,7 +190,7 @@ body .button:not(.secondary){color:#203f4d;}
   const envoye=await envoyerFormulaire(form,'inscription',{parentName:value('parentName'),email:value('email'),phone:value('phone'),schoolStart:value('schoolStart'),childAge:value('childAge'),message:value('message'),newsletter:form.elements.newsletter.checked});
   if(envoye){afficherEnvoiReussi(form,'Merci, votre demande est bien partie. Vous allez recevoir un accusé de réception par e-mail, et nous revenons vers vous rapidement.');return;}
   emailLink.href=url;preview.value=preparedMessage;result.hidden=false;
-  status.textContent='L’envoi n’a pas abouti. Vous pouvez nous écrire directement depuis votre messagerie, ou copier le message ci-dessous.';
+  status.textContent=form.dataset.refus||'L’envoi n’a pas abouti. Vous pouvez nous écrire directement depuis votre messagerie, ou copier le message ci-dessous.';
  });
  document.querySelector('#parent-name').addEventListener('input',event=>event.target.setCustomValidity(''));
  form.addEventListener('input',()=>{if(!result.hidden)result.hidden=true;});
