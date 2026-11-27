@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'bun:test';
-import { contientLien, motifDeRefus, telephonePlausible } from '../src/lib/formulaires/antispam';
+import { contientLien } from '../src/lib/formulaires/antispam';
 
 describe('contientLien', () => {
   test.each([
@@ -23,28 +23,4 @@ describe('contientLien', () => {
     ['mot qui commence comme une extension', 'ma.communication et mon.organisation'],
     ['texte vide', ''],
   ])('laisse passer : %s', (_cas, texte) => expect(contientLien(texte)).toBe(false));
-});
-
-describe('telephonePlausible', () => {
-  test.each(['', '0612345678', '06 12 34 56 78', '06.12.34.56.78', '06-12-34-56-78', '02 40 00 00 00', '+33 6 12 34 56 78', '+33 (0)6 12 34 56 78', '0033612345678', '+32 470 12 34 56', ' 06 12 34 56 78 '])(
-    'accepte « %s »',
-    (telephone) => expect(telephonePlausible(telephone)).toBe(true),
-  );
-
-  test.each([
-    ['spam reçu', '7488256123'],
-    ['trop court', '06 12 34'],
-    ['trop long', '06 12 34 56 78 90'],
-    ['lettres', 'appelez-moi'],
-    ['numéro puis texte', '06 12 34 56 78 le soir'],
-    ['indicatif seul', '+33'],
-  ])('refuse : %s', (_cas, telephone) => expect(telephonePlausible(telephone)).toBe(false));
-});
-
-describe('motifDeRefus', () => {
-  test('rien à signaler', () => expect(motifDeRefus({ textes: ['Camille Martin', '', 'Bonjour'], telephone: '06 12 34 56 78' })).toBeNull());
-  test('formulaire sans texte libre ni téléphone', () => expect(motifDeRefus({ textes: [] })).toBeNull());
-  test('lien dans un des textes', () => expect(motifDeRefus({ textes: ['Camille', 'exemple.com', 'Bonjour'] })).toBe('lien'));
-  test('téléphone invraisemblable', () => expect(motifDeRefus({ textes: ['Bonjour'], telephone: '7488256123' })).toBe('telephone'));
-  test('le lien l’emporte sur le téléphone', () => expect(motifDeRefus({ textes: ['https://exemple.test'], telephone: '7488256123' })).toBe('lien'));
 });

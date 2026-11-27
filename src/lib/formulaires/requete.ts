@@ -1,8 +1,8 @@
 // Contrôles de POST /api/formulaire, dans l'ordre de la spec :
-// méthode, origine, taille, configuration, anti-spam, validation, contenu (liens, téléphone), puis envoi à Brevo.
+// méthode, origine, taille, configuration, anti-spam, validation, contenu (liens), puis envoi à Brevo.
 import { estConfiguree, type ConfigBrevo } from '../../data/brevo';
 import { creerClientBrevo, type Fetch } from '../brevo';
-import { motifDeRefus, type MotifDeRefus } from './antispam';
+import { contientLien } from './antispam';
 import { traiter, type Journal } from './traitement';
 import { estSpam, valider, type Demande } from './validation';
 
@@ -15,7 +15,7 @@ interface Dependances {
   readonly journal: Journal;
 }
 
-const repondre = (statut: number, motif?: MotifDeRefus) =>
+const repondre = (statut: number, motif?: 'lien') =>
   Response.json({ ok: statut === 200, ...(motif ? { motif } : {}) }, { status: statut, headers: { 'cache-control': 'no-store', ...(statut === 405 ? { allow: 'POST' } : {}) } });
 
 /** Origine de la requête si elle vient du même site (production, prévisualisation Vercel ou localhost), sinon null. */
@@ -44,17 +44,11 @@ const lireJson = (texte: string): Record<string, unknown> | null => {
   }
 };
 
-/** Textes libres (où un lien est refusé) et téléphone de chaque formulaire. */
-const champsControles = (demande: Demande): { textes: string[]; telephone?: string } => {
-  if (demande.formulaire === 'contact') {
-    const { name, organisation, message, phone } = demande.champs;
-    return { textes: [name, organisation, message], telephone: phone };
-  }
-  if (demande.formulaire === 'inscription') {
-    const { parentName, schoolStart, message, phone } = demande.champs;
-    return { textes: [parentName, schoolStart, message], telephone: phone };
-  }
-  return { textes: [] };
+/** Textes libres de chaque formulaire : un lien y est refusé. */
+const textesLibres = (demande: Demande): string[] => {
+  if (demande.formulaire === 'contact') return [demande.champs.name, demande.champs.organisation, demande.champs.message];
+  if (demande.formulaire === 'inscription') return [demande.champs.parentName, demande.champs.schoolStart, demande.champs.message];
+  return [];
 };
 
 export const traiterRequete = async (requete: Request, { cleApi, config, fetch, journal }: Dependances): Promise<Response> => {
@@ -80,10 +74,9 @@ export const traiterRequete = async (requete: Request, { cleApi, config, fetch, 
   if (!demande) return repondre(400);
 
   // Refus expliqué au visiteur (422 et motif), contrairement au champ piège : une personne peut corriger et renvoyer.
-  const motif = motifDeRefus(champsControles(demande));
-  if (motif) {
-    journal({ formulaire: demande.formulaire, etape: `refus-${motif}`, statut: null });
-    return repondre(422, motif);
+  if (textesLibres(demande).some(contientLien)) {
+    journal({ formulaire: demande.formulaire, etape: 'refus-lien', statut: null });
+    return repondre(422, 'lien');
   }
 
   const client = creerClientBrevo({ cleApi, fetch });

@@ -111,20 +111,19 @@ describe('traiterRequete', () => {
   const contact = { formulaire: 'contact', champs: { name: 'Camille Martin', email: 'camille@exemple.fr', subject: 'information', message: 'Bonjour, une question.' }, piege: '', dureeMs: 10_000 };
 
   test.each([
-    ['lien dans le message', { message: 'Regarde par ici : https://tanthroughswim.store À plus !' }, 'lien'],
-    ['lien dans le nom', { name: 'www.exemple.test' }, 'lien'],
-    ['téléphone invraisemblable', { phone: '7488256123' }, 'telephone'],
-  ])('refuse en l’expliquant, sans rien envoyer : %s', async (_cas, ajout, motif) => {
+    ['dans le message', { message: 'Regarde par ici : https://tanthroughswim.store À plus !' }],
+    ['dans le nom', { name: 'www.exemple.test' }],
+  ])('refuse un lien en l’expliquant, sans rien envoyer : %s', async (_cas, ajout) => {
     const { appels, evenements, deps } = preparer();
     const reponse = await traiterRequete(requete({ ...contact, champs: { ...contact.champs, ...ajout } }), deps);
-    expect(await lire(reponse)).toEqual({ statut: 422, corps: { ok: false, motif }, cache: 'no-store' });
+    expect(await lire(reponse)).toEqual({ statut: 422, corps: { ok: false, motif: 'lien' }, cache: 'no-store' });
     expect(appels).toEqual([]);
-    expect(evenements).toEqual([{ formulaire: 'contact', etape: `refus-${motif}`, statut: null }]);
+    expect(evenements).toEqual([{ formulaire: 'contact', etape: 'refus-lien', statut: null }]);
   });
 
-  test('envoie un message de contact sans lien, avec un téléphone français', async () => {
+  test('envoie un message de contact sans lien, quel que soit le téléphone', async () => {
     const { appels, evenements, deps } = preparer();
-    const reponse = await traiterRequete(requete({ ...contact, champs: { ...contact.champs, phone: '06 12 34 56 78', message: 'Écrivez-moi à camille@exemple.fr.' } }), deps);
+    const reponse = await traiterRequete(requete({ ...contact, champs: { ...contact.champs, phone: '06 12 34 56 78 (soir)', message: 'Écrivez-moi à camille@exemple.fr.' } }), deps);
     expect(reponse.status).toBe(200);
     expect(appels.length).toBeGreaterThan(0);
     expect(evenements).toEqual([]);

@@ -4,7 +4,6 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import SiteNavScript from '../components/SiteNavScript.astro';
 import FormSubmitScript from '../components/FormSubmitScript.astro';
-import { MOTIF_TELEPHONE } from '../lib/formulaires/antispam';
 import SupportFooterStyles from '../components/SupportFooterStyles.astro';
 ---
 <!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light"><link rel="preload" href="assets/fonts/kalam-700.woff2" as="font" type="font/woff2" crossorigin><Referencement title={"Contact | Les Petons dans l’Herbe · École Montessori Nantes"} description={"Contactez Les Petons dans l’Herbe à Nantes : visite, information, candidature, stage, partenariat, don ou mécénat pour Constellation Montessori."} /><style is:inline>@font-face {
@@ -155,7 +154,7 @@ body .button:not(.secondary){color:#203f4d;}
           <div class="form-fields">
             <div class="field"><label for="contact-name">Prénom et nom <span aria-hidden="true">*</span></label><input id="contact-name" name="name" type="text" autocomplete="name" maxlength="150" required></div>
             <div class="field"><label for="contact-email">Adresse e-mail <span aria-hidden="true">*</span></label><input id="contact-email" name="email" type="email" autocomplete="email" maxlength="254" required></div>
-            <div class="field"><label for="contact-phone">Téléphone <span class="optional">(facultatif)</span></label><input id="contact-phone" name="phone" type="tel" autocomplete="tel" maxlength="35" pattern={MOTIF_TELEPHONE} title="Numéro français (06 12 34 56 78) ou international (+32 470 12 34 56)"></div>
+            <div class="field"><label for="contact-phone">Téléphone <span class="optional">(facultatif)</span></label><input id="contact-phone" name="phone" type="tel" autocomplete="tel" maxlength="35"></div>
             <div class="field"><label for="contact-structure">Structure <span class="optional">(facultatif)</span></label><input id="contact-structure" name="organisation" type="text" autocomplete="organization" placeholder="Entreprise, association…" maxlength="150"></div>
           </div>
           <div class="field subject-field"><label for="contact-subject">Quel est le sujet de votre message ? <span aria-hidden="true">*</span></label><select id="contact-subject" name="subject" aria-describedby="subject-help" required><option value="" selected disabled>Choisissez un sujet</option><option value="information">Une information sur l’école</option><option value="visite">Organiser une visite</option><option value="vacances">Un stage de vacances pour mon enfant</option><option value="candidature">Postuler dans l’équipe</option><option value="stage">Demander un stage</option><option value="partenariat">Proposer un partenariat</option><option value="don">Soutenir par un don</option><option value="mecenat">Devenir mécène</option><option value="autre">Une autre demande</option></select><p class="subject-help" id="subject-help" aria-live="polite">Choisissez le sujet qui correspond le mieux à votre demande.</p></div>

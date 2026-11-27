@@ -1,7 +1,7 @@
 ---
 // Envoi des formulaires marqués data-brevo vers /api/formulaire (voir docs/formulaires-brevo.md).
 // À placer avant le script de la page, qui appelle envoyerFormulaire() puis afficherEnvoiReussi().
-// Quand le site refuse le contenu (lien, téléphone : src/lib/formulaires/antispam.ts), l'explication
+// Quand le site refuse le contenu (un lien : src/lib/formulaires/antispam.ts), l'explication
 // est dans form.dataset.refus : la page l'affiche à la place de « L'envoi n'a pas abouti ».
 ---
 <style is:inline>
@@ -15,8 +15,7 @@
 <script is:inline>(()=>{
  const debut=performance.now(),DELAI_MINIMAL=3000;
  const REFUS={
-  lien:'Pour limiter les spams, le formulaire n’accepte pas les liens ni les adresses de sites. Retirez-les de votre message puis renvoyez-le, ou écrivez-nous depuis votre messagerie.',
-  telephone:'Le numéro de téléphone n’est pas reconnu. Corrigez-le ou laissez ce champ vide, puis renvoyez votre message.'
+  lien:'Pour limiter les spams, le formulaire n’accepte pas les liens ni les adresses de sites. Retirez-les de votre message puis renvoyez-le, ou écrivez-nous depuis votre messagerie.'
  };
  window.envoyerFormulaire=async(form,formulaire,champs)=>{
   const bouton=form.querySelector('button[type="submit"]'),contenu=bouton.innerHTML;
