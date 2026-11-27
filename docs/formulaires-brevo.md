@@ -142,6 +142,7 @@ Le temps est mesuré par le navigateur depuis l’ouverture de la page (pas par 
 | **Brevo est en panne ou refuse l’étape indispensable** (clé invalide, IP refusée, modèle supprimé…) : la notification pour contact et inscription, la double confirmation pour la lettre | « L’envoi n’a pas abouti » + repli messagerie | La route répond 502. Le plus souvent, la notification n’est pas partie (contact et inscription) ou le mail de confirmation n’est pas parti (lettre). Mais si Brevo a seulement répondu trop lentement (délai de 8 secondes), l’envoi a pu aboutir quand même : vérifier dans l’historique des envois de Brevo avant de refaire quoi que ce soit. |
 | **Brevo échoue après la notification** (contact, accusé ou double confirmation), pour contact et inscription uniquement | « Merci », comme si tout allait bien | L’école a reçu la notification. L’incident est dans les journaux : le contact ou l’accusé est à refaire à la main. |
 | **Un robot remplit le formulaire** (champ caché rempli, ou envoi trop rapide) | « Merci » | Rien n’est envoyé (« envoi trop rapide » : durée de moins de 3 secondes, mesurée dans le navigateur, absente ou invalide). Le robot ne sait pas qu’il a été repéré. Une ligne `antispam` est notée dans les journaux. |
+| **Le message contient un lien ou une adresse de site** | Une alerte rouge sous le champ du message (« Votre message n’est pas parti : … le formulaire n’accepte pas les liens… »), le champ est encadré et le curseur y revient | Rien n’est envoyé à Brevo (la route répond 422). Contrairement au robot, le visiteur est prévenu : une personne retire le lien et renvoie, ou écrit à l’adresse indiquée. Une ligne `refus-lien` est notée dans les journaux. Voir « Protection contre le spam ». |
 | **Le message dépasse la taille permise** ou un champ est invalide | « L’envoi n’a pas abouti » + repli messagerie | Les limites sont les mêmes que celles des champs de la page. |
 
 ### Lire les journaux dans Vercel
@@ -153,12 +154,28 @@ Dans Vercel, ouvrir le projet, **Logs**, et chercher **`[formulaire]`**. Chaque 
 ```
 
 - `formulaire` : `contact`, `inscription` ou `lettre`.
-- `etape` : ce qui a échoué : `notification`, `contact`, `accuse`, `confirmation`, ou `antispam`.
+- `etape` : ce qui a échoué : `notification`, `contact`, `accuse`, `confirmation`, `antispam` (robot écarté en silence), ou `refus-lien` (message contenant un lien, refusé avec explication au visiteur).
 - `statut` : le code de réponse de Brevo (`null` s’il n’y en a pas : Brevo n’a pas répondu à temps, ou c’est un robot).
 
 Les journaux ne contiennent **jamais** de nom, d’adresse ni de message : seulement ces trois informations. Pour retrouver une demande qui n’a pas abouti, consulter l’historique des envois dans Brevo ou demander à la personne de renvoyer son message.
 
 Codes à connaître (indicatifs, ceux de Brevo) : `401` ou `403` clé API invalide ou adresse IP refusée ; `400` informations refusées (souvent un attribut non créé à l’étape 3) ; `404` numéro de liste ou de modèle inexistant ; `null` pas de réponse de Brevo (délai de 8 secondes dépassé).
+
+## Protection contre le spam
+
+Deux protections, toutes gratuites et invisibles pour un visiteur ordinaire (logique : `src/lib/formulaires/validation.ts` et `antispam.ts`) :
+
+| Protection | Arrête | Ce que voit l’expéditeur |
+| --- | --- | --- |
+| Champ caché et durée minimale de 3 secondes | Les robots simples, qui remplissent tous les champs ou envoient sans ouvrir la page | « Merci » (rien n’est envoyé) |
+| **Pas de lien dans les textes libres** (nom, structure, rentrée souhaitée, message) : `http://`, `www.`, `exemple.com`, `wa.me/…` | La publicité envoyée depuis de vrais navigateurs (les spams de novembre 2026 contenaient tous un lien) | Une alerte rouge sous le champ du message |
+
+- Une **adresse e-mail** dans le message n’est pas un lien : elle est acceptée.
+- **Conséquence pour l’école** : un candidat ou un partenaire ne peut plus coller l’adresse de son site ou de son profil dans le formulaire. Le message d’explication l’invite à la retirer ou à écrire par sa messagerie, et l’accusé de réception permet de répondre avec un lien ou un CV.
+- **Mesurer l’effet** : dans les journaux Vercel, compter les lignes `refus-lien`. Si de vrais visiteurs se plaignent, la liste des extensions reconnues est dans `src/lib/formulaires/antispam.ts`.
+- Le **téléphone** n’est pas contrôlé : le champ est facultatif, un spammeur le laisse vide, et un format imposé gênerait les parents (deux numéros, « le soir »…).
+
+**Si le spam continue** (messages sans lien), l’étape suivante est un captcha invisible, **Cloudflare Turnstile** : gratuit, sans case à cocher ni image à déchiffrer dans la plupart des cas, sans cookie publicitaire. Il demande un compte Cloudflare (gratuit), une clé publique dans les pages, une clé secrète dans Vercel (comme `BREVO_API_KEY`) et une mention dans le texte sous les formulaires. Une limitation du nombre d’envois par adresse IP est possible aussi, par une règle du pare-feu de Vercel (réglage dans Vercel, sans code ; disponibilité dans l’offre de l’école à vérifier).
 
 ## Hébergement Docker / nginx
 
@@ -203,4 +220,4 @@ Les mentions sous les formulaires annoncent une conservation des informations **
 
 ### Hors périmètre
 
-Une page complète de politique de confidentialité et mentions légales, un CAPTCHA et une limitation du nombre d’envois par adresse IP ne sont pas en place. À envisager si le spam passe la protection invisible actuelle (champ caché et durée minimale de 3 secondes, mesurée dans le navigateur).
+Une page complète de politique de confidentialité et mentions légales, un CAPTCHA et une limitation du nombre d’envois par adresse IP ne sont pas en place. Pour ces deux derniers, voir « Protection contre le spam ».

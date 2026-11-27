@@ -108,6 +108,27 @@ describe('traiterRequete', () => {
     expect(await lire(await traiterRequete(requete(corps), deps))).toEqual({ statut: 400, corps: { ok: false }, cache: 'no-store' });
   });
 
+  const contact = { formulaire: 'contact', champs: { name: 'Camille Martin', email: 'camille@exemple.fr', subject: 'information', message: 'Bonjour, une question.' }, piege: '', dureeMs: 10_000 };
+
+  test.each([
+    ['dans le message', { message: 'Regarde par ici : https://tanthroughswim.store À plus !' }],
+    ['dans le nom', { name: 'www.exemple.test' }],
+  ])('refuse un lien en l’expliquant, sans rien envoyer : %s', async (_cas, ajout) => {
+    const { appels, evenements, deps } = preparer();
+    const reponse = await traiterRequete(requete({ ...contact, champs: { ...contact.champs, ...ajout } }), deps);
+    expect(await lire(reponse)).toEqual({ statut: 422, corps: { ok: false, motif: 'lien' }, cache: 'no-store' });
+    expect(appels).toEqual([]);
+    expect(evenements).toEqual([{ formulaire: 'contact', etape: 'refus-lien', statut: null }]);
+  });
+
+  test('envoie un message de contact sans lien, quel que soit le téléphone', async () => {
+    const { appels, evenements, deps } = preparer();
+    const reponse = await traiterRequete(requete({ ...contact, champs: { ...contact.champs, phone: '06 12 34 56 78 (soir)', message: 'Écrivez-moi à camille@exemple.fr.' } }), deps);
+    expect(reponse.status).toBe(200);
+    expect(appels.length).toBeGreaterThan(0);
+    expect(evenements).toEqual([]);
+  });
+
   test('répond 502 quand Brevo échoue sur l’étape indispensable', async () => {
     const { deps } = preparer(500);
     expect((await traiterRequete(requete(), deps)).status).toBe(502);

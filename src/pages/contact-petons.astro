@@ -216,6 +216,7 @@ body .button:not(.secondary){color:#203f4d;}
   const url='mailto:contact@ecolemontessorinantes.com?subject='+encodeURIComponent(label+' — Les Petons dans l’Herbe')+'&body='+encodeURIComponent(preparedMessage);
   const envoye=await envoyerFormulaire(form,'contact',{name:value('name'),email:value('email'),phone:value('phone'),organisation:value('organisation'),subject:subject.value,message:value('message'),newsletter:form.elements.newsletter.checked});
   if(envoye){afficherEnvoiReussi(form,'Merci, votre message est bien parti. Vous allez recevoir un accusé de réception par e-mail.');return;}
+  if(form.dataset.refus)return;
   emailLink.href=url;preview.value=preparedMessage;result.hidden=false;
   status.textContent='L’envoi n’a pas abouti. Vous pouvez nous écrire directement depuis votre messagerie, ou copier le message ci-dessous.';
  });
