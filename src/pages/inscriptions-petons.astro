@@ -188,8 +188,9 @@ body .button:not(.secondary){color:#203f4d;}
   const url='mailto:contact@ecolemontessorinantes.com?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(preparedMessage);
   const envoye=await envoyerFormulaire(form,'inscription',{parentName:value('parentName'),email:value('email'),phone:value('phone'),schoolStart:value('schoolStart'),childAge:value('childAge'),message:value('message'),newsletter:form.elements.newsletter.checked});
   if(envoye){afficherEnvoiReussi(form,'Merci, votre demande est bien partie. Vous allez recevoir un accusé de réception par e-mail, et nous revenons vers vous rapidement.');return;}
+  if(form.dataset.refus)return;
   emailLink.href=url;preview.value=preparedMessage;result.hidden=false;
-  status.textContent=form.dataset.refus||'L’envoi n’a pas abouti. Vous pouvez nous écrire directement depuis votre messagerie, ou copier le message ci-dessous.';
+  status.textContent='L’envoi n’a pas abouti. Vous pouvez nous écrire directement depuis votre messagerie, ou copier le message ci-dessous.';
  });
  document.querySelector('#parent-name').addEventListener('input',event=>event.target.setCustomValidity(''));
  form.addEventListener('input',()=>{if(!result.hidden)result.hidden=true;});

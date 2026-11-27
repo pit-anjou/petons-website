@@ -1,8 +1,9 @@
 ---
 // Envoi des formulaires marqués data-brevo vers /api/formulaire (voir docs/formulaires-brevo.md).
 // À placer avant le script de la page, qui appelle envoyerFormulaire() puis afficherEnvoiReussi().
-// Quand le site refuse le contenu (un lien : src/lib/formulaires/antispam.ts), l'explication
-// est dans form.dataset.refus : la page l'affiche à la place de « L'envoi n'a pas abouti ».
+// Quand le site refuse le contenu (un lien : src/lib/formulaires/antispam.ts), ce script affiche lui-même
+// une alerte sous le champ du message et y replace le curseur ; form.dataset.refus est alors défini,
+// et la page n'affiche pas son repli « L'envoi n'a pas abouti ».
 ---
 <style is:inline>
 .form-trap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
@@ -10,16 +11,31 @@
 .newsletter-optin input{margin-top:3px;flex:none}
 .form-privacy{margin:14px 0 0;font-size:12px;line-height:1.55;opacity:.8}
 .form-success{margin:0;padding:18px 20px;border-radius:12px;background:rgba(108,140,72,.12);font-size:16px;line-height:1.5}
+.form-refus{margin:10px 0 0;padding:12px 14px;border-radius:10px;border-left:4px solid #b3261e;background:#fdecea;color:#7a1c16;font-size:15px;line-height:1.5;font-weight:600}
+form[data-brevo] [aria-invalid="true"]{border-color:#b3261e;box-shadow:0 0 0 3px rgba(179,38,30,.18)}
 .form-success:focus{outline:2px solid currentColor;outline-offset:3px}
 </style>
 <script is:inline>(()=>{
  const debut=performance.now(),DELAI_MINIMAL=3000;
  const REFUS={
-  lien:'Pour limiter les spams, le formulaire n’accepte pas les liens ni les adresses de sites. Retirez-les de votre message puis renvoyez-le, ou écrivez-nous depuis votre messagerie.'
+  lien:'Votre message n’est pas parti : pour limiter les spams, le formulaire n’accepte pas les liens ni les adresses de sites. Retirez-les puis renvoyez votre message. Pour nous transmettre un lien, écrivez à contact@ecolemontessorinantes.com.'
+ };
+ const retirerRefus=form=>{
+  delete form.dataset.refus;form.querySelector('.form-refus')?.remove();
+  form.querySelector('[aria-invalid="true"]')?.removeAttribute('aria-invalid');
+ };
+ const afficherRefus=(form,texte)=>{
+  const champ=form.elements.message,alerte=document.createElement('p');
+  alerte.className='form-refus';alerte.setAttribute('role','alert');alerte.textContent=texte;
+  form.dataset.refus=texte;
+  if(champ){champ.setAttribute('aria-invalid','true');champ.after(alerte);champ.focus();}
+  else form.querySelector('button[type="submit"]').before(alerte);
+  alerte.scrollIntoView({block:'center',behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'});
+  form.addEventListener('input',()=>retirerRefus(form),{once:true});
  };
  window.envoyerFormulaire=async(form,formulaire,champs)=>{
   const bouton=form.querySelector('button[type="submit"]'),contenu=bouton.innerHTML;
-  bouton.disabled=true;bouton.textContent='Envoi en cours…';delete form.dataset.refus;
+  let refus;bouton.disabled=true;bouton.textContent='Envoi en cours…';retirerRefus(form);
   try{
    let dureeMs=Math.round(performance.now()-debut);
    if(dureeMs<DELAI_MINIMAL){
@@ -28,10 +44,11 @@
    }
    const reponse=await fetch('/api/formulaire',{method:'POST',headers:{'content-type':'application/json'},signal:AbortSignal.timeout?.(25000),body:JSON.stringify({formulaire,champs,piege:form.elements.piege?.value||'',dureeMs})});
    const resultat=await reponse.json();
-   if(REFUS[resultat.motif])form.dataset.refus=REFUS[resultat.motif];
+   refus=REFUS[resultat.motif];
    return reponse.ok&&resultat.ok===true;
   }catch{return false;}
-  finally{bouton.disabled=false;bouton.innerHTML=contenu;}
+  // L'alerte s'affiche une fois le bouton réactivé : le curseur peut alors revenir dans le champ.
+  finally{bouton.disabled=false;bouton.innerHTML=contenu;if(refus)afficherRefus(form,refus);}
  };
  window.afficherEnvoiReussi=(form,message)=>{
   const annonce=document.createElement('p');
